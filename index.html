@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Dev Arena — Conductor HUD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange:        #F97316;
+      --orange-dark:   #EA6C0A;
+      --orange-light:  #FFF7ED;
+      --orange-border: #FDBA74;
+      --black:         #111111;
+      --text-primary:  #111111;
+      --text-secondary:#555555;
+      --gray-700:      #374151;
+      --gray-500:      #6B7280;
+      --gray-400:      #9CA3AF;
+      --gray-300:      #D1D5DB;
+      --gray-200:      #E5E7EB;
+      --gray-100:      #F3F4F6;
+      --gray-50:       #F9FAFB;
+      --white:         #FFFFFF;
+      --success:       #16A34A;
+      --success-bg:    #DCFCE7;
+      --success-border:#86EFAC;
+      --error:         #DC2626;
+      --error-bg:      #FEE2E2;
+      --error-border:  #FCA5A5;
+      --border:        #E5E7EB;
+      --radius:        6px;
+      --font: 'Inter', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+    html, body { height: 100%; font-family: var(--font); color: var(--black); background: var(--white); -webkit-font-smoothing: antialiased; }
+    button { cursor: pointer; font-family: var(--font); }
+    input, select, textarea { font-family: var(--font); }
+    #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    /* NAV */
+    .nav { flex-shrink: 0; background: var(--white); border-bottom: 2px solid var(--border); display: flex; align-items: center; padding: 0 28px; height: 56px; }
+    .nav-brand { font-size: 1rem; font-weight: 700; color: var(--black); margin-right: 40px; letter-spacing: -0.02em; }
+    .nav-brand span { color: var(--orange); }
+    .nav-tabs { display: flex; align-items: stretch; height: 100%; gap: 2px; }
+    .nav-tab { display: flex; align-items: center; gap: 8px; padding: 0 20px; border: none; background: transparent; font-size: 0.875rem; font-weight: 500; color: var(--gray-500); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.15s; }
+    .nav-tab:hover { color: var(--black); }
+    .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); font-weight: 600; }
+    .tab-num { width: 20px; height: 20px; border-radius: 50%; background: var(--gray-200); color: var(--gray-700); font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .nav-tab.active .tab-num { background: var(--orange); color: white; }
+    /* VIEWS */
+    .views { flex: 1; overflow: hidden; position: relative; }
+    .view { display: none; position: absolute; inset: 0; }
+    .view.active { display: flex; flex-direction: column; }
+    /* ROUND HEADER */
+    .round-header { flex-shrink: 0; background: var(--white); border-bottom: 1px solid var(--border); padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .round-label { display: flex; align-items: center; gap: 14px; }
+    .round-badge { background: var(--orange); color: white; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .round-title { font-size: 1rem; font-weight: 700; color: var(--black); }
+    .round-desc { font-size: 0.82rem; color: var(--gray-500); margin-top: 1px; }
+    .round-actions { display: flex; align-items: center; gap: 10px; }
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 7px 16px; border-radius: var(--radius); font-size: 0.83rem; font-weight: 600; border: none; transition: all 0.15s; white-space: nowrap; }
+    .btn-orange { background: var(--orange); color: white; }
+    .btn-orange:hover { background: var(--orange-dark); }
+    .btn-ghost { background: transparent; color: var(--gray-700); border: 1px solid var(--border); }
+    .btn-ghost:hover { background: var(--gray-100); border-color: var(--gray-300); }
+    .btn-ghost.is-on { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+    .btn-redo { background: white; color: var(--error); border: 1px solid var(--error-border); padding: 7px 16px; font-weight: 700; }
+    .btn-redo:hover { background: var(--error-bg); }
+    /* VIEW 1: HTML */
+    .html-view-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .browser-chrome { flex-shrink: 0; background: #F9FAFB; border-bottom: 1px solid var(--border); padding: 6px 16px; display: flex; align-items: center; gap: 12px; }
+    .browser-dots { display: flex; gap: 5px; }
+    .browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .browser-dot.r { background: #EF4444; } .browser-dot.y { background: #F59E0B; } .browser-dot.g { background: #22C55E; }
+    .browser-url { flex: 1; background: white; border: 1px solid var(--border); border-radius: 4px; padding: 4px 12px; font-size: 0.78rem; color: var(--gray-500); font-family: var(--mono); }
+    .preview-frame { flex: 1; border: none; background: white; width: 100%; }
+    /* VIEW 2: CSS CHALLENGE */
+    .css-body { flex: 1; display: flex; overflow: hidden; }
+    .css-controls { width: 440px; flex-shrink: 0; display: flex; flex-direction: column; border-right: 1px solid var(--border); background: var(--white); overflow: hidden; }
+    @media (max-width: 1100px) { .css-controls { width: 380px; } }
+    .css-controls-scroll { flex: 1; overflow-y: auto; padding: 20px 22px 28px; }
+    /* Quiz mode */
+    .q-header-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .q-badge { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--orange-dark); background: var(--orange-light); border: 1px solid var(--orange-border); padding: 3px 8px; border-radius: 4px; }
+    .q-counter { font-size: 0.82rem; font-weight: 600; color: var(--gray-500); }
+    .q-dots-indicator { display: flex; gap: 6px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+    .q-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--gray-200); border: 1px solid var(--gray-300); transition: all 0.2s ease; }
+    .q-dot.current { background: var(--orange); border-color: var(--orange-dark); transform: scale(1.2); box-shadow: 0 0 0 2px rgba(249,115,22,0.25); }
+    .q-dot.completed { background: var(--success); border-color: #15803D; }
+
+    .q-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .q-topic-tag { display: inline-flex; align-items: center; background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--border); border-radius: 4px; padding: 2px 9px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+    .q-text { font-size: 0.94rem; font-weight: 700; color: var(--black); line-height: 1.45; margin-bottom: 8px; }
+    .q-purpose { font-size: 0.78rem; color: var(--gray-500); margin-bottom: 14px; font-style: italic; }
+    .q-options { display: flex; flex-direction: column; gap: 8px; }
+    .q-option { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all 0.15s; background: white; width: 100%; text-align: left; }
+    .q-option:hover:not(:disabled) { border-color: var(--orange); background: var(--orange-light); }
+    .q-option.correct { border-color: var(--success); background: var(--success-bg); }
+    .q-option.incorrect { border-color: var(--error); background: var(--error-bg); }
+    .q-option:disabled { cursor: default; }
+    .q-opt-key { width: 22px; height: 22px; border-radius: 4px; border: 1.5px solid var(--border); background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--gray-700); flex-shrink: 0; margin-top: 1px; }
+    .q-option.correct .q-opt-key { background: var(--success); border-color: var(--success); color: white; }
+    .q-option.incorrect .q-opt-key { background: var(--error); border-color: var(--error); color: white; }
+    .q-opt-text { font-size: 0.8rem; color: var(--gray-700); font-family: var(--mono); line-height: 1.45; white-space: pre-line; word-break: break-word; }
+    .q-option.correct .q-opt-text { color: #15803D; font-weight: 600; }
+    .q-option.incorrect .q-opt-text { color: #B91C1C; }
+
+    .q-feedback { border-radius: var(--radius); padding: 14px 16px; font-size: 0.82rem; line-height: 1.55; display: none; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+    .q-feedback.correct { background: var(--success-bg); border: 1.5px solid var(--success-border); color: #15803D; display: block; }
+    .q-feedback.incorrect { background: var(--error-bg); border: 1.5px solid var(--error-border); color: #B91C1C; display: block; }
+    .q-feedback-status { font-weight: 800; margin-bottom: 6px; font-size: 0.86rem; letter-spacing: 0.02em; display: flex; align-items: center; gap: 6px; }
+    .q-feedback-desc { font-size: 0.82rem; color: inherit; line-height: 1.55; }
+    .q-feedback-desc p { margin: 0 0 6px 0; }
+    .q-feedback-desc p:last-child { margin-bottom: 0; }
+    .q-feedback code { background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px; font-family: var(--mono); font-weight: 700; font-size: 0.8rem; }
+    .q-feedback-hint { font-size: 0.77rem; opacity: 0.92; font-style: italic; margin-top: 8px; padding-top: 6px; border-top: 1px dashed rgba(185, 28, 28, 0.25); }
+    .q-nav-row { display: none; gap: 8px; margin-top: 6px; }
+    .q-nav-row.show { display: flex; }
+    .q-completion-card { text-align: center; padding: 28px 20px; border: 1px solid var(--border); border-radius: var(--radius); display: none; background: white; }
+    .q-completion-card.show { display: block; }
+    .q-completion-card h3 { font-size: 1.15rem; font-weight: 700; color: var(--black); margin-bottom: 6px; }
+    .q-completion-score { font-size: 1.25rem; font-weight: 700; color: var(--orange); margin: 10px 0; font-family: var(--mono); }
+    .q-completion-card p { color: var(--gray-500); font-size: 0.85rem; margin-bottom: 14px; }
+    /* Preview panel & Full Screen */
+    .css-preview { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .preview-bar { flex-shrink: 0; background: #F9FAFB; border-bottom: 1px solid var(--border); padding: 6px 16px; display: flex; align-items: center; gap: 12px; }
+    .preview-live-badge { font-size: 0.72rem; font-weight: 700; color: var(--success); margin-left: auto; display: flex; align-items: center; gap: 4px; }
+    .preview-live-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+    .btn-fullscreen {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      background: white;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-fullscreen:hover {
+      background: var(--orange-light);
+      border-color: var(--orange);
+      color: var(--orange-dark);
+    }
+    .is-fullscreen {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 99999 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background: white !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .is-fullscreen .btn-fullscreen {
+      background: var(--orange);
+      color: white;
+      border-color: var(--orange-dark);
+    }
+    .is-fullscreen .btn-fullscreen:hover {
+      background: var(--orange-dark);
+    }
+    /* VIEW 3: JS */
+    .js-body { flex: 1; display: grid; grid-template-columns: 420px 1fr; overflow: hidden; }
+    @media (max-width: 1100px) { .js-body { grid-template-columns: 360px 1fr; } }
+    .js-panel { border-right: 1px solid var(--border); overflow-y: auto; padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+    .task-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-400); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--gray-200); }
+    .task-list { display: flex; flex-direction: column; gap: 7px; }
+    .task-item { display: flex; gap: 10px; padding: 10px 12px; background: var(--gray-100); border-radius: var(--radius); border-left: 3px solid var(--orange); align-items: flex-start; }
+    .task-num { font-size: 0.7rem; font-weight: 700; color: var(--orange); background: var(--orange-light); padding: 2px 6px; border-radius: 3px; flex-shrink: 0; margin-top: 1px; font-family: var(--mono); }
+    .task-text { font-size: 0.83rem; color: var(--gray-700); line-height: 1.45; }
+    .task-text code { background: white; border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; font-family: var(--mono); font-size: 0.78rem; }
+    .dl-card { background: var(--orange-light); border: 1px solid #FDBA74; border-radius: var(--radius); padding: 18px; text-align: center; }
+    .dl-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--black); margin-bottom: 6px; }
+    .dl-card p { font-size: 0.82rem; color: var(--gray-500); margin-bottom: 14px; line-height: 1.5; }
+    .dl-contents { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 14px; }
+    .dl-file-badge { background: white; border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-size: 0.78rem; font-family: var(--mono); color: var(--gray-700); }
+    .js-preview { overflow: hidden; display: flex; flex-direction: column; }
+    /* TOAST */
+    #toast-area { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; pointer-events: none; display: flex; flex-direction: column; gap: 8px; }
+    .toast { background: var(--black); color: white; padding: 10px 20px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; animation: toastIn 0.2s ease; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 99px; } ::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+    @media (max-width: 768px) { .css-body { flex-direction: column; } .css-controls { width: 100%; border-right: none; border-bottom: 1px solid var(--border); max-height: 45vh; } .js-body { grid-template-columns: 1fr; } .js-preview { display: none; } }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <nav class="nav">
+    <div class="nav-brand">Web Dev <span>Arena</span></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" id="navHtml" onclick="switchView('html')">
+        <span class="tab-num">1</span> HTML Rapid Fire
+      </button>
+      <button class="nav-tab" id="navCss" onclick="switchView('css')">
+        <span class="tab-num">2</span> CSS Challenge
+      </button>
+      <button class="nav-tab" id="navJs" onclick="switchView('js')">
+        <span class="tab-num">3</span> JS Challenge
+      </button>
+    </div>
+  </nav>
+
+  <div class="views">
+
+    <!-- VIEW 1: HTML RAPID FIRE -->
+    <div class="view active" id="viewHtml">
+      <div class="round-header">
+        <div class="round-label">
+          <span class="round-badge">Round 1</span>
+          <div>
+            <div class="round-title">HTML Rapid Fire — Manual Q&amp;A</div>
+            <div class="round-desc">Ask questions about HTML elements visible in the preview. Click ADD CSS when done.</div>
+          </div>
+        </div>
+        <div class="round-actions">
+          <button class="btn btn-ghost" id="btnInspector" onclick="toggleInspector()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            Tag Inspector: <strong id="inspectorLabel">OFF</strong>
+          </button>
+          <button class="btn btn-orange" onclick="switchView('css')">
+            ADD CSS &rarr;
+          </button>
+        </div>
+      </div>
+      <div class="html-view-body">
+        <div class="browser-chrome">
+          <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
+          <div class="browser-url">Student Registration Portal — Raw HTML (Round 1)</div>
+          <button class="btn-fullscreen" id="btnFsHtml" onclick="toggleFullscreen('html')" title="Toggle Full Screen">
+            <svg class="icon-expand" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            <svg class="icon-compress" style="display:none;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 14h6v6m10-10h-6V4m0 6 7-7M3 21l7-7"/></svg>
+            <span class="fs-label">Full Screen</span>
+          </button>
+        </div>
+        <iframe id="frameHtml" class="preview-frame" title="HTML Preview"></iframe>
+      </div>
+    </div>
+
+    <!-- VIEW 2: CSS CHALLENGE -->
+    <div class="view" id="viewCss">
+      <div class="round-header">
+        <div class="round-label">
+          <span class="round-badge">Round 2</span>
+          <div>
+            <div class="round-title">CSS Challenge</div>
+            <div class="round-desc">Apply CSS properties and watch the Student Registration Portal update in real time.</div>
+          </div>
+        </div>
+        <div class="round-actions">
+          <button class="btn btn-redo" onclick="redoAll()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            REDO
+          </button>
+        </div>
+      </div>
+
+      <div class="css-body">
+        <!-- LEFT PANEL -->
+        <div class="css-controls">
+          <div class="css-controls-scroll">
+            <!-- CSS CHALLENGE (15 QUESTIONS) -->
+            <div id="panelQuiz">
+              <div class="q-header-meta">
+                <span class="q-badge">CSS CHALLENGE</span>
+                <span class="q-counter">Question <span id="qNum">1</span> of 15</span>
+              </div>
+              <div class="q-dots-indicator" id="qDots"></div>
+              <div id="qContainer"></div>
+              <div class="q-completion-card" id="qCompletion">
+                <div style="font-size:2.2rem;margin-bottom:6px;">🎉</div>
+                <h3>CSS CHALLENGE COMPLETE</h3>
+                <p style="color:var(--gray-600);margin-bottom:12px;">The Student Registration Portal has been successfully styled.</p>
+                <div class="q-completion-score" id="qFinalScore">15 / 15 Styling Challenges Completed</div>
+                <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
+                  <button class="btn btn-redo" onclick="redoAll()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    REDO Challenge
+                  </button>
+                  <button class="btn btn-orange" onclick="switchView('js')">Go to JS Challenge &rarr;</button>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /css-controls-scroll -->
+        </div><!-- /css-controls -->
+
+        <!-- RIGHT: LIVE PREVIEW -->
+        <div class="css-preview">
+          <div class="preview-bar">
+            <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
+            <div class="browser-url">Student Registration Portal — Live CSS Preview</div>
+            <div class="preview-live-badge">Live Preview</div>
+            <button class="btn-fullscreen" id="btnFsCss" onclick="toggleFullscreen('css')" title="Toggle Full Screen">
+              <svg class="icon-expand" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+              <svg class="icon-compress" style="display:none;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 14h6v6m10-10h-6V4m0 6 7-7M3 21l7-7"/></svg>
+              <span class="fs-label">Full Screen</span>
+            </button>
+          </div>
+          <iframe id="frameCss" class="preview-frame" title="CSS Preview"></iframe>
+        </div>
+
+      </div><!-- /css-body -->
+    </div><!-- /viewCss -->
+
+    <!-- VIEW 3: JS CHALLENGE -->
+    <div class="view" id="viewJs">
+      <div class="round-header">
+        <div class="round-label">
+          <span class="round-badge">Round 3</span>
+          <div>
+            <div class="round-title">JavaScript Challenge</div>
+            <div class="round-desc">Students implement form validation in script.js using VS Code. Download the ZIP to begin.</div>
+          </div>
+        </div>
+        <div class="round-actions">
+          <button class="btn btn-orange" onclick="downloadZip()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Download ZIP
+          </button>
+        </div>
+      </div>
+      <div class="js-body">
+        <div class="js-panel">
+          <div>
+            <div class="task-section-title">JavaScript Tasks</div>
+            <div class="task-list">
+              <div class="task-item"><span class="task-num">01</span><span class="task-text">Select the registration form and all input fields using <code>getElementById</code> or <code>querySelector</code>.</span></div>
+              <div class="task-item"><span class="task-num">02</span><span class="task-text">Attach a <code>submit</code> event listener to the form element.</span></div>
+              <div class="task-item"><span class="task-num">03</span><span class="task-text">Call <code>event.preventDefault()</code> inside the listener to stop the page reloading.</span></div>
+              <div class="task-item"><span class="task-num">04</span><span class="task-text">Read and trim values from: fullName, email, phone, courseSelect, password, confirmPassword.</span></div>
+              <div class="task-item"><span class="task-num">05</span><span class="task-text">Validate that name and course are not empty strings.</span></div>
+              <div class="task-item"><span class="task-num">06</span><span class="task-text">Validate email format using regex: <code>/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code>.</span></div>
+              <div class="task-item"><span class="task-num">07</span><span class="task-text">Validate phone is exactly 10 digits: <code>/^\d{10}$/</code>.</span></div>
+              <div class="task-item"><span class="task-num">08</span><span class="task-text">Validate password is at least 6 characters long.</span></div>
+              <div class="task-item"><span class="task-num">09</span><span class="task-text">Check that confirmPassword exactly matches password.</span></div>
+              <div class="task-item"><span class="task-num">10</span><span class="task-text">Display inline error messages in the <code>.error-msg</code> spans beside each invalid field.</span></div>
+              <div class="task-item"><span class="task-num">11</span><span class="task-text">Clear all previous error messages before re-running validation on each submit attempt.</span></div>
+              <div class="task-item"><span class="task-num">12</span><span class="task-text">If all validation passes: show success in <code>#formSuccess</code>, then call <code>form.reset()</code>.</span></div>
+            </div>
+          </div>
+          <div class="dl-card">
+            <h3>Student Starter Project</h3>
+            <p>Download the ZIP. The HTML and CSS from Rounds 1 &amp; 2 are included. Students only write in <code>script.js</code>.</p>
+            <div class="dl-contents">
+              <span class="dl-file-badge">index.html</span>
+              <span class="dl-file-badge">style.css</span>
+              <span class="dl-file-badge">script.js</span>
+              <span class="dl-file-badge">README.md</span>
+            </div>
+            <button class="btn btn-orange" onclick="downloadZip()" style="width:100%;justify-content:center;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Download ZIP
+            </button>
+          </div>
+        </div>
+        <div class="js-preview">
+          <div class="preview-bar">
+            <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
+            <div class="browser-url">Student Registration Portal — Final Styled Preview</div>
+            <div class="preview-live-badge">Final Result</div>
+            <button class="btn-fullscreen" id="btnFsJs" onclick="toggleFullscreen('js')" title="Toggle Full Screen">
+              <svg class="icon-expand" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+              <svg class="icon-compress" style="display:none;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 14h6v6m10-10h-6V4m0 6 7-7M3 21l7-7"/></svg>
+              <span class="fs-label">Full Screen</span>
+            </button>
+          </div>
+          <iframe id="frameJs" class="preview-frame" title="JS Preview"></iframe>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /views -->
+</div><!-- /app -->
+
+<div id="toast-area"></div>
+
+<script>
+/* ===========================================================================
+   BASE HTML — Student Registration Portal (BASELINE STRUCTURE)
+   =========================================================================== */
+const BASE_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Registration Portal</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; font-family: serif; color: #111111; line-height: 1.5; background: #ffffff; }
+    header { margin-bottom: 24px; }
+    header h1 { margin: 0 0 8px 0; }
+    header p { margin: 0 0 14px 0; }
+    header img { max-width: 100%; height: auto; display: block; border-radius: 4px; }
+    nav { margin-bottom: 28px; }
+    nav ul { list-style: none; padding: 0; margin: 0; }
+    nav li { margin-right: 18px; margin-bottom: 6px; }
+    nav a { color: #2563eb; }
+    main { margin-bottom: 36px; }
+    section { margin-bottom: 32px; }
+    .course-list { gap: 16px; margin-top: 14px; }
+    .course-section, .course-card { padding: 16px; margin-bottom: 14px; flex: 1; min-width: 0; background: #ffffff; }
+    .course-section h3 { margin-top: 0; margin-bottom: 8px; }
+    .course-section p { margin-bottom: 10px; }
+    .course-section ol { padding-left: 20px; }
+    table { width: auto; border-collapse: collapse; margin-top: 14px; }
+    th, td { border: 1px solid #d1d5db; text-align: left; vertical-align: top; }
+    form { padding: 20px; border: 1px solid #e5e7eb; border-radius: 4px; margin-top: 14px; max-width: 600px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+    .form-group input, .form-group select { width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; font-size: 0.9rem; }
+    .form-actions { margin-top: 18px; }
+    .form-actions button { padding: 10px 22px; font-size: 0.95rem; font-weight: 600; cursor: pointer; border: 1px solid #d1d5db; background: #f3f4f6; }
+    .error-msg { color: #dc2626; font-size: 0.8rem; margin-top: 3px; display: block; }
+    footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e7eb; color: #555555; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <header class="hero-content">
+    <h1>Student Registration Portal</h1>
+    <p><strong>Welcome</strong> to the official registration gateway for <em>Web Development 2026</em>.</p>
+    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80" alt="Campus" class="hero-image" width="700" height="220">
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#courses">Courses</a></li>
+      <li><a href="#schedule">Schedule</a></li>
+      <li><a href="#registration">Register</a></li>
+      <li><a href="https://developer.mozilla.org" target="_blank">MDN Docs</a></li>
+    </ul>
+  </nav>
+  <main class="page-container">
+    <section id="courses">
+      <h2>Available Courses</h2>
+      <p>Select from our intensive, industry-focused certification tracks:</p>
+      <div class="course-list">
+        <article class="course-section course-card">
+          <h3>HTML5 &amp; Semantic Web</h3>
+          <p>Learn document architecture, forms, accessibility, and semantic tags.</p>
+          <ol><li>Document Skeleton</li><li>Semantic Landmarks</li><li>Forms &amp; Inputs</li></ol>
+        </article>
+        <article class="course-section course-card">
+          <h3>Modern CSS &amp; Layouts</h3>
+          <p>Master Flexbox, CSS Grid, responsive design, and custom properties.</p>
+          <ol><li>Flexbox Alignment</li><li>CSS Grid Mastery</li><li>Responsive Media</li></ol>
+        </article>
+        <article class="course-section course-card">
+          <h3>Interactive JavaScript</h3>
+          <p>Dominate DOM manipulation, event loops, form validation, and APIs.</p>
+          <ol><li>DOM Selection</li><li>Event Listeners</li><li>Input Validation</li></ol>
+        </article>
+      </div>
+    </section>
+    <section id="schedule">
+      <h2>Course Schedule</h2>
+      <table>
+        <thead><tr><th>Course</th><th>Duration</th><th>Level</th><th>Prerequisite</th></tr></thead>
+        <tbody>
+          <tr><td>HTML5 &amp; Semantics</td><td>2 Weeks</td><td>Beginner</td><td>None</td></tr>
+          <tr><td>Modern CSS</td><td>3 Weeks</td><td>Beginner</td><td>HTML Basics</td></tr>
+          <tr><td>Interactive JavaScript</td><td>4 Weeks</td><td>Intermediate</td><td>HTML &amp; CSS</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="registration">
+      <h2>Student Registration</h2>
+      <p>Complete all required fields to register for the upcoming cohort.</p>
+      <form id="registrationForm" class="content-card" novalidate>
+        <div class="form-group">
+          <label for="fullName">Full Name:</label>
+          <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+          <span class="error-msg" id="nameError"></span>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address:</label>
+          <input type="email" id="email" name="email" placeholder="student@example.com" required>
+          <span class="error-msg" id="emailError"></span>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" name="phone" placeholder="10-digit number" required>
+          <span class="error-msg" id="phoneError"></span>
+        </div>
+        <div class="form-group">
+          <label for="courseSelect">Selected Course:</label>
+          <select id="courseSelect" name="courseSelect" required>
+            <option value="">-- Choose a course --</option>
+            <option value="html">HTML5 &amp; Semantic Web</option>
+            <option value="css">Modern CSS &amp; Layouts</option>
+            <option value="js">Interactive JavaScript</option>
+          </select>
+          <span class="error-msg" id="courseError"></span>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" placeholder="Min 6 characters" required>
+          <span class="error-msg" id="passwordError"></span>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password:</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required>
+          <span class="error-msg" id="confirmError"></span>
+        </div>
+        <div class="form-actions">
+          <button type="submit" id="submitBtn" class="primary-action">Register for Course</button>
+        </div>
+        <div id="formSuccess" class="success-message" style="display:none;"></div>
+      </form>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2026 Student Registration Portal. Web Development Challenge.</p>
+  </footer>
+</body>
+</html>`;
+
+/* ===========================================================================
+   15 CSS PROGRESSIVE CHALLENGE QUESTIONS (CONCEPTUAL LEARNING)
+   =========================================================================== */
+const QUESTIONS = [
+  {
+    id: 1,
+    title: "CSS Selectors",
+    property: "Element Selector (h2)",
+    q: "You want to change the color of ALL <h2> headings on the page.\nWhich CSS selector correctly targets every <h2> element?",
+    purpose: "Learn how element selectors target all instances of an HTML tag.",
+    options: [
+      {
+        key: "A",
+        label: ".h2",
+        css: ".h2 { color: #F97316 !important; }",
+        correct: false,
+        explanation: 'The dot prefix ".h2" targets elements with a class name of "h2" (e.g. <div class="h2">), not standard <h2> HTML tags.'
+      },
+      {
+        key: "B",
+        label: "#h2",
+        css: "#h2 { color: #F97316 !important; }",
+        correct: false,
+        explanation: 'The hash prefix "#h2" targets a single element with an ID of "h2" (e.g. <h2 id="h2">), not all <h2> elements.'
+      },
+      {
+        key: "C",
+        label: "h2",
+        css: "h2 { color: #F97316 !important; }",
+        correct: true,
+        explanation: 'In CSS, writing the plain tag name "h2" is an Element Selector. It directly targets and styles every <h2> element across the entire document.'
+      },
+      {
+        key: "D",
+        label: "<h2>",
+        css: "/* Invalid CSS selector */",
+        correct: false,
+        explanation: '"<h2>" is HTML tag syntax with angle brackets. In CSS, tag selectors omit the angle brackets and are written simply as h2.'
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Text Color",
+    property: "color",
+    q: "Which CSS property changes the color of text?",
+    purpose: "Learn that the 'color' property specifically controls text foreground color.",
+    options: [
+      {
+        key: "A",
+        label: "background",
+        css: "body { background: #111827 !important; color: #ffffff !important; }",
+        correct: false,
+        explanation: '"background" fills the canvas behind the text rather than changing the text characters themselves.'
+      },
+      {
+        key: "B",
+        label: "color",
+        css: "body { color: #111827 !important; }",
+        correct: true,
+        explanation: 'In CSS, the "color" property sets the text foreground color. Setting "color: #111827" renders clean, high-contrast dark text.'
+      },
+      {
+        key: "C",
+        label: "text-color",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"text-color" is not a standard CSS property. The correct property is simply "color".'
+      },
+      {
+        key: "D",
+        label: "font-color",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"font-color" was an obsolete HTML attribute from 1995 (<font color="...">). CSS uses the "color" property.'
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Background Color",
+    property: "background-color",
+    q: "Which CSS property changes the background color of an element?",
+    purpose: "Learn the distinction between 'color' (text) and 'background-color' (fill).",
+    options: [
+      {
+        key: "A",
+        label: "background-color",
+        css: "body { background-color: #F8FAFC !important; }",
+        correct: true,
+        explanation: '"background-color" sets the background fill color. Setting "background-color: #F8FAFC" replaces the stark white with a soft, modern off-white foundation.'
+      },
+      {
+        key: "B",
+        label: "color-background",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"color-background" is not a valid CSS property. CSS uses "background-color".'
+      },
+      {
+        key: "C",
+        label: "bgcolor",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"bgcolor" is a legacy HTML attribute deprecated since HTML 4. Modern CSS uses "background-color".'
+      },
+      {
+        key: "D",
+        label: "background-text",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"background-text" is not a valid CSS property. To color element backgrounds, use "background-color".'
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Font Size",
+    property: "font-size",
+    q: "Which CSS property controls the size of text?",
+    purpose: "Learn how font-size controls typography scale and visual hierarchy.",
+    options: [
+      {
+        key: "A",
+        label: "text-size",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"text-size" is not a standard CSS property. In CSS, typography dimensions are set via "font-size".'
+      },
+      {
+        key: "B",
+        label: "font-style",
+        css: "h1 { font-style: italic !important; }",
+        correct: false,
+        explanation: '"font-style" controls font styling variants like italic or oblique, not font dimensions.'
+      },
+      {
+        key: "C",
+        label: "font-size",
+        css: "h1 { font-size: 42px !important; margin-bottom: 12px !important; }",
+        correct: true,
+        explanation: '"font-size" controls the physical dimensions of text characters (e.g. 42px, 2.5rem). The main heading now stands out prominently at 42px.'
+      },
+      {
+        key: "D",
+        label: "text-scale",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"text-scale" is not a standard CSS property. CSS uses "font-size".'
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "Font Weight",
+    property: "font-weight",
+    q: "You want the main heading to appear bold.\nWhich CSS property should you use?",
+    purpose: "Learn how font-weight controls character stroke thickness.",
+    options: [
+      {
+        key: "A",
+        label: "font-bold",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"font-bold" is not a CSS property. Boldness is configured through "font-weight: bold" or numeric values like 700.'
+      },
+      {
+        key: "B",
+        label: "text-weight",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"text-weight" is not a valid CSS property. CSS uses "font-weight".'
+      },
+      {
+        key: "C",
+        label: "font-weight",
+        css: "h1 { font-weight: 700 !important; }",
+        correct: true,
+        explanation: '"font-weight" specifies the boldness/stroke weight of typography (e.g. 400 = regular, 700 = bold). Setting "font-weight: 700" gives the main title a strong presence.'
+      },
+      {
+        key: "D",
+        label: "bold-text",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"bold-text" is not a valid CSS property.'
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: "Text Alignment",
+    property: "text-align",
+    q: "Which CSS property controls whether text is aligned left, center, or right?",
+    purpose: "Learn how text-align aligns inline content horizontally inside its container.",
+    options: [
+      {
+        key: "A",
+        label: "align-text",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"align-text" is not a valid CSS property. The correct CSS property name is "text-align".'
+      },
+      {
+        key: "B",
+        label: "text-align",
+        css: "header, .hero-content { text-align: center !important; }",
+        correct: true,
+        explanation: '"text-align" controls the horizontal alignment of inline content (left, center, right, justify). Setting "text-align: center" centers the introductory header.'
+      },
+      {
+        key: "C",
+        label: "text-position",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"text-position" is not a standard CSS property.'
+      },
+      {
+        key: "D",
+        label: "font-align",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"font-align" is not a valid CSS property. Alignment is set via "text-align".'
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "Margin",
+    property: "margin",
+    q: "The content sections are too close together.\nWhich CSS property adds space OUTSIDE an element?",
+    purpose: "Learn the CSS Box Model: Margin is the outermost layer outside the border.",
+    options: [
+      {
+        key: "A",
+        label: "padding",
+        css: "section { padding: 32px !important; background: rgba(0,0,0,0.03) !important; }",
+        correct: false,
+        explanation: '"padding" creates space INSIDE the element\'s border. To create space OUTSIDE the element, use "margin".'
+      },
+      {
+        key: "B",
+        label: "margin",
+        css: "section { margin-bottom: 32px !important; }",
+        correct: true,
+        explanation: '"margin" creates empty space OUTSIDE an element, separating it from neighboring elements.\n\nBox Model Hierarchy:\nContent ↓ Border ↓ Margin = OUTSIDE space'
+      },
+      {
+        key: "C",
+        label: "border-spacing",
+        css: "section { border-spacing: 32px !important; }",
+        correct: false,
+        explanation: '"border-spacing" only applies to HTML <table> elements with separated borders, not <div> or <section> elements.'
+      },
+      {
+        key: "D",
+        label: "gap-outside",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"gap-outside" is not a valid CSS property.'
+      }
+    ]
+  },
+  {
+    id: 8,
+    title: "Padding",
+    property: "padding",
+    q: "A course section has content touching its border.\nWhich CSS property adds space INSIDE the element?",
+    purpose: "Learn that Padding adds breathing space between content and its border.",
+    options: [
+      {
+        key: "A",
+        label: "margin",
+        css: ".course-section { margin: 24px !important; background: #fff !important; }",
+        correct: false,
+        explanation: '"margin" pushes the outside of the card away, but the content inside remains cramped touching the card\'s inner boundary.'
+      },
+      {
+        key: "B",
+        label: "padding",
+        css: ".course-section, .course-card { padding: 24px !important; }",
+        correct: true,
+        explanation: '"padding" adds space INSIDE an element, creating breathing room between the inner content and the outer border.\n\nComparison:\n• margin → space outside\n• padding → space inside'
+      },
+      {
+        key: "C",
+        label: "spacing",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"spacing" is not a CSS property. CSS uses "padding" for inside spacing and "margin" for outside spacing.'
+      },
+      {
+        key: "D",
+        label: "inner-margin",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"inner-margin" is not a valid CSS property. In CSS, internal space is named "padding".'
+      }
+    ]
+  },
+  {
+    id: 9,
+    title: "Border",
+    property: "border",
+    q: "Which CSS property adds a visible border around an element?",
+    purpose: "Learn the border shorthand: width style color.",
+    options: [
+      {
+        key: "A",
+        label: "outline-border",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"outline-border" is not a CSS property. To add a visible border, use the "border" property.'
+      },
+      {
+        key: "B",
+        label: "element-border",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"element-border" is not a valid CSS property.'
+      },
+      {
+        key: "C",
+        label: "border",
+        css: ".course-section, .course-card { border: 1px solid #E5E7EB !important; }",
+        correct: true,
+        explanation: 'The "border" shorthand specifies width, style, and color in a single declaration: "border: 1px solid #E5E7EB;". Course sections now have clean, subtle frames.'
+      },
+      {
+        key: "D",
+        label: "box-line",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"box-line" is not a valid CSS property.'
+      }
+    ]
+  },
+  {
+    id: 10,
+    title: "Border Radius",
+    property: "border-radius",
+    q: "Which CSS property creates rounded corners?",
+    purpose: "Learn how border-radius curves rectangular box corners.",
+    options: [
+      {
+        key: "A",
+        label: "corner-radius",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"corner-radius" is not a CSS property. CSS uses "border-radius".'
+      },
+      {
+        key: "B",
+        label: "border-round",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"border-round" is not a valid CSS property.'
+      },
+      {
+        key: "C",
+        label: "border-radius",
+        css: ".course-section, .course-card, header img { border-radius: 12px !important; }",
+        correct: true,
+        explanation: '"border-radius" curves the outer corners of an element:\n• 0 = sharp square corners\n• 12px = modern smooth corners\n• 50% = circular / pill shape'
+      },
+      {
+        key: "D",
+        label: "radius-border",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"radius-border" is not a valid CSS property.'
+      }
+    ]
+  },
+  {
+    id: 11,
+    title: "Width and Max-Width",
+    property: "max-width & margin auto",
+    q: "The webpage is stretching across the entire screen and becoming difficult to read.\nWhich CSS approach creates a readable maximum content width?",
+    purpose: "Learn how max-width and auto margins center responsive layouts on desktop screens.",
+    options: [
+      {
+        key: "A",
+        label: "width: 2000px;",
+        css: "main, .page-container, header, nav, footer { width: 2000px !important; max-width: none !important; }",
+        correct: false,
+        explanation: '"width: 2000px" forces the webpage wider than most desktop screens, causing unwanted horizontal scrollbars.'
+      },
+      {
+        key: "B",
+        label: "max-width: 1200px;\nmargin: 0 auto;\npadding: 0 24px;",
+        css: "main, .page-container, header, nav, footer { max-width: 1200px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 24px !important; padding-right: 24px !important; }",
+        correct: true,
+        explanation: '"max-width: 1200px" caps line width on wide monitors, while "margin: 0 auto" automatically centers the block container with balanced margins.'
+      },
+      {
+        key: "C",
+        label: "width: 100px;",
+        css: "main, .page-container, header, nav, footer { width: 100px !important; max-width: 100px !important; }",
+        correct: false,
+        explanation: '"width: 100px" squashes the entire desktop webpage into a tiny 100px column.'
+      },
+      {
+        key: "D",
+        label: "max-width: 100px;",
+        css: "main, .page-container, header, nav, footer { max-width: 100px !important; }",
+        correct: false,
+        explanation: '"max-width: 100px" restricts content to 100px, which is far too small for readable desktop interfaces.'
+      }
+    ]
+  },
+  {
+    id: 12,
+    title: "Display & Flexbox",
+    property: "display: flex",
+    q: "The navigation links are currently displayed vertically.\nWhich CSS property can be used to create a horizontal Flexbox layout?",
+    purpose: "Learn the core Flexbox concepts: display: flex, gap, and align-items.",
+    options: [
+      {
+        key: "A",
+        label: "display: block;",
+        css: "nav ul { display: block !important; }",
+        correct: false,
+        explanation: '"display: block" keeps list items stacked vertically in standard document flow.'
+      },
+      {
+        key: "B",
+        label: "display: inline;",
+        css: "nav ul { display: inline !important; }",
+        correct: false,
+        explanation: '"display: inline" flows with text but does not enable flex gap, alignment, or flex distribution properties.'
+      },
+      {
+        key: "C",
+        label: "display: flex;",
+        css: "nav ul { display: flex !important; gap: 24px !important; align-items: center !important; list-style: none !important; padding: 0 !important; margin: 20px 0 !important; border-bottom: 1px solid #E5E7EB !important; padding-bottom: 16px !important; } .course-list { display: flex !important; gap: 20px !important; flex-wrap: wrap !important; } .course-card, .course-section { flex: 1 1 300px !important; }",
+        correct: true,
+        explanation: '"display: flex" establishes a Flexbox container. Children line up horizontally by default. "gap: 24px" sets space between items, and "align-items: center" aligns them along the cross axis.'
+      },
+      {
+        key: "D",
+        label: "display: table;",
+        css: "nav ul { display: table !important; }",
+        correct: false,
+        explanation: '"display: table" uses legacy tabular rendering; modern responsive navigation uses Flexbox.'
+      }
+    ]
+  },
+  {
+    id: 13,
+    title: "Hover Pseudo-Class",
+    property: ":hover",
+    q: "You want a navigation link to change color when the mouse moves over it.\nWhich CSS selector is correct?",
+    purpose: "Learn how pseudo-classes like :hover attach styling to user interactions.",
+    options: [
+      {
+        key: "A",
+        label: "nav a:hover",
+        css: "nav a { color: #111827 !important; text-decoration: none !important; font-weight: 600 !important; transition: color 0.15s ease !important; } nav a:hover { color: #F97316 !important; }",
+        correct: true,
+        explanation: '":hover" is a CSS pseudo-class that matches when the user positions a cursor over an element. Move your mouse over navigation links to see them turn orange!'
+      },
+      {
+        key: "B",
+        label: "nav a:mouse",
+        css: "/* Invalid pseudo-class */",
+        correct: false,
+        explanation: '":mouse" is not a valid CSS pseudo-class. The standard pseudo-class for pointer hover is ":hover".'
+      },
+      {
+        key: "C",
+        label: "nav a:click",
+        css: "/* Invalid pseudo-class */",
+        correct: false,
+        explanation: '":click" is not a CSS pseudo-class. In CSS, clicked state uses ":active" and mouseover uses ":hover".'
+      },
+      {
+        key: "D",
+        label: "nav a:change",
+        css: "/* Invalid pseudo-class */",
+        correct: false,
+        explanation: '":change" is not a valid CSS pseudo-class.'
+      }
+    ]
+  },
+  {
+    id: 14,
+    title: "Box Shadow",
+    property: "box-shadow",
+    q: "You want to give the course cards a subtle sense of depth.\nWhich CSS property should you use?",
+    purpose: "Learn how box-shadow adds depth: offset-x, offset-y, blur-radius, and color.",
+    options: [
+      {
+        key: "A",
+        label: "element-shadow",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"element-shadow" is not a valid CSS property. CSS uses "box-shadow".'
+      },
+      {
+        key: "B",
+        label: "box-shadow",
+        css: ".course-section, .course-card, form, table { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important; }",
+        correct: true,
+        explanation: '"box-shadow: 0 4px 14px rgba(0,0,0,0.06)" adds clean depth with 0 horizontal offset, 4px vertical drop, 14px soft blur, and a gentle translucent black shadow.'
+      },
+      {
+        key: "C",
+        label: "card-shadow",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"card-shadow" is not a valid CSS property.'
+      },
+      {
+        key: "D",
+        label: "shadow-box",
+        css: "/* Invalid CSS property */",
+        correct: false,
+        explanation: '"shadow-box" is inverted syntax. The correct property name is "box-shadow".'
+      }
+    ]
+  },
+  {
+    id: 15,
+    title: "CSS Color System & Hierarchy",
+    property: "Unified Color System",
+    q: "You are designing a professional student registration website.\nWhich color system provides the best visual hierarchy for this application?",
+    purpose: "Learn how professional websites combine backgrounds, cards, typography, and accents into a unified system.",
+    options: [
+      {
+        key: "A",
+        label: "Background: #000000\nText: #FFFFFF\nAccent: #FF00FF",
+        css: "body { background: #000000 !important; color: #FFFFFF !important; } a, button { background: #FF00FF !important; color: #fff !important; }",
+        correct: false,
+        explanation: "Harsh black and neon magenta causes eye fatigue and lacks clear visual hierarchy for a student portal."
+      },
+      {
+        key: "B",
+        label: "Background: #F8FAFC\nText: #111827\nAccent: #F97316\nCards: #FFFFFF",
+        css: `body { background: #F8FAFC !important; color: #111827 !important; font-family: Arial, sans-serif !important; }
+.course-section, .course-card, form, table { background: #FFFFFF !important; border: 1px solid #E5E7EB !important; }
+h1, h2, h3 { color: #111827 !important; }
+h2, .accent-text, em, header p strong { color: #F97316 !important; }
+p, li, td { color: #374151 !important; line-height: 1.6 !important; }
+table { width: 100% !important; border-collapse: collapse !important; border-radius: 8px !important; overflow: hidden !important; }
+th { background: #111827 !important; color: #FFFFFF !important; text-align: left !important; padding: 14px 16px !important; }
+td { padding: 14px 16px !important; border-bottom: 1px solid #E5E7EB !important; }
+tr:hover { background: #FFF7ED !important; }
+form { padding: 32px !important; border-radius: 14px !important; max-width: 700px !important; }
+input, select { width: 100% !important; padding: 12px 14px !important; border: 1px solid #D1D5DB !important; border-radius: 8px !important; font-size: 15px !important; margin-top: 6px !important; margin-bottom: 14px !important; }
+input:focus, select:focus { outline: none !important; border-color: #F97316 !important; box-shadow: 0 0 0 3px rgba(249,115,22,0.15) !important; }
+button, input[type='submit'] { background: #F97316 !important; color: #FFFFFF !important; padding: 13px 24px !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 700 !important; cursor: pointer !important; transition: background 0.2s ease, transform 0.2s ease !important; }
+button:hover, input[type='submit']:hover { background: #EA580C !important; transform: translateY(-1px) !important; }
+header img { width: 100% !important; max-width: 100% !important; height: 360px !important; object-fit: cover !important; border-radius: 16px !important; display: block !important; margin: 16px 0 !important; }
+footer { text-align: center !important; padding: 32px 0 !important; border-top: 1px solid #E5E7EB !important; color: #6B7280 !important; margin-top: 48px !important; font-size: 14px !important; }`,
+        correct: true,
+        explanation: "Option B establishes a cohesive, professional design system:\n• #F8FAFC → Canvas background\n• #FFFFFF → Cards and containers\n• #111827 → Primary text and headers\n• #374151 → Readable secondary body text\n• #F97316 → Warm energetic action accent\n• #E5E7EB → Structural dividers and borders"
+      },
+      {
+        key: "C",
+        label: "Background: #FF0000\nText: #FFFF00\nAccent: #0000FF",
+        css: "body { background: #FF0000 !important; color: #FFFF00 !important; }",
+        correct: false,
+        explanation: "High-saturation red and yellow colors create severe visual vibration and make text unreadable."
+      },
+      {
+        key: "D",
+        label: "Background: #7C3AED\nText: #FFFFFF\nAccent: #00FF00",
+        css: "body { background: #7C3AED !important; color: #FFFFFF !important; }",
+        correct: false,
+        explanation: "Saturated purple with neon green lacks the subtle contrast needed for clean academic portals."
+      }
+    ]
+  }
+];
+
+/* ===========================================================================
+   STATE
+   =========================================================================== */
+const state = {
+  currentView: 'html',
+  inspectorOn: false,
+  qIndex: 0,
+  qScore: 0
+};
+
+const quizState = {
+  solvedQuestions: {}, // index -> chosen option object with { key, css, label, explanation }
+  currentTry: null,    // chosen option object with { key, css, label, explanation }
+  qAnswered: false
+};
+
+/* ===========================================================================
+   HELPERS & FULLSCREEN
+   =========================================================================== */
+function toast(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.getElementById('toast-area').appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 2400);
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function toggleFullscreen(viewType) {
+  let targetEl;
+  let btnEl;
+  if (viewType === 'html') {
+    targetEl = document.querySelector('.html-view-body');
+    btnEl = document.getElementById('btnFsHtml');
+  } else if (viewType === 'css') {
+    targetEl = document.querySelector('.css-preview');
+    btnEl = document.getElementById('btnFsCss');
+  } else if (viewType === 'js') {
+    targetEl = document.querySelector('.js-preview');
+    btnEl = document.getElementById('btnFsJs');
+  }
+  if (!targetEl) return;
+
+  const isFs = targetEl.classList.toggle('is-fullscreen');
+  
+  if (btnEl) {
+    const expandIcon = btnEl.querySelector('.icon-expand');
+    const compressIcon = btnEl.querySelector('.icon-compress');
+    const label = btnEl.querySelector('.fs-label');
+    if (expandIcon) expandIcon.style.display = isFs ? 'none' : 'inline-block';
+    if (compressIcon) compressIcon.style.display = isFs ? 'inline-block' : 'none';
+    if (label) label.textContent = isFs ? 'Minimize' : 'Full Screen';
+  }
+
+  toast(isFs ? 'Full Screen Preview (Press ESC or Minimize to exit)' : 'Exited Full Screen');
+}
+
+// Global ESC key listener to exit full screen
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.is-fullscreen').forEach(el => {
+      el.classList.remove('is-fullscreen');
+      const btn = el.querySelector('.btn-fullscreen');
+      if (btn) {
+        const expandIcon = btn.querySelector('.icon-expand');
+        const compressIcon = btn.querySelector('.icon-compress');
+        const label = btn.querySelector('.fs-label');
+        if (expandIcon) expandIcon.style.display = 'inline-block';
+        if (compressIcon) compressIcon.style.display = 'none';
+        if (label) label.textContent = 'Full Screen';
+      }
+    });
+  }
+});
+
+/* ===========================================================================
+   VIEW SWITCHING
+   =========================================================================== */
+function switchView(v) {
+  state.currentView = v;
+  const viewMap = { html: 'viewHtml', css: 'viewCss', js: 'viewJs' };
+  const navMap  = { html: 'navHtml',  css: 'navCss',  js: 'navJs'  };
+  Object.keys(viewMap).forEach(k => {
+    document.getElementById(viewMap[k]).classList.toggle('active', k === v);
+    document.getElementById(navMap[k]).classList.toggle('active', k === v);
+  });
+  if (v === 'css') renderCssPreview();
+  if (v === 'js')  renderJsPreview();
+}
+
+/* ===========================================================================
+   ROUND 1 — HTML
+   =========================================================================== */
+function renderHtmlPreview() {
+  let html = BASE_HTML;
+  if (state.inspectorOn) {
+    html = html.replace('</body>', `
+    <style>*:hover{outline:2px dashed #2563eb!important;cursor:help;position:relative;}
+    *:hover::before{content:attr(data-tag);position:absolute;top:-20px;left:0;background:#2563eb;color:#fff;font:700 11px monospace;padding:2px 7px;border-radius:3px;z-index:99999;pointer-events:none;white-space:nowrap;}</style>
+    <script>document.querySelectorAll('*').forEach(el=>{el.dataset.tag='<'+el.tagName.toLowerCase()+'>';});<\/script></body>`);
+  }
+  document.getElementById('frameHtml').srcdoc = html;
+}
+
+function toggleInspector() {
+  state.inspectorOn = !state.inspectorOn;
+  document.getElementById('inspectorLabel').textContent = state.inspectorOn ? 'ON' : 'OFF';
+  const btn = document.getElementById('btnInspector');
+  btn.classList.toggle('is-on', state.inspectorOn);
+  renderHtmlPreview();
+  toast('Tag Inspector ' + (state.inspectorOn ? 'enabled' : 'disabled'));
+}
+
+/* ===========================================================================
+   ROUND 2 — 15 PROGRESSIVE CSS ENGINE
+   =========================================================================== */
+function renderProgressDots() {
+  const container = document.getElementById('qDots');
+  if (!container) return;
+  let html = '';
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    let stateClass = '';
+    if (quizState.solvedQuestions[i]) {
+      stateClass = 'completed';
+    } else if (i === state.qIndex) {
+      stateClass = 'current';
+    }
+    html += `<span class="q-dot ${stateClass}" title="Question ${i+1}: ${QUESTIONS[i].title}"></span>`;
+  }
+  container.innerHTML = html;
+}
+
+function buildCssString() {
+  let css = '';
+  // 1. Accumulate all solved questions up to current progress
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    if (quizState.solvedQuestions[i]) {
+      css += `/* === [Q${i+1}] ${QUESTIONS[i].title} === */\n` + quizState.solvedQuestions[i].css + '\n\n';
+    }
+  }
+  // 2. If user is currently trying an option for the active question, apply its CSS on top
+  if (quizState.currentTry) {
+    css += `/* === [Q${state.qIndex+1} Active Choice] === */\n` + quizState.currentTry.css + '\n\n';
+  }
+  return css;
+}
+
+function renderCssPreview() {
+  const css = buildCssString();
+  const html = BASE_HTML.replace('</head>', `<style>\n${css}\n</style>\n</head>`);
+  const frame = document.getElementById('frameCss');
+  if (frame) frame.srcdoc = html;
+}
+
+function renderQuestion() {
+  renderProgressDots();
+  const container = document.getElementById('qContainer');
+  const qNum = document.getElementById('qNum');
+  const qCompletion = document.getElementById('qCompletion');
+
+  if (state.qIndex >= QUESTIONS.length) {
+    container.innerHTML = '';
+    if (qNum) qNum.textContent = QUESTIONS.length;
+    if (qCompletion) {
+      qCompletion.classList.add('show');
+      const finalScore = document.getElementById('qFinalScore');
+      if (finalScore) finalScore.textContent = `${state.qScore} / ${QUESTIONS.length} Concepts Mastered`;
+    }
+    renderCssPreview();
+    return;
+  }
+
+  if (qCompletion) qCompletion.classList.remove('show');
+  if (qNum) qNum.textContent = state.qIndex + 1;
+
+  quizState.qAnswered = false;
+  quizState.currentTry = null;
+
+  const q = QUESTIONS[state.qIndex];
+  const optsHtml = q.options.map((o, i) => `
+    <button class="q-option" id="qopt_${i}" onclick="selectAnswer(${i})">
+      <span class="q-opt-key">${o.key}</span>
+      <span class="q-opt-text">${escapeHtml(o.label)}</span>
+    </button>`).join('');
+
+  container.innerHTML = `
+    <div class="q-card">
+      <div class="q-topic-tag">${q.title}</div>
+      <h3 class="q-text">${escapeHtml(q.q)}</h3>
+      <div class="q-purpose">${escapeHtml(q.purpose)}</div>
+      <div class="q-options">${optsHtml}</div>
+    </div>
+    <div class="q-feedback" id="qFeedback"></div>
+    <div class="q-nav-row" id="qNavRow">
+      <button class="btn btn-orange" onclick="nextQuestion()" style="flex:1;justify-content:center;">
+        ${state.qIndex < QUESTIONS.length - 1 ? 'Next Question &rarr;' : 'Review Final Styled Page &#10003;'}
+      </button>
+    </div>`;
+
+  renderCssPreview();
+}
+
+function selectAnswer(optIdx) {
+  if (quizState.qAnswered) return;
+  const q = QUESTIONS[state.qIndex];
+  const chosen = q.options[optIdx];
+  const btn = document.getElementById('qopt_' + optIdx);
+  if (!btn || btn.disabled) return;
+
+  const isCorrect = chosen.correct === true;
+  const correctOpt = q.options.find(o => o.correct);
+
+  if (!isCorrect) {
+    // 1. Mark this specific button as incorrect (RED) and disable it
+    btn.disabled = true;
+    btn.classList.add('incorrect');
+
+    // 2. Apply this wrong CSS to preview so student sees what happens
+    quizState.currentTry = chosen;
+    renderCssPreview();
+
+    // 3. Show structured educational error feedback with the correct answer
+    const fb = document.getElementById('qFeedback');
+    fb.className = 'q-feedback incorrect';
+    fb.innerHTML = `
+      <div class="q-feedback-status">&#10005; INCORRECT &nbsp;—&nbsp; You selected Option ${chosen.key}</div>
+      <div class="q-feedback-desc">
+        <p style="margin:0 0 6px 0;"><strong>Why it is different:</strong><br>${escapeHtml(chosen.explanation).replace(/\n/g, '<br>')}</p>
+        <p style="margin:0 0 6px 0;color:#7F1D1D;"><strong>Correct Answer:</strong> Option ${correctOpt.key} (<code>${escapeHtml(correctOpt.label.split('\n')[0])}</code>)</p>
+      </div>
+      <div class="q-feedback-hint">Notice what changed in the live preview. Click the correct answer (${correctOpt.key}) to apply the proper CSS and continue!</div>`;
+    
+    // Other options remain clickable.
+  } else {
+    // Correct answer clicked!
+    quizState.qAnswered = true;
+    btn.classList.add('correct');
+
+    // Check if answered on first try (no incorrect options clicked yet for this question)
+    const hadMistakes = q.options.some((_, i) => {
+      const b = document.getElementById('qopt_' + i);
+      return b && b.classList.contains('incorrect');
+    });
+    if (!hadMistakes) {
+      state.qScore++;
+    }
+
+    // Disable all option buttons for this question
+    q.options.forEach((_, i) => {
+      const b = document.getElementById('qopt_' + i);
+      if (b) b.disabled = true;
+    });
+
+    // Save this question into solved state
+    quizState.solvedQuestions[state.qIndex] = chosen;
+    quizState.currentTry = null;
+    renderCssPreview();
+    renderProgressDots();
+
+    // Show correct feedback
+    const fb = document.getElementById('qFeedback');
+    fb.className = 'q-feedback correct';
+    fb.innerHTML = `
+      <div class="q-feedback-status">&#10003; CORRECT &nbsp;—&nbsp; ${q.title}</div>
+      <div class="q-feedback-desc">
+        <p style="margin:0 0 6px 0;"><strong>CSS Property:</strong> <code>${escapeHtml(q.property || chosen.label.split('\n')[0])}</code></p>
+        <p style="margin:0;"><strong>What you learned:</strong><br>${escapeHtml(chosen.explanation).replace(/\n/g, '<br>')}</p>
+      </div>`;
+
+    // Reveal Next Question button
+    const navRow = document.getElementById('qNavRow');
+    if (navRow) navRow.classList.add('show');
+  }
+}
+
+function nextQuestion() {
+  state.qIndex++;
+  renderQuestion();
+}
+
+function redoAll() {
+  quizState.solvedQuestions = {};
+  quizState.currentTry = null;
+  quizState.qAnswered = false;
+  state.qIndex = 0;
+  state.qScore = 0;
+
+  const qNum = document.getElementById('qNum');
+  if (qNum) qNum.textContent = '1';
+  const qCompletion = document.getElementById('qCompletion');
+  if (qCompletion) qCompletion.classList.remove('show');
+
+  renderCssPreview();
+  renderQuestion();
+  toast('CSS Challenge reset — preview restored to original raw HTML.');
+}
+
+/* ===========================================================================
+   ROUND 3 — JS PREVIEW
+   =========================================================================== */
+function renderJsPreview() {
+  const css = buildCssString();
+  const html = BASE_HTML.replace('</head>', `<style>${css}</style></head>`);
+  document.getElementById('frameJs').srcdoc = html;
+}
+
+/* ===========================================================================
+   ZIP DOWNLOAD
+   =========================================================================== */
+const STARTER_JS = `// ==========================================================================
+// WEB DEVELOPMENT CHALLENGE — ROUND 3: JAVASCRIPT IMPLEMENTATION
+// Student Registration Portal — Form Validation
+// ==========================================================================
+// Instructions:
+//   Complete all 12 tasks below.
+//   Do NOT edit index.html or style.css.
+//   Open index.html in your browser to test.
+// ==========================================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  // TASK 1: Select the form and input elements using getElementById / querySelector
+  // const form = ...;
+  // const fullName = ...;
+  // const email = ...;
+  // const phone = ...;
+  // const courseSelect = ...;
+  // const password = ...;
+  // const confirmPassword = ...;
+  // const formSuccess = ...;
+
+
+  // TASK 2: Attach a 'submit' event listener to the form
+  // form.addEventListener('submit', (event) => {
+
+    // TASK 3: Prevent default form submission
+    // event.preventDefault();
+
+    // TASK 11: Clear all previous error messages before re-validating
+
+    // TASK 4: Read and trim values from each input
+
+    // TASK 5: Validate required fields (name, course)
+
+    // TASK 6: Validate email format using regex: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/
+
+    // TASK 7: Validate phone is exactly 10 digits using: /^\\d{10}$/
+
+    // TASK 8: Validate password length >= 6 characters
+
+    // TASK 9: Validate confirmPassword === password
+
+    // TASK 10: Display error messages in .error-msg spans
+
+    // TASK 12: If all valid — show success, reset form
+
+  // });
+
+});
+`;
+
+const README_CONTENT = `# Web Development Challenge — Round 3
+
+## Task
+Add JavaScript validation to the Student Registration Portal.
+
+## Files
+- index.html  — The HTML page (do not edit)
+- style.css   — The CSS from Round 2 (do not edit)
+- script.js   — Write all your JavaScript here
+- README.md   — This file
+
+## How to Run
+1. Extract the ZIP to a folder
+2. Open the folder in VS Code
+3. Complete the 12 tasks in script.js
+4. Open index.html in your browser
+5. Test the form with valid and invalid data
+
+## Tasks to Complete
+01. Select form and input elements
+02. Add submit event listener
+03. Prevent default submission
+04. Read and trim all values
+05. Validate required fields
+06. Validate email format
+07. Validate phone (10 digits)
+08. Validate password length >= 6
+09. Validate confirmPassword matches
+10. Show inline error messages
+11. Clear errors before each validation
+12. On success: show message, reset form
+`;
+
+function downloadZip() {
+  const allCss = buildCssString();
+  const finalHtml = BASE_HTML
+    .replace('</head>', '  <link rel="stylesheet" href="style.css">\n</head>')
+    .replace('</body>', '  <script src="script.js"><\\/script>\n</body>');
+  const finalCss = `/* Web Dev Challenge — CSS from Round 2 */\n${allCss}`;
+
+  if (window.JSZip) {
+    const zip = new JSZip();
+    zip.file('index.html', finalHtml);
+    zip.file('style.css', finalCss);
+    zip.file('script.js', STARTER_JS);
+    zip.file('README.md', README_CONTENT);
+    zip.generateAsync({ type: 'blob' }).then(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'web-dev-challenge-round3.zip';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 100);
+      toast('ZIP downloaded! Hand out to students.');
+    });
+  } else {
+    toast('JSZip not available. Check internet connection.');
+  }
+}
+
+/* ===========================================================================
+   INIT
+   =========================================================================== */
+window.addEventListener('DOMContentLoaded', () => {
+  renderHtmlPreview();
+  renderQuestion();
+});
+</script>
+</body>
+</html>
+
