@@ -83,9 +83,12 @@
     .btn-orange:hover:not(:disabled) { background: var(--orange-dark); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(249, 115, 22, 0.35); }
     .btn-orange:active:not(:disabled) { transform: translateY(0); }
     .btn-orange:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
-    .btn-ghost { background: transparent; color: var(--gray-700); border: 1px solid var(--border); }
-    .btn-ghost:hover { background: var(--gray-100); border-color: var(--gray-300); }
+    
+    .btn-ghost { background: transparent; color: var(--gray-700); border: 1.5px solid var(--border); }
+    .btn-ghost:hover:not(:disabled) { background: var(--gray-100); border-color: var(--gray-400); color: var(--black); }
+    .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
     .btn-ghost.is-on { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+    
     .btn-redo { background: white; color: var(--gray-700); border: 1px solid var(--border); padding: 8px 16px; font-weight: 700; }
     .btn-redo:hover { background: var(--gray-100); border-color: var(--gray-400); }
 
@@ -113,33 +116,48 @@
     .hq-question-text { font-size: 1.15rem; font-weight: 700; color: var(--black); line-height: 1.45; margin-bottom: 20px; }
     .hq-question-text code { font-family: var(--mono); background: var(--gray-100); border: 1px solid var(--gray-200); padding: 2px 7px; border-radius: 4px; font-size: 1rem; color: var(--orange-dark); font-weight: 700; }
 
-    /* 4 Large Clickable Options */
+    /* 4 Large Clickable Options (RED FOR WRONG, GREEN FOR CORRECT) */
     .hq-options { display: flex; flex-direction: column; gap: 10px; }
     .hq-option { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); background: var(--white); width: 100%; text-align: left; position: relative; }
     .hq-option:hover:not(:disabled) { border-color: var(--orange); background: var(--orange-light); transform: translateY(-1px); box-shadow: 0 2px 8px var(--orange-glow); }
-    .hq-option.selected { border-color: var(--orange-dark); background: var(--orange-light); box-shadow: 0 0 0 1px var(--orange-dark); }
-    .hq-option:disabled { cursor: default; }
     
+    /* WRONG (RED) & CORRECT (GREEN) STATES */
+    .hq-option.incorrect { border-color: var(--error) !important; background: var(--error-bg) !important; }
+    .hq-option.incorrect .hq-opt-letter { background: var(--error) !important; border-color: var(--error) !important; color: white !important; }
+    .hq-option.incorrect .hq-opt-text { color: #B91C1C !important; font-weight: 700; }
+    
+    .hq-option.correct { border-color: var(--success) !important; background: var(--success-bg) !important; }
+    .hq-option.correct .hq-opt-letter { background: var(--success) !important; border-color: var(--success) !important; color: white !important; }
+    .hq-option.correct .hq-opt-text { color: #15803D !important; font-weight: 700; }
+
     .hq-opt-letter { width: 30px; height: 30px; border-radius: 6px; border: 1.5px solid var(--border); background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; color: var(--gray-700); flex-shrink: 0; transition: all 0.15s ease; }
     .hq-option:hover:not(:disabled) .hq-opt-letter { border-color: var(--orange); background: var(--white); color: var(--orange-dark); }
-    .hq-option.selected .hq-opt-letter { background: var(--orange); border-color: var(--orange-dark); color: var(--white); }
+    
     .hq-opt-text { font-size: 0.92rem; font-weight: 600; color: var(--gray-700); line-height: 1.45; word-break: break-word; font-family: var(--font); flex: 1; }
     .hq-opt-text code { font-family: var(--mono); font-size: 0.88rem; background: var(--gray-100); border: 1px solid var(--gray-200); padding: 1px 6px; border-radius: 4px; font-weight: 700; color: var(--black); }
 
-    /* Neutral Pedagogical Explanation Card (NO RED / NO GREEN / NO CORRECT/WRONG LABELS) */
-    .hq-feedback-card { display: none; background: var(--white); border: 1.5px solid var(--border); border-left: 5px solid var(--orange); border-radius: var(--radius-lg); padding: 20px 22px; box-shadow: var(--shadow-sm); animation: fadeIn 0.2s ease; }
+    /* Feedback Card (Red on Incorrect, Green on Correct) */
+    .hq-feedback-card { display: none; background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; box-shadow: var(--shadow-sm); animation: fadeIn 0.2s ease; }
     .hq-feedback-card.show { display: block; }
+    .hq-feedback-card.incorrect { background: var(--error-bg); border-color: var(--error-border); border-left: 5px solid var(--error); }
+    .hq-feedback-card.correct { background: var(--success-bg); border-color: var(--success-border); border-left: 5px solid var(--success); }
+
     .hq-feedback-title { font-size: 0.92rem; font-weight: 800; color: var(--black); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.01em; }
+    .hq-feedback-card.incorrect .hq-feedback-title { color: #B91C1C; }
+    .hq-feedback-card.correct .hq-feedback-title { color: #15803D; }
+
     .hq-feedback-body { font-size: 0.88rem; color: var(--gray-700); line-height: 1.6; }
+    .hq-feedback-card.incorrect .hq-feedback-body { color: #7F1D1D; }
+    .hq-feedback-card.correct .hq-feedback-body { color: #14532D; }
+
     .hq-feedback-body p { margin-bottom: 8px; }
     .hq-feedback-body p:last-child { margin-bottom: 0; }
-    .hq-feedback-body code { font-family: var(--mono); background: var(--gray-100); border: 1px solid var(--gray-200); padding: 2px 6px; border-radius: 4px; font-size: 0.83rem; font-weight: 700; color: var(--black); }
+    .hq-feedback-body code { font-family: var(--mono); background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.83rem; font-weight: 700; color: inherit; }
     .hq-feedback-body pre { background: var(--black); color: #F3F4F6; padding: 12px 16px; border-radius: 6px; font-family: var(--mono); font-size: 0.82rem; line-height: 1.5; overflow-x: auto; margin: 8px 0; }
     
-    /* Navigation Row */
-    .hq-nav-row { display: none; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 4px; }
-    .hq-nav-row.show { display: flex; }
-    .hq-nav-btn { min-width: 180px; padding: 12px 24px; font-size: 0.95rem; }
+    /* Navigation Row with PREVIOUS and NEXT Buttons */
+    .hq-nav-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 6px; }
+    .hq-nav-btn { min-width: 140px; padding: 11px 22px; font-size: 0.9rem; font-weight: 700; }
 
     /* =========================================================================
        HTML ROUND 1 COMPLETION SCREEN
@@ -296,7 +314,7 @@
           <span class="round-badge">HTML ROUND 1</span>
           <div>
             <div class="round-title" id="htmlHeaderTitle">HTML Round 1 — Interactive Learning Quiz</div>
-            <div class="round-desc" id="htmlHeaderDesc">Answer all 30 foundational questions to unlock the Student Registration Portal.</div>
+            <div class="round-desc" id="htmlHeaderDesc">Reason through all 30 foundational questions with real-time feedback.</div>
           </div>
         </div>
         <div class="round-actions" id="htmlHeaderActions">
@@ -337,7 +355,7 @@
             <!-- Dynamic Question Card rendered here -->
           </div>
 
-          <!-- NEUTRAL PEDAGOGICAL FEEDBACK CARD -->
+          <!-- FEEDBACK CARD (RED ON WRONG, GREEN ON CORRECT) -->
           <div class="hq-feedback-card" id="hqFeedbackCard">
             <div class="hq-feedback-title" id="hqFeedbackTitle">
               <!-- Dynamic title -->
@@ -347,8 +365,11 @@
             </div>
           </div>
 
-          <!-- NEXT QUESTION BUTTON ROW -->
+          <!-- PREVIOUS AND NEXT NAVIGATION BUTTON ROW -->
           <div class="hq-nav-row" id="hqNavRow">
+            <button class="btn btn-ghost hq-nav-btn" id="btnHqPrev" onclick="prevHtmlQuestion()">
+              &larr; Previous
+            </button>
             <button class="btn btn-orange hq-nav-btn" id="btnHqNext" onclick="nextHtmlQuestion()">
               Next Question &rarr;
             </button>
@@ -358,7 +379,7 @@
           <div class="hq-completion-container" id="hqCompletionContainer">
             <div class="hq-completion-icon">&#127881;</div>
             <h2 class="hq-completion-title">HTML ROUND 1 COMPLETED</h2>
-            <p class="hq-completion-subtitle">You have successfully reasoned through and mastered all 30 foundational HTML concepts.</p>
+            <p class="hq-completion-subtitle">You have successfully completed all 30 foundational HTML questions.</p>
             
             <div class="hq-stats-grid">
               <div class="hq-stat-box">
@@ -379,6 +400,9 @@
               <button class="btn btn-redo" onclick="resetHtmlQuiz()">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                 Retake Quiz
+              </button>
+              <button class="btn btn-ghost" onclick="reviewQuestionsFromStart()">
+                &larr; Review Questions
               </button>
               <button class="btn btn-orange hq-reveal-btn" onclick="revealStudentPortal()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
@@ -1836,12 +1860,11 @@ const state = {
 // HTML Round 1 Quiz State
 const htmlQuizState = {
   currentIndex: 0,
-  selectedOption: null,
-  isCorrect: false,
   totalAttempts: 0,
   additionalAttempts: 0,
-  questionAttempts: {}, // questionIndex -> count
-  portalRevealed: false
+  portalRevealed: false,
+  // Question tracking: map from qIndex -> { selected: number, isCorrect: bool, wrongTries: number[] }
+  answers: {}
 };
 
 // CSS Challenge Quiz State
@@ -1937,19 +1960,20 @@ function switchView(v) {
 }
 
 /* ===========================================================================
-   ROUND 1: 30-QUESTION INTERACTIVE HTML QUIZ LOGIC
+   ROUND 1: 30-QUESTION INTERACTIVE HTML QUIZ (WITH RED/GREEN & PREV/NEXT)
    =========================================================================== */
 function renderHtmlQuestion() {
   const qArea = document.getElementById('hqQuestionArea');
   const counterText = document.getElementById('hqCounterText');
   const progressBar = document.getElementById('hqProgressBar');
   const statsTag = document.getElementById('hqStatsTag');
-  const feedbackCard = document.getElementById('hqFeedbackCard');
-  const navRow = document.getElementById('hqNavRow');
   const completionContainer = document.getElementById('hqCompletionContainer');
   const topCard = document.getElementById('hqTopCard');
   const portalContainer = document.getElementById('htmlPortalContainer');
   const quizBody = document.getElementById('htmlQuizBody');
+  const btnPrev = document.getElementById('btnHqPrev');
+  const btnNext = document.getElementById('btnHqNext');
+  const navRow = document.getElementById('hqNavRow');
 
   if (htmlQuizState.portalRevealed) {
     quizBody.style.display = 'none';
@@ -1968,7 +1992,7 @@ function renderHtmlQuestion() {
   document.getElementById('btnInspector').style.display = 'none';
   document.getElementById('btnGoToCssFromHtml').style.display = 'none';
   document.getElementById('htmlHeaderTitle').textContent = 'HTML Round 1 — Interactive Learning Quiz';
-  document.getElementById('htmlHeaderDesc').textContent = 'Answer all 30 foundational questions to unlock the Student Registration Portal.';
+  document.getElementById('htmlHeaderDesc').textContent = 'Reason through all 30 foundational questions with real-time feedback.';
 
   const total = HTML_QUESTIONS.length;
   const idx = htmlQuizState.currentIndex;
@@ -1976,33 +2000,61 @@ function renderHtmlQuestion() {
   if (idx >= total) {
     // Show completion screen
     qArea.innerHTML = '';
-    feedbackCard.classList.remove('show');
-    navRow.classList.remove('show');
     topCard.style.display = 'none';
+    navRow.style.display = 'none';
+    document.getElementById('hqFeedbackCard').classList.remove('show');
     completionContainer.classList.add('show');
 
-    document.getElementById('hqStatCompleted').textContent = `${total} / ${total}`;
+    // Count solved
+    let solvedCount = 0;
+    for (let i = 0; i < total; i++) {
+      if (htmlQuizState.answers[i] && htmlQuizState.answers[i].isCorrect) solvedCount++;
+    }
+
+    document.getElementById('hqStatCompleted').textContent = `${solvedCount} / ${total}`;
     document.getElementById('hqStatTotalAttempts').textContent = htmlQuizState.totalAttempts;
     document.getElementById('hqStatAdditionalAttempts').textContent = htmlQuizState.additionalAttempts;
     return;
   }
 
   topCard.style.display = 'flex';
+  navRow.style.display = 'flex';
   completionContainer.classList.remove('show');
 
   const q = HTML_QUESTIONS[idx];
   counterText.textContent = `Question ${idx + 1} / ${total}`;
-  const pct = Math.max(3.33, ((idx) / total) * 100);
+  const pct = Math.max(3.33, (((idx + 1)) / total) * 100);
   progressBar.style.width = pct + '%';
   statsTag.textContent = `Attempts: ${htmlQuizState.totalAttempts}`;
+
+  // Get current answer state for this question
+  const ansState = htmlQuizState.answers[idx] || { selected: null, isCorrect: false, wrongTries: [] };
+
+  // Configure Prev & Next buttons
+  if (btnPrev) {
+    btnPrev.disabled = (idx === 0);
+  }
+  if (btnNext) {
+    if (idx === total - 1) {
+      btnNext.innerHTML = 'Complete Round 1 &rarr;';
+    } else {
+      btnNext.innerHTML = 'Next Question &rarr;';
+    }
+  }
 
   // Build Options HTML (A, B, C, D)
   const letters = ['A', 'B', 'C', 'D'];
   const optsHtml = q.options.map((optText, i) => {
-    const isSelected = htmlQuizState.selectedOption === i;
-    const selectedClass = isSelected ? 'selected' : '';
+    let stateClass = '';
+    if (ansState.wrongTries && ansState.wrongTries.includes(i)) {
+      stateClass = 'incorrect';
+    }
+    if (ansState.selected === i) {
+      stateClass = (i === q.answer) ? 'correct' : 'incorrect';
+    }
+
     return `
-      <button class="hq-option ${selectedClass}" id="hqOpt_${i}" onclick="selectHtmlOption(${i})">
+      <button class="hq-option ${stateClass}" id="hqOpt_${i}" onclick="selectHtmlOption(${i})">
         <span class="hq-opt-letter">${letters[i]}</span>
         <span class="hq-opt-text">${escapeHtml(optText)}</span>
       </button>
@@ -2019,36 +2071,42 @@ function renderHtmlQuestion() {
     </div>
   `;
 
-  // Check feedback state
-  if (htmlQuizState.selectedOption !== null) {
-    renderHtmlFeedback();
-  } else {
-    feedbackCard.classList.remove('show');
-    navRow.classList.remove('show');
-  }
+  renderHtmlFeedback();
 }
 
 function selectHtmlOption(optIdx) {
   const idx = htmlQuizState.currentIndex;
   const q = HTML_QUESTIONS[idx];
   
+  if (!htmlQuizState.answers[idx]) {
+    htmlQuizState.answers[idx] = { selected: null, isCorrect: false, wrongTries: [] };
+  }
+  const ansState = htmlQuizState.answers[idx];
+
   htmlQuizState.totalAttempts++;
-  if (!htmlQuizState.questionAttempts[idx]) {
-    htmlQuizState.questionAttempts[idx] = 1;
-  } else {
-    htmlQuizState.questionAttempts[idx]++;
+  if (ansState.selected !== null) {
     htmlQuizState.additionalAttempts++;
   }
 
-  htmlQuizState.selectedOption = optIdx;
+  ansState.selected = optIdx;
   const isCorrect = (optIdx === q.answer);
-  htmlQuizState.isCorrect = isCorrect;
+  ansState.isCorrect = isCorrect;
 
-  // Update UI selection on buttons
+  if (!isCorrect && !ansState.wrongTries.includes(optIdx)) {
+    ansState.wrongTries.push(optIdx);
+  }
+
+  // Update visual state of buttons directly
   q.options.forEach((_, i) => {
     const btn = document.getElementById('hqOpt_' + i);
     if (btn) {
-      btn.classList.toggle('selected', i === optIdx);
+      btn.classList.remove('correct', 'incorrect');
+      if (ansState.wrongTries.includes(i)) {
+        btn.classList.add('incorrect');
+      }
+      if (ansState.selected === i) {
+        btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+      }
     }
   });
 
@@ -2061,22 +2119,27 @@ function selectHtmlOption(optIdx) {
 function renderHtmlFeedback() {
   const idx = htmlQuizState.currentIndex;
   const q = HTML_QUESTIONS[idx];
-  const optIdx = htmlQuizState.selectedOption;
-  if (optIdx === null) return;
-
+  const ansState = htmlQuizState.answers[idx];
   const feedbackCard = document.getElementById('hqFeedbackCard');
   const feedbackTitle = document.getElementById('hqFeedbackTitle');
   const feedbackBody = document.getElementById('hqFeedbackBody');
-  const navRow = document.getElementById('hqNavRow');
-  const btnNext = document.getElementById('btnHqNext');
+
+  if (!ansState || ansState.selected === null) {
+    feedbackCard.classList.remove('show', 'correct', 'incorrect');
+    return;
+  }
 
   feedbackCard.classList.add('show');
+  const optIdx = ansState.selected;
+  const letters = ['A', 'B', 'C', 'D'];
 
-  if (htmlQuizState.isCorrect) {
-    // CORRECT SELECTION — Display concept explanation without green colors or "Correct" labels
+  if (ansState.isCorrect) {
+    // CORRECT SELECTION — Display in GREEN with Concept Explanation
+    feedbackCard.classList.remove('incorrect');
+    feedbackCard.classList.add('correct');
     feedbackTitle.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--orange);"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-      Concept Explanation
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" style="color:var(--success);"><path d="M20 6L9 17l-5-5"/></svg>
+      Correct! Option ${letters[optIdx]} &nbsp;—&nbsp; Concept Explanation
     `;
 
     let formattedExplanation = escapeHtml(q.explanation).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
@@ -2088,52 +2151,57 @@ function renderHtmlFeedback() {
     feedbackBody.innerHTML = `
       <p>${formattedExplanation}</p>
     `;
-
-    // Enable / Show Next Question button
-    navRow.classList.add('show');
-    if (idx === HTML_QUESTIONS.length - 1) {
-      btnNext.innerHTML = 'Complete Round 1 &rarr;';
-    } else {
-      btnNext.innerHTML = 'Next Question &rarr;';
-    }
   } else {
-    // WRONG SELECTION — Neutral explanation of why that selected option is not right without revealing the answer
+    // WRONG SELECTION — Display in RED with why this option is not right
+    feedbackCard.classList.remove('correct');
+    feedbackCard.classList.add('incorrect');
     feedbackTitle.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--orange);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Think about what this HTML element is responsible for.
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" style="color:var(--error);"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      Incorrect — You selected Option ${letters[optIdx]}
     `;
 
     const wrongText = q.wrongExplanations[optIdx] || "Consider how standard HTML elements divide responsibilities between content, markup, styling, and server execution.";
     feedbackBody.innerHTML = `
+      <p style="margin-bottom:6px;"><strong>Why this choice is incorrect:</strong></p>
       <p>${escapeHtml(wrongText)}</p>
     `;
-
-    // Hide Next Question button on incorrect attempt
-    navRow.classList.remove('show');
   }
 }
 
 function nextHtmlQuestion() {
-  if (!htmlQuizState.isCorrect) return;
+  if (htmlQuizState.currentIndex < HTML_QUESTIONS.length - 1) {
+    htmlQuizState.currentIndex++;
+    renderHtmlQuestion();
+  } else {
+    // Reached end of quiz
+    htmlQuizState.currentIndex = HTML_QUESTIONS.length;
+    renderHtmlQuestion();
+  }
 
-  htmlQuizState.currentIndex++;
-  htmlQuizState.selectedOption = null;
-  htmlQuizState.isCorrect = false;
-
-  renderHtmlQuestion();
-
-  // Smooth scroll back to top of quiz body
   const quizBody = document.getElementById('htmlQuizBody');
   if (quizBody) quizBody.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function prevHtmlQuestion() {
+  if (htmlQuizState.currentIndex > 0) {
+    htmlQuizState.currentIndex--;
+    renderHtmlQuestion();
+  }
+
+  const quizBody = document.getElementById('htmlQuizBody');
+  if (quizBody) quizBody.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function reviewQuestionsFromStart() {
+  htmlQuizState.currentIndex = 0;
+  renderHtmlQuestion();
+}
+
 function resetHtmlQuiz() {
   htmlQuizState.currentIndex = 0;
-  htmlQuizState.selectedOption = null;
-  htmlQuizState.isCorrect = false;
   htmlQuizState.totalAttempts = 0;
   htmlQuizState.additionalAttempts = 0;
-  htmlQuizState.questionAttempts = {};
+  htmlQuizState.answers = {};
   htmlQuizState.portalRevealed = false;
 
   renderHtmlQuestion();
@@ -2148,6 +2216,7 @@ function revealStudentPortal() {
 
 function backToHtmlQuiz() {
   htmlQuizState.portalRevealed = false;
+  htmlQuizState.currentIndex = 0;
   renderHtmlQuestion();
 }
 
