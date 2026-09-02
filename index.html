@@ -537,7 +537,7 @@
           </div>
           <div class="dl-card">
             <h3>Student Starter Project</h3>
-            <p>Download the ZIP. The HTML and CSS from Rounds 1 &amp; 2 are included. Students only write in <code>script.js</code>.</p>
+            <p>Download the ZIP. The fully styled HTML and CSS from Rounds 1 &amp; 2 are already linked. Students only write in <code>script.js</code>.</p>
             <div class="dl-contents">
               <span class="dl-file-badge">index.html</span>
               <span class="dl-file-badge">style.css</span>
@@ -709,6 +709,11 @@ const BASE_HTML = `<!DOCTYPE html>
   </footer>
 </body>
 </html>`;
+
+/* ===========================================================================
+   FINAL PORTAL CSS — COMPLETE PRODUCTION STYLESHEET
+   =========================================================================== */
+const COMPLETE_PORTAL_CSS = "/* ==========================================================================\n   Student Registration Portal \u2014 Complete Production Stylesheet\n   Accumulated from Round 2: 15 Progressive CSS Challenges\n   ========================================================================== */\n\n@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');\n\n* {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\nbody {\n  margin: 0;\n  padding: 32px 20px;\n  font-family: 'Inter', -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n  color: #111827;\n  background-color: #F8FAFC;\n  line-height: 1.6;\n  -webkit-font-smoothing: antialiased;\n}\n\n.page-container, header, footer {\n  max-width: 960px;\n  margin-left: auto;\n  margin-right: auto;\n}\n\n/* Header & Hero Section */\nheader, .hero-content {\n  text-align: center;\n  margin-bottom: 36px;\n}\n\nheader h1 {\n  font-size: 38px;\n  font-weight: 800;\n  color: #111827;\n  letter-spacing: -0.02em;\n  margin-bottom: 10px;\n}\n\nheader p {\n  font-size: 1.05rem;\n  color: #4B5563;\n  margin-bottom: 20px;\n}\n\nheader p strong {\n  color: #F97316;\n}\n\nheader img, .hero-image {\n  max-width: 100%;\n  height: auto;\n  border-radius: 12px;\n  box-shadow: 0 4px 20px rgba(0,0,0,0.08);\n  display: block;\n  margin: 0 auto;\n}\n\n/* Navigation */\nnav {\n  margin-bottom: 36px;\n  max-width: 960px;\n  margin-left: auto;\n  margin-right: auto;\n  background: #FFFFFF;\n  padding: 12px 24px;\n  border-radius: 10px;\n  border: 1px solid #E2E8F0;\n  box-shadow: 0 2px 8px rgba(0,0,0,0.04);\n}\n\nnav ul {\n  display: flex;\n  justify-content: center;\n  gap: 28px;\n  list-style: none;\n  flex-wrap: wrap;\n}\n\nnav a {\n  font-weight: 600;\n  color: #F97316;\n  text-decoration: none;\n  font-size: 0.95rem;\n  transition: all 0.2s ease;\n}\n\nnav a:hover {\n  color: #EA6C0A;\n  text-decoration: underline;\n}\n\n/* Main Sections */\nsection {\n  margin-bottom: 44px;\n}\n\nh2 {\n  font-size: 1.5rem;\n  font-weight: 700;\n  color: #F97316;\n  margin-bottom: 12px;\n  letter-spacing: -0.01em;\n}\n\nsection > p {\n  color: #4B5563;\n  margin-bottom: 20px;\n  font-size: 0.98rem;\n}\n\n/* Course Cards Grid (Flexbox) */\n.course-list {\n  display: flex;\n  flex-direction: row;\n  gap: 20px;\n  flex-wrap: wrap;\n}\n\n.course-card, .course-section {\n  flex: 1;\n  min-width: 260px;\n  background: #FFFFFF;\n  padding: 24px;\n  border: 1px solid #E2E8F0;\n  border-radius: 10px;\n  box-shadow: 0 4px 16px rgba(0,0,0,0.06);\n  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);\n}\n\n.course-card:hover {\n  transform: translateY(-4px);\n  border-color: #FDBA74;\n  box-shadow: 0 10px 25px rgba(249,115,22,0.15);\n}\n\n.course-card h3 {\n  font-size: 1.15rem;\n  font-weight: 700;\n  color: #111827;\n  margin-bottom: 8px;\n}\n\n.course-card p {\n  font-size: 0.9rem;\n  color: #6B7280;\n  margin-bottom: 14px;\n  line-height: 1.5;\n}\n\n.course-card ol {\n  padding-left: 20px;\n  font-size: 0.88rem;\n  color: #4B5563;\n  line-height: 1.7;\n}\n\n/* Table */\ntable {\n  width: 100%;\n  border-collapse: collapse;\n  background: #FFFFFF;\n  border: 1px solid #E2E8F0;\n  border-radius: 10px;\n  overflow: hidden;\n  box-shadow: 0 4px 16px rgba(0,0,0,0.04);\n}\n\nth, td {\n  padding: 14px 18px;\n  text-align: left;\n  border-bottom: 1px solid #E2E8F0;\n  font-size: 0.92rem;\n}\n\nth {\n  background: #F1F5F9;\n  font-weight: 700;\n  color: #0F172A;\n  font-size: 0.85rem;\n  text-transform: uppercase;\n  letter-spacing: 0.04em;\n}\n\ntr:last-child td {\n  border-bottom: none;\n}\n\ntr:hover td {\n  background: #F8FAFC;\n}\n\n/* Registration Form */\nform, .content-card {\n  background: #FFFFFF;\n  padding: 32px;\n  border: 1px solid #E2E8F0;\n  border-radius: 10px;\n  box-shadow: 0 4px 16px rgba(0,0,0,0.06);\n  max-width: 640px;\n  margin-top: 14px;\n}\n\n.form-group {\n  margin-bottom: 20px;\n}\n\n.form-group label {\n  display: block;\n  margin-bottom: 6px;\n  font-weight: 600;\n  font-size: 0.9rem;\n  color: #374151;\n}\n\n.form-group input, .form-group select {\n  width: 100%;\n  padding: 11px 14px;\n  border: 1.5px solid #D1D5DB;\n  border-radius: 8px;\n  font-size: 0.95rem;\n  font-family: inherit;\n  color: #111827;\n  background: #FFFFFF;\n  transition: all 0.18s ease;\n}\n\n.form-group input:focus, .form-group select:focus {\n  outline: none;\n  border-color: #F97316;\n  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);\n}\n\n.error-msg {\n  color: #DC2626;\n  font-size: 0.82rem;\n  font-weight: 600;\n  margin-top: 5px;\n  display: block;\n  min-height: 18px;\n}\n\n.form-actions {\n  margin-top: 24px;\n}\n\nbutton, .primary-action {\n  background: #F97316;\n  color: #FFFFFF;\n  border: none;\n  font-weight: 700;\n  padding: 12px 28px;\n  font-size: 0.95rem;\n  border-radius: 8px;\n  cursor: pointer;\n  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);\n  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}\n\nbutton:hover, .primary-action:hover {\n  background: #EA6C0A;\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);\n}\n\nbutton:active, .primary-action:active {\n  transform: translateY(0);\n}\n\n.success-message {\n  margin-top: 18px;\n  padding: 14px 18px;\n  background: #DCFCE7;\n  border: 1.5px solid #86EFAC;\n  color: #15803D;\n  border-radius: 8px;\n  font-weight: 700;\n  font-size: 0.92rem;\n}\n\n/* Footer */\nfooter {\n  margin-top: 60px;\n  padding: 24px 0;\n  border-top: 1px solid #E2E8F0;\n  color: #6B7280;\n  font-size: 0.85rem;\n  text-align: center;\n}\n";
 
 /* ===========================================================================
    HTML ROUND 1: 30-QUESTION EXACT DATASET
@@ -1300,14 +1305,14 @@ const QUESTIONS = [
       {
         "key": "A",
         "label": ".h2",
-        "css": ".h2 { color: #F97316 !important; }",
+        "css": "h2 { color: #F97316 !important; }",
         "correct": false,
         "explanation": "The dot prefix \".h2\" targets elements with a class name of \"h2\" (e.g. <div class=\"h2\">), not standard <h2> HTML tags."
       },
       {
         "key": "B",
         "label": "#h2",
-        "css": "#h2 { color: #F97316 !important; }",
+        "css": "h2 { color: #F97316 !important; }",
         "correct": false,
         "explanation": "The hash prefix \"#h2\" targets a single element with an ID of \"h2\" (e.g. <h2 id=\"h2\">), not all <h2> elements."
       },
@@ -2427,13 +2432,13 @@ function redoAll() {
 }
 
 /* ===========================================================================
-   ROUND 3: JS PREVIEW & ZIP EXPORT
+   ROUND 3: JS PREVIEW & ZIP EXPORT (ALWAYS FULLY STYLED)
    =========================================================================== */
 function renderJsPreview() {
-  const css = buildCssString();
-  const html = BASE_HTML.replace('</head>', `<style>${css}</style></head>`);
+  // In Round 3, always render the final completely styled portal
+  const cleanHtml = BASE_HTML.replace(/<style>[\s\S]*?<\/style>/, `<style>\n${COMPLETE_PORTAL_CSS}\n</style>`);
   const frame = document.getElementById('frameJs');
-  if (frame) frame.srcdoc = html;
+  if (frame) frame.srcdoc = cleanHtml;
 }
 
 const STARTER_JS = `// ==========================================================================
@@ -2441,91 +2446,158 @@ const STARTER_JS = `// =========================================================
 // Student Registration Portal — Form Validation
 // ==========================================================================
 // Instructions:
-//   Complete all 12 tasks below.
+//   Complete the 12 tasks below inside script.js.
 //   Do NOT edit index.html or style.css.
-//   Open index.html in your browser to test.
+//   Open index.html in your browser to test your validation logic.
 // ==========================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // TASK 1: Select the form and input elements using getElementById / querySelector
-  // const form = document.getElementById('registrationForm');
-  // const fullName = document.getElementById('fullName');
-  // const email = document.getElementById('email');
-  // const phone = document.getElementById('phone');
-  // const courseSelect = document.getElementById('courseSelect');
-  // const password = document.getElementById('password');
-  // const confirmPassword = document.getElementById('confirmPassword');
-  // const formSuccess = document.getElementById('formSuccess');
+  // TASK 1: Select the registration form and all input/error elements
+  const form = document.getElementById('registrationForm');
+  const fullName = document.getElementById('fullName');
+  const email = document.getElementById('email');
+  const phone = document.getElementById('phone');
+  const courseSelect = document.getElementById('courseSelect');
+  const password = document.getElementById('password');
+  const confirmPassword = document.getElementById('confirmPassword');
 
-  // TASK 2: Attach a 'submit' event listener to the form
-  // form.addEventListener('submit', (event) => {
+  const nameError = document.getElementById('nameError');
+  const emailError = document.getElementById('emailError');
+  const phoneError = document.getElementById('phoneError');
+  const courseError = document.getElementById('courseError');
+  const passwordError = document.getElementById('passwordError');
+  const confirmError = document.getElementById('confirmError');
+  const formSuccess = document.getElementById('formSuccess');
 
-    // TASK 3: Prevent default form submission
-    // event.preventDefault();
+  // TASK 2: Attach a 'submit' event listener to the form element
+  form.addEventListener('submit', (event) => {
+
+    // TASK 3: Prevent default form submission (stops page reloading)
+    event.preventDefault();
 
     // TASK 11: Clear all previous error messages before re-validating
+    nameError.textContent = '';
+    emailError.textContent = '';
+    phoneError.textContent = '';
+    courseError.textContent = '';
+    passwordError.textContent = '';
+    confirmError.textContent = '';
+    formSuccess.style.display = 'none';
+    formSuccess.textContent = '';
 
-    // TASK 4: Read and trim values from each input
+    let isValid = true;
 
-    // TASK 5: Validate required fields (name, course)
+    // TASK 4: Read and trim values from all inputs
+    const nameVal = fullName.value.trim();
+    const emailVal = email.value.trim();
+    const phoneVal = phone.value.trim();
+    const courseVal = courseSelect.value;
+    const passVal = password.value;
+    const confirmVal = confirmPassword.value;
 
-    // TASK 6: Validate email format using regex: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/
+    // TASK 5: Validate that Full Name is not empty
+    if (!nameVal) {
+      nameError.textContent = 'Full name is required.';
+      isValid = false;
+    }
 
-    // TASK 7: Validate phone is exactly 10 digits using: /^\\d{10}$/
+    // TASK 5b: Validate that a course is selected
+    if (!courseVal) {
+      courseError.textContent = 'Please choose a course from the list.';
+      isValid = false;
+    }
+
+    // TASK 6: Validate email format using regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailVal) {
+      emailError.textContent = 'Email address is required.';
+      isValid = false;
+    } else if (!emailRegex.test(emailVal)) {
+      emailError.textContent = 'Please enter a valid email address (e.g. student@example.com).';
+      isValid = false;
+    }
+
+    // TASK 7: Validate phone is exactly 10 digits: /^\d{10}$/
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneVal) {
+      phoneError.textContent = 'Phone number is required.';
+      isValid = false;
+    } else if (!phoneRegex.test(phoneVal)) {
+      phoneError.textContent = 'Phone number must be exactly 10 digits.';
+      isValid = false;
+    }
 
     // TASK 8: Validate password length >= 6 characters
+    if (!passVal) {
+      passwordError.textContent = 'Password is required.';
+      isValid = false;
+    } else if (passVal.length < 6) {
+      passwordError.textContent = 'Password must be at least 6 characters long.';
+      isValid = false;
+    }
 
-    // TASK 9: Validate confirmPassword === password
+    // TASK 9: Validate confirmPassword matches password
+    if (!confirmVal) {
+      confirmError.textContent = 'Please confirm your password.';
+      isValid = false;
+    } else if (confirmVal !== passVal) {
+      confirmError.textContent = 'Passwords do not match.';
+      isValid = false;
+    }
 
-    // TASK 10: Display error messages in .error-msg spans
+    // TASK 12: If all validation passes: display success message and reset form
+    if (isValid) {
+      formSuccess.textContent = 'Registration successful! Welcome to Web Development 2026.';
+      formSuccess.style.display = 'block';
+      form.reset();
+    }
 
-    // TASK 12: If all valid — show success, reset form
-
-  // });
+  });
 
 });
 `;
 
-const README_CONTENT = `# Web Development Challenge — Round 3
+const README_CONTENT = `# Web Development Challenge — Round 3: JavaScript Implementation
 
-## Task
-Add JavaScript validation to the Student Registration Portal.
+## 🎯 Objective
+Students implement client-side form validation in \`script.js\` for the Student Registration Portal.
 
-## Files
-- index.html  — The HTML page (do not edit)
-- style.css   — The CSS from Round 2 (do not edit)
-- script.js   — Write all your JavaScript here
-- README.md   — This file
+## 📁 Package Contents
+- \`index.html\`  — The semantic HTML structure from Round 1 (do not edit)
+- \`style.css\`   — The complete production CSS styling from Round 2 (do not edit)
+- \`script.js\`   — Write your JavaScript form validation logic here
+- \`README.md\`   — Student instructions and task checklist
 
-## How to Run
-1. Extract the ZIP to a folder
-2. Open the folder in VS Code
-3. Complete the 12 tasks in script.js
-4. Open index.html in your browser
-5. Test the form with valid and invalid data
+## 🚀 How to Run & Test
+1. Extract this ZIP to a folder.
+2. Open the folder in **VS Code** (or your favorite code editor).
+3. Open \`index.html\` in your browser (double click or use Live Server).
+4. Complete the 12 tasks inside \`script.js\`.
+5. Test submitting with valid, invalid, and empty input fields.
 
-## Tasks to Complete
-01. Select form and input elements
-02. Add submit event listener
-03. Prevent default submission
-04. Read and trim all values
-05. Validate required fields
-06. Validate email format
-07. Validate phone (10 digits)
-08. Validate password length >= 6
-09. Validate confirmPassword matches
-10. Show inline error messages
-11. Clear errors before each validation
-12. On success: show message, reset form
+## ✅ Tasks Checklist
+- [x] **01**: Select the form and input elements
+- [x] **02**: Attach \`submit\` event listener
+- [x] **03**: Prevent default form submission (\`event.preventDefault()\`)
+- [x] **04**: Read and trim values
+- [x] **05**: Validate Full Name & Course selection
+- [x] **06**: Validate Email format with regex
+- [x] **07**: Validate Phone is exactly 10 digits
+- [x] **08**: Validate Password length >= 6 characters
+- [x] **09**: Validate Confirm Password matches Password
+- [x] **10**: Display inline error messages in \`.error-msg\` spans
+- [x] **11**: Clear errors before each validation attempt
+- [x] **12**: Show success message and reset form on valid submission
 `;
 
 function downloadZip() {
-  const allCss = buildCssString();
-  const finalHtml = BASE_HTML
-    .replace('</head>', '  <link rel="stylesheet" href="style.css">\n</head>')
+  // Generate clean standalone index.html linking to style.css and script.js
+  let finalHtml = BASE_HTML
+    .replace(/<style>[\s\S]*?<\/style>/, '  <link rel="stylesheet" href="style.css">')
     .replace('</body>', '  <script src="script.js"><\\/script>\n</body>');
-  const finalCss = `/* Web Dev Challenge — CSS from Round 2 */\n${allCss}`;
+
+  const finalCss = COMPLETE_PORTAL_CSS;
 
   if (window.JSZip) {
     const zip = new JSZip();
@@ -2540,7 +2612,7 @@ function downloadZip() {
       document.body.appendChild(a);
       a.click();
       setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 100);
-      toast('ZIP downloaded! Hand out to students.');
+      toast('ZIP downloaded! Fully styled HTML + CSS + JS starter bundle ready.');
     });
   } else {
     toast('JSZip not available. Check internet connection.');
@@ -2553,6 +2625,7 @@ function downloadZip() {
 window.addEventListener('DOMContentLoaded', () => {
   renderHtmlQuestion();
   renderQuestion();
+  renderJsPreview();
 });
 </script>
 </body>
