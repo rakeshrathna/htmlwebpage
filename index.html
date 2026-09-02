@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web Dev Arena — Conductor HUD</title>
+  <title>Web Dev Arena — Conductor HUD &amp; Interactive Learning Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -15,10 +15,12 @@
       --orange-dark:   #EA6C0A;
       --orange-light:  #FFF7ED;
       --orange-border: #FDBA74;
+      --orange-glow:   rgba(249, 115, 22, 0.18);
       --black:         #111111;
       --text-primary:  #111111;
-      --text-secondary:#555555;
+      --text-secondary:#4B5563;
       --gray-700:      #374151;
+      --gray-600:      #4B5563;
       --gray-500:      #6B7280;
       --gray-400:      #9CA3AF;
       --gray-300:      #D1D5DB;
@@ -33,58 +35,145 @@
       --error-bg:      #FEE2E2;
       --error-border:  #FCA5A5;
       --border:        #E5E7EB;
-      --radius:        6px;
-      --font: 'Inter', system-ui, sans-serif;
+      --radius:        8px;
+      --radius-lg:     12px;
+      --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --mono: 'JetBrains Mono', monospace;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
     }
-    html, body { height: 100%; font-family: var(--font); color: var(--black); background: var(--white); -webkit-font-smoothing: antialiased; }
+    html, body { height: 100%; font-family: var(--font); color: var(--black); background: var(--gray-50); -webkit-font-smoothing: antialiased; }
     button { cursor: pointer; font-family: var(--font); }
     input, select, textarea { font-family: var(--font); }
-    #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-    /* NAV */
-    .nav { flex-shrink: 0; background: var(--white); border-bottom: 2px solid var(--border); display: flex; align-items: center; padding: 0 28px; height: 56px; }
-    .nav-brand { font-size: 1rem; font-weight: 700; color: var(--black); margin-right: 40px; letter-spacing: -0.02em; }
+    #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: var(--white); }
+
+    /* =========================================================================
+       NAVIGATION BAR
+       ========================================================================= */
+    .nav { flex-shrink: 0; background: var(--white); border-bottom: 2px solid var(--border); display: flex; align-items: center; padding: 0 28px; height: 58px; z-index: 50; }
+    .nav-brand { font-size: 1.05rem; font-weight: 800; color: var(--black); margin-right: 36px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 6px; }
     .nav-brand span { color: var(--orange); }
-    .nav-tabs { display: flex; align-items: stretch; height: 100%; gap: 2px; }
-    .nav-tab { display: flex; align-items: center; gap: 8px; padding: 0 20px; border: none; background: transparent; font-size: 0.875rem; font-weight: 500; color: var(--gray-500); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.15s; }
+    .nav-tabs { display: flex; align-items: stretch; height: 100%; gap: 4px; }
+    .nav-tab { display: flex; align-items: center; gap: 8px; padding: 0 20px; border: none; background: transparent; font-size: 0.875rem; font-weight: 600; color: var(--gray-500); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s ease; }
     .nav-tab:hover { color: var(--black); }
-    .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); font-weight: 600; }
-    .tab-num { width: 20px; height: 20px; border-radius: 50%; background: var(--gray-200); color: var(--gray-700); font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-    .nav-tab.active .tab-num { background: var(--orange); color: white; }
-    /* VIEWS */
+    .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); font-weight: 700; }
+    .tab-num { width: 22px; height: 22px; border-radius: 6px; background: var(--gray-100); color: var(--gray-700); font-size: 0.74rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 1px solid var(--gray-200); }
+    .nav-tab.active .tab-num { background: var(--orange); color: white; border-color: var(--orange-dark); }
+
+    /* =========================================================================
+       VIEWS CONTAINER
+       ========================================================================= */
     .views { flex: 1; overflow: hidden; position: relative; }
     .view { display: none; position: absolute; inset: 0; }
     .view.active { display: flex; flex-direction: column; }
-    /* ROUND HEADER */
+
+    /* =========================================================================
+       COMMON ROUND HEADER & BUTTONS
+       ========================================================================= */
     .round-header { flex-shrink: 0; background: var(--white); border-bottom: 1px solid var(--border); padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
     .round-label { display: flex; align-items: center; gap: 14px; }
-    .round-badge { background: var(--orange); color: white; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
-    .round-title { font-size: 1rem; font-weight: 700; color: var(--black); }
+    .round-badge { background: var(--orange); color: white; font-size: 0.7rem; font-weight: 800; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .round-title { font-size: 1.05rem; font-weight: 800; color: var(--black); letter-spacing: -0.01em; }
     .round-desc { font-size: 0.82rem; color: var(--gray-500); margin-top: 1px; }
     .round-actions { display: flex; align-items: center; gap: 10px; }
-    /* BUTTONS */
-    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 7px 16px; border-radius: var(--radius); font-size: 0.83rem; font-weight: 600; border: none; transition: all 0.15s; white-space: nowrap; }
-    .btn-orange { background: var(--orange); color: white; }
-    .btn-orange:hover { background: var(--orange-dark); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 18px; border-radius: var(--radius); font-size: 0.85rem; font-weight: 700; border: none; transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap; user-select: none; }
+    .btn-orange { background: var(--orange); color: white; box-shadow: 0 2px 6px rgba(249, 115, 22, 0.25); }
+    .btn-orange:hover:not(:disabled) { background: var(--orange-dark); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(249, 115, 22, 0.35); }
+    .btn-orange:active:not(:disabled) { transform: translateY(0); }
+    .btn-orange:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
     .btn-ghost { background: transparent; color: var(--gray-700); border: 1px solid var(--border); }
     .btn-ghost:hover { background: var(--gray-100); border-color: var(--gray-300); }
     .btn-ghost.is-on { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
-    .btn-redo { background: white; color: var(--error); border: 1px solid var(--error-border); padding: 7px 16px; font-weight: 700; }
-    .btn-redo:hover { background: var(--error-bg); }
-    /* VIEW 1: HTML */
-    .html-view-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .btn-redo { background: white; color: var(--gray-700); border: 1px solid var(--border); padding: 8px 16px; font-weight: 700; }
+    .btn-redo:hover { background: var(--gray-100); border-color: var(--gray-400); }
+
+    /* =========================================================================
+       ROUND 1: HTML INTERACTIVE LEARNING QUIZ (30 QUESTIONS)
+       ========================================================================= */
+    .html-quiz-body { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--gray-50); padding: 24px 20px 40px; }
+    .html-quiz-wrapper { width: 100%; max-width: 820px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+    /* Header & Progress */
+    .hq-top-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 22px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 12px; }
+    .hq-meta-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .hq-title-group { display: flex; align-items: center; gap: 10px; }
+    .hq-badge { background: var(--orange-light); color: var(--orange-dark); border: 1px solid var(--orange-border); font-size: 0.72rem; font-weight: 800; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .hq-counter { font-size: 0.95rem; font-weight: 800; color: var(--black); font-family: var(--font); }
+    .hq-stats-tag { font-size: 0.78rem; font-weight: 600; color: var(--gray-500); background: var(--gray-100); padding: 3px 10px; border-radius: 99px; border: 1px solid var(--gray-200); }
+
+    /* Visual Progress Bar */
+    .hq-progress-container { width: 100%; height: 8px; background: var(--gray-200); border-radius: 99px; overflow: hidden; position: relative; }
+    .hq-progress-bar { height: 100%; background: linear-gradient(90deg, #F97316 0%, #EA6C0A 100%); width: 3.33%; border-radius: 99px; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+    /* Question Card */
+    .hq-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 26px; box-shadow: var(--shadow-sm); }
+    .hq-topic-badge { display: inline-flex; align-items: center; background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+    .hq-question-text { font-size: 1.15rem; font-weight: 700; color: var(--black); line-height: 1.45; margin-bottom: 20px; }
+    .hq-question-text code { font-family: var(--mono); background: var(--gray-100); border: 1px solid var(--gray-200); padding: 2px 7px; border-radius: 4px; font-size: 1rem; color: var(--orange-dark); font-weight: 700; }
+
+    /* 4 Large Clickable Options */
+    .hq-options { display: flex; flex-direction: column; gap: 10px; }
+    .hq-option { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); background: var(--white); width: 100%; text-align: left; position: relative; }
+    .hq-option:hover:not(:disabled) { border-color: var(--orange); background: var(--orange-light); transform: translateY(-1px); box-shadow: 0 2px 8px var(--orange-glow); }
+    .hq-option.selected { border-color: var(--orange-dark); background: var(--orange-light); box-shadow: 0 0 0 1px var(--orange-dark); }
+    .hq-option:disabled { cursor: default; }
+    
+    .hq-opt-letter { width: 30px; height: 30px; border-radius: 6px; border: 1.5px solid var(--border); background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; color: var(--gray-700); flex-shrink: 0; transition: all 0.15s ease; }
+    .hq-option:hover:not(:disabled) .hq-opt-letter { border-color: var(--orange); background: var(--white); color: var(--orange-dark); }
+    .hq-option.selected .hq-opt-letter { background: var(--orange); border-color: var(--orange-dark); color: var(--white); }
+    .hq-opt-text { font-size: 0.92rem; font-weight: 600; color: var(--gray-700); line-height: 1.45; word-break: break-word; font-family: var(--font); flex: 1; }
+    .hq-opt-text code { font-family: var(--mono); font-size: 0.88rem; background: var(--gray-100); border: 1px solid var(--gray-200); padding: 1px 6px; border-radius: 4px; font-weight: 700; color: var(--black); }
+
+    /* Neutral Pedagogical Explanation Card (NO RED / NO GREEN / NO CORRECT/WRONG LABELS) */
+    .hq-feedback-card { display: none; background: var(--white); border: 1.5px solid var(--border); border-left: 5px solid var(--orange); border-radius: var(--radius-lg); padding: 20px 22px; box-shadow: var(--shadow-sm); animation: fadeIn 0.2s ease; }
+    .hq-feedback-card.show { display: block; }
+    .hq-feedback-title { font-size: 0.92rem; font-weight: 800; color: var(--black); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.01em; }
+    .hq-feedback-body { font-size: 0.88rem; color: var(--gray-700); line-height: 1.6; }
+    .hq-feedback-body p { margin-bottom: 8px; }
+    .hq-feedback-body p:last-child { margin-bottom: 0; }
+    .hq-feedback-body code { font-family: var(--mono); background: var(--gray-100); border: 1px solid var(--gray-200); padding: 2px 6px; border-radius: 4px; font-size: 0.83rem; font-weight: 700; color: var(--black); }
+    .hq-feedback-body pre { background: var(--black); color: #F3F4F6; padding: 12px 16px; border-radius: 6px; font-family: var(--mono); font-size: 0.82rem; line-height: 1.5; overflow-x: auto; margin: 8px 0; }
+    
+    /* Navigation Row */
+    .hq-nav-row { display: none; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 4px; }
+    .hq-nav-row.show { display: flex; }
+    .hq-nav-btn { min-width: 180px; padding: 12px 24px; font-size: 0.95rem; }
+
+    /* =========================================================================
+       HTML ROUND 1 COMPLETION SCREEN
+       ========================================================================= */
+    .hq-completion-container { display: none; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 40px 32px; box-shadow: var(--shadow-md); text-align: center; animation: fadeIn 0.3s ease; }
+    .hq-completion-container.show { display: block; }
+    .hq-completion-icon { font-size: 3rem; margin-bottom: 12px; }
+    .hq-completion-title { font-size: 1.4rem; font-weight: 800; color: var(--black); letter-spacing: -0.02em; margin-bottom: 6px; }
+    .hq-completion-subtitle { font-size: 0.9rem; color: var(--gray-500); margin-bottom: 24px; }
+    .hq-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; max-width: 620px; margin-left: auto; margin-right: auto; }
+    .hq-stat-box { background: var(--gray-50); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 12px; }
+    .hq-stat-val { font-size: 1.35rem; font-weight: 800; color: var(--orange-dark); font-family: var(--mono); margin-bottom: 2px; }
+    .hq-stat-lbl { font-size: 0.75rem; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; }
+    .hq-reveal-btn { padding: 14px 32px; font-size: 1rem; border-radius: var(--radius); font-weight: 800; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4); }
+
+    /* =========================================================================
+       PORTAL PREVIEW (REVEALED AFTER QUIZ)
+       ========================================================================= */
+    .html-portal-container { display: none; flex: 1; flex-direction: column; overflow: hidden; background: var(--white); }
+    .html-portal-container.show { display: flex; }
     .browser-chrome { flex-shrink: 0; background: #F9FAFB; border-bottom: 1px solid var(--border); padding: 6px 16px; display: flex; align-items: center; gap: 12px; }
     .browser-dots { display: flex; gap: 5px; }
     .browser-dot { width: 10px; height: 10px; border-radius: 50%; }
     .browser-dot.r { background: #EF4444; } .browser-dot.y { background: #F59E0B; } .browser-dot.g { background: #22C55E; }
     .browser-url { flex: 1; background: white; border: 1px solid var(--border); border-radius: 4px; padding: 4px 12px; font-size: 0.78rem; color: var(--gray-500); font-family: var(--mono); }
     .preview-frame { flex: 1; border: none; background: white; width: 100%; }
-    /* VIEW 2: CSS CHALLENGE */
+
+    /* =========================================================================
+       ROUND 2: CSS CHALLENGE
+       ========================================================================= */
     .css-body { flex: 1; display: flex; overflow: hidden; }
     .css-controls { width: 440px; flex-shrink: 0; display: flex; flex-direction: column; border-right: 1px solid var(--border); background: var(--white); overflow: hidden; }
     @media (max-width: 1100px) { .css-controls { width: 380px; } }
     .css-controls-scroll { flex: 1; overflow-y: auto; padding: 20px 22px 28px; }
-    /* Quiz mode */
     .q-header-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
     .q-badge { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--orange-dark); background: var(--orange-light); border: 1px solid var(--orange-border); padding: 3px 8px; border-radius: 4px; }
     .q-counter { font-size: 0.82rem; font-weight: 600; color: var(--gray-500); }
@@ -126,50 +215,21 @@
     .q-completion-card h3 { font-size: 1.15rem; font-weight: 700; color: var(--black); margin-bottom: 6px; }
     .q-completion-score { font-size: 1.25rem; font-weight: 700; color: var(--orange); margin: 10px 0; font-family: var(--mono); }
     .q-completion-card p { color: var(--gray-500); font-size: 0.85rem; margin-bottom: 14px; }
-    /* Preview panel & Full Screen */
+    
     .css-preview { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .preview-bar { flex-shrink: 0; background: #F9FAFB; border-bottom: 1px solid var(--border); padding: 6px 16px; display: flex; align-items: center; gap: 12px; }
     .preview-live-badge { font-size: 0.72rem; font-weight: 700; color: var(--success); margin-left: auto; display: flex; align-items: center; gap: 4px; }
     .preview-live-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
-    .btn-fullscreen {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: var(--gray-700);
-      background: white;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: all 0.15s;
-      flex-shrink: 0;
-    }
-    .btn-fullscreen:hover {
-      background: var(--orange-light);
-      border-color: var(--orange);
-      color: var(--orange-dark);
-    }
-    .is-fullscreen {
-      position: fixed !important;
-      inset: 0 !important;
-      z-index: 99999 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      background: white !important;
-      display: flex !important;
-      flex-direction: column !important;
-    }
-    .is-fullscreen .btn-fullscreen {
-      background: var(--orange);
-      color: white;
-      border-color: var(--orange-dark);
-    }
-    .is-fullscreen .btn-fullscreen:hover {
-      background: var(--orange-dark);
-    }
-    /* VIEW 3: JS */
+    
+    .btn-fullscreen { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 4px; font-size: 0.74rem; font-weight: 600; color: var(--gray-700); background: white; border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; flex-shrink: 0; }
+    .btn-fullscreen:hover { background: var(--orange-light); border-color: var(--orange); color: var(--orange-dark); }
+    .is-fullscreen { position: fixed !important; inset: 0 !important; z-index: 99999 !important; width: 100vw !important; height: 100vh !important; background: white !important; display: flex !important; flex-direction: column !important; }
+    .is-fullscreen .btn-fullscreen { background: var(--orange); color: white; border-color: var(--orange-dark); }
+    .is-fullscreen .btn-fullscreen:hover { background: var(--orange-dark); }
+
+    /* =========================================================================
+       ROUND 3: JS CHALLENGE
+       ========================================================================= */
     .js-body { flex: 1; display: grid; grid-template-columns: 420px 1fr; overflow: hidden; }
     @media (max-width: 1100px) { .js-body { grid-template-columns: 360px 1fr; } }
     .js-panel { border-right: 1px solid var(--border); overflow-y: auto; padding: 22px; display: flex; flex-direction: column; gap: 18px; }
@@ -185,22 +245,36 @@
     .dl-contents { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 14px; }
     .dl-file-badge { background: white; border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-size: 0.78rem; font-family: var(--mono); color: var(--gray-700); }
     .js-preview { overflow: hidden; display: flex; flex-direction: column; }
+
     /* TOAST */
-    #toast-area { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; pointer-events: none; display: flex; flex-direction: column; gap: 8px; }
-    .toast { background: var(--black); color: white; padding: 10px 20px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; animation: toastIn 0.2s ease; }
+    #toast-area { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; display: flex; flex-direction: column; gap: 8px; }
+    .toast { background: var(--black); color: white; padding: 10px 20px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; box-shadow: var(--shadow-lg); animation: toastIn 0.2s ease; }
     @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
     ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 99px; } ::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
-    @media (max-width: 768px) { .css-body { flex-direction: column; } .css-controls { width: 100%; border-right: none; border-bottom: 1px solid var(--border); max-height: 45vh; } .js-body { grid-template-columns: 1fr; } .js-preview { display: none; } }
+    @media (max-width: 768px) {
+      .round-header { flex-direction: column; align-items: flex-start; gap: 10px; padding: 12px 16px; }
+      .nav { padding: 0 16px; }
+      .nav-brand { margin-right: 16px; font-size: 0.95rem; }
+      .nav-tab { padding: 0 10px; font-size: 0.8rem; }
+      .css-body { flex-direction: column; }
+      .css-controls { width: 100%; border-right: none; border-bottom: 1px solid var(--border); max-height: 45vh; }
+      .js-body { grid-template-columns: 1fr; }
+      .js-preview { display: none; }
+      .hq-stats-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 <div id="app">
 
+  <!-- NAVIGATION BAR -->
   <nav class="nav">
     <div class="nav-brand">Web Dev <span>Arena</span></div>
     <div class="nav-tabs">
       <button class="nav-tab active" id="navHtml" onclick="switchView('html')">
-        <span class="tab-num">1</span> HTML Rapid Fire
+        <span class="tab-num">1</span> HTML ROUND 1
       </button>
       <button class="nav-tab" id="navCss" onclick="switchView('css')">
         <span class="tab-num">2</span> CSS Challenge
@@ -213,30 +287,117 @@
 
   <div class="views">
 
-    <!-- VIEW 1: HTML RAPID FIRE -->
+    <!-- VIEW 1: HTML ROUND 1 (30-QUESTION INTERACTIVE QUIZ & PORTAL REVEAL) -->
     <div class="view active" id="viewHtml">
-      <div class="round-header">
+      
+      <!-- QUIZ HEADER -->
+      <div class="round-header" id="htmlRoundHeader">
         <div class="round-label">
-          <span class="round-badge">Round 1</span>
+          <span class="round-badge">HTML ROUND 1</span>
           <div>
-            <div class="round-title">HTML Rapid Fire — Manual Q&amp;A</div>
-            <div class="round-desc">Ask questions about HTML elements visible in the preview. Click ADD CSS when done.</div>
+            <div class="round-title" id="htmlHeaderTitle">HTML Round 1 — Interactive Learning Quiz</div>
+            <div class="round-desc" id="htmlHeaderDesc">Answer all 30 foundational questions to unlock the Student Registration Portal.</div>
           </div>
         </div>
-        <div class="round-actions">
-          <button class="btn btn-ghost" id="btnInspector" onclick="toggleInspector()">
+        <div class="round-actions" id="htmlHeaderActions">
+          <button class="btn btn-redo" id="btnRestartHtmlQuiz" onclick="resetHtmlQuiz()" title="Restart Quiz">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Restart Quiz
+          </button>
+          <button class="btn btn-ghost" id="btnInspector" onclick="toggleInspector()" style="display:none;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             Tag Inspector: <strong id="inspectorLabel">OFF</strong>
           </button>
-          <button class="btn btn-orange" onclick="switchView('css')">
-            ADD CSS &rarr;
+          <button class="btn btn-orange" id="btnGoToCssFromHtml" onclick="switchView('css')" style="display:none;">
+            CSS Challenge &rarr;
           </button>
         </div>
       </div>
-      <div class="html-view-body">
+
+      <!-- MAIN QUIZ INTERACTION BODY -->
+      <div class="html-quiz-body" id="htmlQuizBody">
+        <div class="html-quiz-wrapper">
+
+          <!-- TOP META & PROGRESS BAR -->
+          <div class="hq-top-card" id="hqTopCard">
+            <div class="hq-meta-row">
+              <div class="hq-title-group">
+                <span class="hq-badge">HTML ROUND 1</span>
+                <span class="hq-counter" id="hqCounterText">Question 1 / 30</span>
+              </div>
+              <span class="hq-stats-tag" id="hqStatsTag">Attempts: 0</span>
+            </div>
+            <div class="hq-progress-container">
+              <div class="hq-progress-bar" id="hqProgressBar"></div>
+            </div>
+          </div>
+
+          <!-- QUESTION & OPTIONS CONTAINER -->
+          <div id="hqQuestionArea">
+            <!-- Dynamic Question Card rendered here -->
+          </div>
+
+          <!-- NEUTRAL PEDAGOGICAL FEEDBACK CARD -->
+          <div class="hq-feedback-card" id="hqFeedbackCard">
+            <div class="hq-feedback-title" id="hqFeedbackTitle">
+              <!-- Dynamic title -->
+            </div>
+            <div class="hq-feedback-body" id="hqFeedbackBody">
+              <!-- Dynamic explanation -->
+            </div>
+          </div>
+
+          <!-- NEXT QUESTION BUTTON ROW -->
+          <div class="hq-nav-row" id="hqNavRow">
+            <button class="btn btn-orange hq-nav-btn" id="btnHqNext" onclick="nextHtmlQuestion()">
+              Next Question &rarr;
+            </button>
+          </div>
+
+          <!-- COMPLETION CARD (AFTER QUESTION 30) -->
+          <div class="hq-completion-container" id="hqCompletionContainer">
+            <div class="hq-completion-icon">&#127881;</div>
+            <h2 class="hq-completion-title">HTML ROUND 1 COMPLETED</h2>
+            <p class="hq-completion-subtitle">You have successfully reasoned through and mastered all 30 foundational HTML concepts.</p>
+            
+            <div class="hq-stats-grid">
+              <div class="hq-stat-box">
+                <div class="hq-stat-val" id="hqStatCompleted">30 / 30</div>
+                <div class="hq-stat-lbl">Questions Completed</div>
+              </div>
+              <div class="hq-stat-box">
+                <div class="hq-stat-val" id="hqStatTotalAttempts">30</div>
+                <div class="hq-stat-lbl">Total Attempts</div>
+              </div>
+              <div class="hq-stat-box">
+                <div class="hq-stat-val" id="hqStatAdditionalAttempts">0</div>
+                <div class="hq-stat-lbl">Additional Attempts</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+              <button class="btn btn-redo" onclick="resetHtmlQuiz()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                Retake Quiz
+              </button>
+              <button class="btn btn-orange hq-reveal-btn" onclick="revealStudentPortal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                Reveal Student Registration Portal &rarr;
+              </button>
+            </div>
+          </div>
+
+        </div><!-- /html-quiz-wrapper -->
+      </div><!-- /html-quiz-body -->
+
+      <!-- REVEALED STUDENT REGISTRATION PORTAL PREVIEW -->
+      <div class="html-portal-container" id="htmlPortalContainer">
         <div class="browser-chrome">
           <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
-          <div class="browser-url">Student Registration Portal — Raw HTML (Round 1)</div>
+          <div class="browser-url">Student Registration Portal — Raw HTML (Round 1 Unlocked)</div>
+          <button class="btn btn-ghost" id="btnBackToQuiz" onclick="backToHtmlQuiz()" style="padding:4px 10px;font-size:0.75rem;">
+            &larr; Back to Quiz
+          </button>
           <button class="btn-fullscreen" id="btnFsHtml" onclick="toggleFullscreen('html')" title="Toggle Full Screen">
             <svg class="icon-expand" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
             <svg class="icon-compress" style="display:none;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 14h6v6m10-10h-6V4m0 6 7-7M3 21l7-7"/></svg>
@@ -245,7 +406,8 @@
         </div>
         <iframe id="frameHtml" class="preview-frame" title="HTML Preview"></iframe>
       </div>
-    </div>
+
+    </div><!-- /viewHtml -->
 
     <!-- VIEW 2: CSS CHALLENGE -->
     <div class="view" id="viewCss">
@@ -278,7 +440,7 @@
               <div class="q-dots-indicator" id="qDots"></div>
               <div id="qContainer"></div>
               <div class="q-completion-card" id="qCompletion">
-                <div style="font-size:2.2rem;margin-bottom:6px;">🎉</div>
+                <div style="font-size:2.2rem;margin-bottom:6px;">&#127881;</div>
                 <h3>CSS CHALLENGE COMPLETE</h3>
                 <p style="color:var(--gray-600);margin-bottom:12px;">The Student Registration Portal has been successfully styled.</p>
                 <div class="q-completion-score" id="qFinalScore">15 / 15 Styling Challenges Completed</div>
@@ -341,8 +503,8 @@
               <div class="task-item"><span class="task-num">04</span><span class="task-text">Read and trim values from: fullName, email, phone, courseSelect, password, confirmPassword.</span></div>
               <div class="task-item"><span class="task-num">05</span><span class="task-text">Validate that name and course are not empty strings.</span></div>
               <div class="task-item"><span class="task-num">06</span><span class="task-text">Validate email format using regex: <code>/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code>.</span></div>
-              <div class="task-item"><span class="task-num">07</span><span class="task-text">Validate phone is exactly 10 digits: <code>/^\d{10}$/</code>.</span></div>
-              <div class="task-item"><span class="task-num">08</span><span class="task-text">Validate password is at least 6 characters long.</span></div>
+              <div class="task-item"><span class="task-num">07</span><span class="task-text">Validate phone is exactly 10 digits: <code>/^\d10$/</code>.</span></div>
+              <div class="task-item"><span class="task-num">08</span><span class="task-text">Validate password length >= 6 characters.</span></div>
               <div class="task-item"><span class="task-num">09</span><span class="task-text">Check that confirmPassword exactly matches password.</span></div>
               <div class="task-item"><span class="task-num">10</span><span class="task-text">Display inline error messages in the <code>.error-msg</code> spans beside each invalid field.</span></div>
               <div class="task-item"><span class="task-num">11</span><span class="task-text">Clear all previous error messages before re-running validation on each submit attempt.</span></div>
@@ -378,7 +540,7 @@
           <iframe id="frameJs" class="preview-frame" title="JS Preview"></iframe>
         </div>
       </div>
-    </div>
+    </div><!-- /viewJs -->
 
   </div><!-- /views -->
 </div><!-- /app -->
@@ -525,583 +687,1144 @@ const BASE_HTML = `<!DOCTYPE html>
 </html>`;
 
 /* ===========================================================================
-   15 CSS PROGRESSIVE CHALLENGE QUESTIONS (CONCEPTUAL LEARNING)
+   HTML ROUND 1: 30-QUESTION EXACT DATASET
+   =========================================================================== */
+const HTML_QUESTIONS = [
+  {
+    "id": 1,
+    "topic": "PURPOSE OF HTML",
+    "question": "What is the primary purpose of HTML?",
+    "options": [
+      "To style webpages",
+      "To structure the content of webpages",
+      "To create databases",
+      "To run server-side code"
+    ],
+    "answer": 1,
+    "explanation": "HTML is used to structure and organize content on a webpage.",
+    "wrongExplanations": [
+      "HTML is used to structure and organize the content of a webpage. Styling is a different responsibility handled by Cascading Style Sheets (CSS), not the primary purpose of HTML.",
+      "",
+      "HTML is a client-side markup language executed inside the web browser to structure documents, not a database management system like SQL, PostgreSQL, or MongoDB.",
+      "HTML is a static markup language rendered on the client browser, not a server-side programming language or runtime like Node.js, Python, or PHP."
+    ]
+  },
+  {
+    "id": 2,
+    "topic": "HTML5 DOCTYPE",
+    "question": "Which declaration tells the browser that the document uses HTML5?",
+    "options": [
+      "<html5>",
+      "<doctype html>",
+      "<!DOCTYPE html>",
+      "<HTML version=\"5\">"
+    ],
+    "answer": 2,
+    "explanation": "<!DOCTYPE html> tells the browser that the document should be interpreted using the HTML5 standard.",
+    "wrongExplanations": [
+      "This is not the HTML5 document-type declaration. The browser needs a specific declaration at the very top of the document to indicate which HTML standard should be used.",
+      "Document type declarations require an exclamation mark <! at the beginning to signal an instruction to the browser engine rather than a regular HTML element.",
+      "",
+      "HTML5 deliberately simplified document type declarations by removing version numbers and system identifiers entirely, rather than using a version attribute."
+    ]
+  },
+  {
+    "id": 3,
+    "topic": "MAIN HEADING",
+    "question": "Which HTML tag represents the main heading of a webpage?",
+    "options": [
+      "<heading>",
+      "<h6>",
+      "<head>",
+      "<h1>"
+    ],
+    "answer": 3,
+    "explanation": "<h1> represents the highest-level/main heading of a webpage.\n\nExample:\n<h1>Student Registration Portal</h1>",
+    "wrongExplanations": [
+      "<heading> is not a valid HTML element. HTML provides standardized numbered heading elements from 1 through 6.",
+      "<h6> represents the lowest and smallest heading level in the HTML hierarchy, not the primary main heading.",
+      "<head> is the metadata container for the document (title, styles, scripts), not a visible content heading on the page.",
+      ""
+    ]
+  },
+  {
+    "id": 4,
+    "topic": "PARAGRAPH",
+    "question": "Which HTML element is used to create a paragraph?",
+    "options": [
+      "<text>",
+      "<paragraph>",
+      "<p>",
+      "<para>"
+    ],
+    "answer": 2,
+    "explanation": "The <p> element is used to represent a paragraph of text.\n\nExample:\n<p>Welcome to our registration portal.</p>",
+    "wrongExplanations": [
+      "<text> is an SVG graphic element used for rendering coordinates in vector graphics, not the standard HTML element for document text blocks.",
+      "<paragraph> is not a valid HTML element tag. HTML uses concise shorthand tags for standard text blocks.",
+      "",
+      "<para> is not a standard HTML tag. HTML specifies a single-letter element for paragraphs."
+    ]
+  },
+  {
+    "id": 5,
+    "topic": "HEADING HIERARCHY",
+    "question": "Which sequence represents a logical HTML heading hierarchy?",
+    "options": [
+      "<h1> \u2192 <h2> \u2192 <h3>",
+      "<h3> \u2192 <h1> \u2192 <h2>",
+      "<h6> \u2192 <h2> \u2192 <h1>",
+      "<h4> \u2192 <h1> \u2192 <h6>"
+    ],
+    "answer": 0,
+    "explanation": "HTML headings provide a hierarchy for organizing content.\n\nExample:\n<h1> Main Page Heading\n<h2> Major Section\n<h3> Subsection",
+    "wrongExplanations": [
+      "",
+      "Starting with a sub-level heading before the main document heading breaks sequential document outlining and accessibility navigation.",
+      "Document headings should start with the top-level topic and progress downward, not begin at the deepest level (<h6>).",
+      "Heading levels should follow a structured top-down progression rather than jumping between arbitrary depths."
+    ]
+  },
+  {
+    "id": 6,
+    "topic": "STRONG TEXT",
+    "question": "Which HTML element represents text with strong importance?",
+    "options": [
+      "<bold>",
+      "<b>",
+      "<strong>",
+      "<important>"
+    ],
+    "answer": 2,
+    "explanation": "<strong> gives semantic meaning that the text has strong importance.\n\nExample:\n<strong>Important Information</strong>",
+    "wrongExplanations": [
+      "<bold> is not a standard HTML element.",
+      "<b> applies visual bold styling for presentation without conveying semantic importance or urgency to screen readers and search engines.",
+      "",
+      "<important> is not a valid standard HTML element tag."
+    ]
+  },
+  {
+    "id": 7,
+    "topic": "EMPHASIZED TEXT",
+    "question": "Which HTML element represents emphasized text?",
+    "options": [
+      "<italic>",
+      "<i>",
+      "<em>",
+      "<emphasis>"
+    ],
+    "answer": 2,
+    "explanation": "<em> represents emphasis.\n\nExample:\n<em>Web Development 2026</em>",
+    "wrongExplanations": [
+      "<italic> is not a standard HTML element.",
+      "<i> renders text in italic type for stylistic offset (such as technical terms or foreign phrases) without conveying linguistic emphasis.",
+      "",
+      "<emphasis> is not a standard HTML tag name; HTML uses the abbreviated <em> keyword."
+    ]
+  },
+  {
+    "id": 8,
+    "topic": "LINE BREAK",
+    "question": "Which HTML element creates a line break?",
+    "options": [
+      "<break>",
+      "<br>",
+      "<newline>",
+      "<lb>"
+    ],
+    "answer": 1,
+    "explanation": "<br> inserts a line break without starting a new paragraph.",
+    "wrongExplanations": [
+      "<break> is not a valid standard HTML element tag.",
+      "",
+      "<newline> is not an HTML element.",
+      "<lb> is not a standard HTML element."
+    ]
+  },
+  {
+    "id": 9,
+    "topic": "HYPERLINK",
+    "question": "Which HTML element is used to create a hyperlink?",
+    "options": [
+      "<link>",
+      "<a>",
+      "<href>",
+      "<url>"
+    ],
+    "answer": 1,
+    "explanation": "The <a> element, also called the anchor element, creates hyperlinks.\n\nExample:\n<a href=\"https://example.com\">Visit Website</a>",
+    "wrongExplanations": [
+      "<link> is placed in the <head> to connect external resources like stylesheets, not for clickable text hyperlinks in the visible body.",
+      "",
+      "href is an attribute placed inside an anchor tag, not an HTML element tag itself.",
+      "<url> is not a valid HTML element tag."
+    ]
+  },
+  {
+    "id": 10,
+    "topic": "HREF ATTRIBUTE",
+    "question": "What is the purpose of the href attribute in an <a> element?",
+    "options": [
+      "Specifies the image source",
+      "Specifies the link destination",
+      "Specifies the text color",
+      "Specifies the font size"
+    ],
+    "answer": 1,
+    "explanation": "The href attribute specifies the destination of a hyperlink.\n\nExample:\n<a href=\"https://developer.mozilla.org/\">MDN Docs</a>",
+    "wrongExplanations": [
+      "Image sources are specified using the src attribute on <img> elements, not href on <a> elements.",
+      "",
+      "Text color is configured via CSS properties (color), not HTML hyperlink attributes.",
+      "Font sizing is controlled through CSS rules (font-size), not hyperlink attributes."
+    ]
+  },
+  {
+    "id": 11,
+    "topic": "IMAGE ELEMENT",
+    "question": "Which HTML element is used to display an image?",
+    "options": [
+      "<image>",
+      "<picture>",
+      "<img>",
+      "<src>"
+    ],
+    "answer": 2,
+    "explanation": "<img> embeds an image into an HTML document.\n\nExample:\n<img src=\"campus.jpg\">",
+    "wrongExplanations": [
+      "<image> is an SVG graphic tag; in standard HTML documents the core element for images is <img>.",
+      "<picture> is a wrapper container for responsive art direction holding multiple <source> tags, but the standalone core image element is <img>.",
+      "",
+      "src is an attribute name (source) used inside image elements, not an HTML element tag."
+    ]
+  },
+  {
+    "id": 12,
+    "topic": "SRC ATTRIBUTE",
+    "question": "What does the src attribute specify in an <img> element?",
+    "options": [
+      "Alternative text",
+      "Image source/location",
+      "Image title",
+      "Image color"
+    ],
+    "answer": 1,
+    "explanation": "The src attribute specifies the source or location of the image.\n\nExample:\n<img src=\"campus.jpg\">",
+    "wrongExplanations": [
+      "Alternative text for accessibility is provided by the alt attribute, not src.",
+      "",
+      "Image tooltips and advisory titles are configured using the title attribute.",
+      "Graphic colors are part of the image file or CSS filters, not HTML source path attributes."
+    ]
+  },
+  {
+    "id": 13,
+    "topic": "ALT ATTRIBUTE",
+    "question": "Why is the alt attribute used with an image?",
+    "options": [
+      "To change the image size",
+      "To provide alternative text",
+      "To change the image color",
+      "To create a hyperlink"
+    ],
+    "answer": 1,
+    "explanation": "The alt attribute provides alternative text for an image. It is important for accessibility and is useful when the image cannot be displayed.\n\nExample:\n<img src=\"campus.jpg\" alt=\"Students studying together\">",
+    "wrongExplanations": [
+      "Image dimensions are controlled with width and height attributes or CSS sizing properties.",
+      "",
+      "Image visual styling and colors are handled via CSS rules, not descriptive accessibility attributes.",
+      "Hyperlinks are created by wrapping the <img> element inside an <a> anchor tag."
+    ]
+  },
+  {
+    "id": 14,
+    "topic": "UNORDERED LIST",
+    "question": "Which HTML element creates an unordered/bulleted list?",
+    "options": [
+      "<list>",
+      "<ol>",
+      "<ul>",
+      "<li>"
+    ],
+    "answer": 2,
+    "explanation": "<ul> creates an unordered list.\n\nExample:\n<ul>\n    <li>Home</li>\n    <li>Courses</li>\n    <li>Schedule</li>\n</ul>",
+    "wrongExplanations": [
+      "<list> is not a standard HTML element.",
+      "<ol> creates an ordered (numbered) list, whereas bulleted lists use unordered list semantics.",
+      "",
+      "<li> defines an individual item inside a list, not the unordered list container itself."
+    ]
+  },
+  {
+    "id": 15,
+    "topic": "ORDERED LIST",
+    "question": "Which HTML element creates a numbered/ordered list?",
+    "options": [
+      "<ul>",
+      "<ol>",
+      "<li>",
+      "<numbered>"
+    ],
+    "answer": 1,
+    "explanation": "<ol> creates an ordered list.\n\nExample:\n<ol>\n    <li>Document Skeleton</li>\n    <li>Semantic Landmarks</li>\n    <li>Forms and Inputs</li>\n</ol>",
+    "wrongExplanations": [
+      "<ul> creates an unordered bulleted list rather than a numbered sequence.",
+      "",
+      "<li> represents a single item within a list, not the ordered sequence container.",
+      "<numbered> is not a valid HTML element."
+    ]
+  },
+  {
+    "id": 16,
+    "topic": "LIST ITEM",
+    "question": "Which HTML element represents an individual item inside an ordered or unordered list?",
+    "options": [
+      "<item>",
+      "<li>",
+      "<list-item>",
+      "<content>"
+    ],
+    "answer": 1,
+    "explanation": "<li> represents one item inside a <ul> or <ol>.\n\nExample:\n<ul>\n    <li>HTML</li>\n    <li>CSS</li>\n    <li>JavaScript</li>\n</ul>",
+    "wrongExplanations": [
+      "<item> is not a valid HTML element.",
+      "",
+      "<list-item> is not a standard HTML element tag.",
+      "<content> is a deprecated Web Components shadow DOM element, not a list item tag."
+    ]
+  },
+  {
+    "id": 17,
+    "topic": "UL VS OL",
+    "question": "What is the main difference between <ul> and <ol>?",
+    "options": [
+      "<ul> creates numbered lists and <ol> creates bulleted lists",
+      "<ul> creates bulleted lists and <ol> creates numbered lists",
+      "Both create numbered lists",
+      "Both create bulleted lists"
+    ],
+    "answer": 1,
+    "explanation": "<ul> means unordered list and creates a bulleted list.\n\n<ol> means ordered list and creates a numbered list.",
+    "wrongExplanations": [
+      "The names stand for 'Unordered List' (bullet points) and 'Ordered List' (sequential numbering).",
+      "",
+      "<ul> does not create numbered lists; it renders unordered bullet marks.",
+      "<ol> renders sequential numbers (1, 2, 3...) rather than bullet points."
+    ]
+  },
+  {
+    "id": 18,
+    "topic": "NAVIGATION",
+    "question": "Which semantic HTML element is used to contain navigation links?",
+    "options": [
+      "<links>",
+      "<navigation>",
+      "<nav>",
+      "<menu-bar>"
+    ],
+    "answer": 2,
+    "explanation": "<nav> represents a section containing navigation links.\n\nExample:\n<nav>\n    <a href=\"#home\">Home</a>\n    <a href=\"#courses\">Courses</a>\n</nav>",
+    "wrongExplanations": [
+      "<links> is not a standard HTML element.",
+      "<navigation> is not a standard tag; HTML uses the concise <nav> keyword.",
+      "",
+      "<menu-bar> is not a native HTML element."
+    ]
+  },
+  {
+    "id": 19,
+    "topic": "MAIN CONTENT",
+    "question": "Which semantic HTML element represents the main content of a webpage?",
+    "options": [
+      "<content>",
+      "<main>",
+      "<body-content>",
+      "<primary>"
+    ],
+    "answer": 1,
+    "explanation": "<main> represents the primary content of the document.",
+    "wrongExplanations": [
+      "<content> is not the standard semantic container for page content.",
+      "",
+      "<body-content> is not a valid HTML element.",
+      "<primary> is not a standard HTML semantic landmark."
+    ]
+  },
+  {
+    "id": 20,
+    "topic": "SECTION",
+    "question": "Which semantic HTML element is used to group related content into a meaningful section?",
+    "options": [
+      "<group>",
+      "<section>",
+      "<content>",
+      "<div-section>"
+    ],
+    "answer": 1,
+    "explanation": "<section> represents a standalone section of related content.\n\nExamples include sections for Available Courses, Course Schedule, and Student Registration.",
+    "wrongExplanations": [
+      "<group> is not a standard HTML element.",
+      "",
+      "<content> is not used to group thematic document sections.",
+      "<div-section> is not a valid HTML tag."
+    ]
+  },
+  {
+    "id": 21,
+    "topic": "FOOTER",
+    "question": "Which semantic HTML element represents the footer of a webpage?",
+    "options": [
+      "<bottom>",
+      "<footer>",
+      "<end>",
+      "<page-footer>"
+    ],
+    "answer": 1,
+    "explanation": "<footer> represents footer information such as copyright, contact information, or related links.",
+    "wrongExplanations": [
+      "<bottom> is not a valid HTML element.",
+      "",
+      "<end> is not a standard HTML tag.",
+      "<page-footer> is not a standard HTML element name."
+    ]
+  },
+  {
+    "id": 22,
+    "topic": "SEMANTIC HTML",
+    "question": "What is the main advantage of using semantic HTML elements?",
+    "options": [
+      "They automatically add CSS",
+      "They make JavaScript unnecessary",
+      "They provide meaningful structure to content",
+      "They automatically make a website responsive"
+    ],
+    "answer": 2,
+    "explanation": "Semantic elements communicate the meaning and structure of the content.\n\nExamples include <nav>, <main>, <section>, and <footer>.",
+    "wrongExplanations": [
+      "Semantic elements provide structural meaning; visual styling still requires CSS rules.",
+      "Semantic tags structure the document but do not replace programming logic and dynamic interactivity provided by JavaScript.",
+      "",
+      "Responsive layouts across screen sizes require CSS media queries and responsive layout models."
+    ]
+  },
+  {
+    "id": 23,
+    "topic": "TABLE",
+    "question": "Which HTML element is used to create a table?",
+    "options": [
+      "<grid>",
+      "<table>",
+      "<tab>",
+      "<data-table>"
+    ],
+    "answer": 1,
+    "explanation": "<table> creates an HTML table.",
+    "wrongExplanations": [
+      "<grid> is not an HTML element; grid layouts are defined in CSS with display: grid.",
+      "",
+      "<tab> is not a standard HTML tag.",
+      "<data-table> is not a native HTML element."
+    ]
+  },
+  {
+    "id": 24,
+    "topic": "TABLE ROW",
+    "question": "Which HTML element represents a row in a table?",
+    "options": [
+      "<row>",
+      "<tr>",
+      "<td>",
+      "<table-row>"
+    ],
+    "answer": 1,
+    "explanation": "<tr> means Table Row.\n\nExample:\n<tr>\n    <td>HTML</td>\n    <td>2 Weeks</td>\n</tr>",
+    "wrongExplanations": [
+      "<row> is not a standard HTML tag.",
+      "",
+      "<td> represents an individual data cell inside a row, not the row container itself.",
+      "<table-row> is not a valid HTML tag name."
+    ]
+  },
+  {
+    "id": 25,
+    "topic": "TABLE HEADER",
+    "question": "Which HTML element represents a header cell in a table?",
+    "options": [
+      "<thead>",
+      "<header>",
+      "<th>",
+      "<td>"
+    ],
+    "answer": 2,
+    "explanation": "<th> represents a table header cell.\n\nExample:\n<tr>\n    <th>Course</th>\n    <th>Duration</th>\n    <th>Level</th>\n</tr>",
+    "wrongExplanations": [
+      "<thead> groups the entire header section of rows in a table, but individual header cells use <th>.",
+      "<header> represents an introductory landmark for a page or article, not a tabular cell.",
+      "",
+      "<td> defines standard body data cells rather than header cells."
+    ]
+  },
+  {
+    "id": 26,
+    "topic": "TABLE DATA",
+    "question": "Which HTML element represents a normal data cell in a table?",
+    "options": [
+      "<cell>",
+      "<data>",
+      "<td>",
+      "<table-data>"
+    ],
+    "answer": 2,
+    "explanation": "<td> represents a standard table data cell.\n\nExample:\n<td>HTML5 & Semantic Web</td>",
+    "wrongExplanations": [
+      "<cell> is not a standard HTML element.",
+      "<data> is an element used to link machine-readable values to content, not a grid cell in a table.",
+      "",
+      "<table-data> is not a valid HTML tag."
+    ]
+  },
+  {
+    "id": 27,
+    "topic": "FORM ELEMENT",
+    "question": "Which HTML element is used to group form controls that collect information from a user?",
+    "options": [
+      "<input>",
+      "<form>",
+      "<register>",
+      "<fields>"
+    ],
+    "answer": 1,
+    "explanation": "<form> is the container for controls used to collect and submit user information.",
+    "wrongExplanations": [
+      "<input> represents an individual field control, not the overall container holding the set of form fields.",
+      "",
+      "<register> is not a standard HTML element.",
+      "<fields> is not a valid HTML tag."
+    ]
+  },
+  {
+    "id": 28,
+    "topic": "INPUT ELEMENT",
+    "question": "Which HTML element is commonly used to create a text input field?",
+    "options": [
+      "<textbox>",
+      "<text>",
+      "<input>",
+      "<field>"
+    ],
+    "answer": 2,
+    "explanation": "<input> creates different types of form controls.\n\nExample:\n<input type=\"text\">",
+    "wrongExplanations": [
+      "<textbox> is not a standard HTML tag.",
+      "<text> is an SVG element and not used for form input fields.",
+      "",
+      "<field> is not a standard HTML element."
+    ]
+  },
+  {
+    "id": 29,
+    "topic": "INPUT TYPES",
+    "question": "Which input type is specifically designed for entering an email address?",
+    "options": [
+      "type=\"mail\"",
+      "type=\"email\"",
+      "type=\"address\"",
+      "type=\"text-email\""
+    ],
+    "answer": 1,
+    "explanation": "HTML provides specialized input types, including type=\"email\" for email addresses.\n\nExample:\n<input type=\"email\">",
+    "wrongExplanations": [
+      "type=\"mail\" is not recognized by browsers; the HTML specification uses the full word email.",
+      "",
+      "type=\"address\" is not a valid HTML input type.",
+      "type=\"text-email\" is not a standard HTML attribute value."
+    ]
+  },
+  {
+    "id": 30,
+    "topic": "PASSWORD INPUT",
+    "question": "Which input type is used to create a password field where entered characters are visually hidden?",
+    "options": [
+      "type=\"hidden\"",
+      "type=\"secure\"",
+      "type=\"password\"",
+      "type=\"private\""
+    ],
+    "answer": 2,
+    "explanation": "type=\"password\" creates a password input field.\n\nExample:\n<input type=\"password\">",
+    "wrongExplanations": [
+      "type=\"hidden\" completely hides the input element from the UI, rather than masking characters as bullets during user typing.",
+      "type=\"secure\" is not a valid HTML input type attribute.",
+      "",
+      "type=\"private\" is not a standard HTML input type."
+    ]
+  }
+];
+
+/* ===========================================================================
+   ROUND 2: 15 CSS PROGRESSIVE CHALLENGE QUESTIONS
    =========================================================================== */
 const QUESTIONS = [
   {
-    id: 1,
-    title: "CSS Selectors",
-    property: "Element Selector (h2)",
-    q: "You want to change the color of ALL <h2> headings on the page.\nWhich CSS selector correctly targets every <h2> element?",
-    purpose: "Learn how element selectors target all instances of an HTML tag.",
-    options: [
+    "id": 1,
+    "title": "CSS Selectors",
+    "property": "Element Selector (h2)",
+    "q": "You want to change the color of ALL <h2> headings on the page.\nWhich CSS selector correctly targets every <h2> element?",
+    "purpose": "Learn how element selectors target all instances of an HTML tag.",
+    "options": [
       {
-        key: "A",
-        label: ".h2",
-        css: ".h2 { color: #F97316 !important; }",
-        correct: false,
-        explanation: 'The dot prefix ".h2" targets elements with a class name of "h2" (e.g. <div class="h2">), not standard <h2> HTML tags.'
+        "key": "A",
+        "label": ".h2",
+        "css": ".h2 { color: #F97316 !important; }",
+        "correct": false,
+        "explanation": "The dot prefix \".h2\" targets elements with a class name of \"h2\" (e.g. <div class=\"h2\">), not standard <h2> HTML tags."
       },
       {
-        key: "B",
-        label: "#h2",
-        css: "#h2 { color: #F97316 !important; }",
-        correct: false,
-        explanation: 'The hash prefix "#h2" targets a single element with an ID of "h2" (e.g. <h2 id="h2">), not all <h2> elements.'
+        "key": "B",
+        "label": "#h2",
+        "css": "#h2 { color: #F97316 !important; }",
+        "correct": false,
+        "explanation": "The hash prefix \"#h2\" targets a single element with an ID of \"h2\" (e.g. <h2 id=\"h2\">), not all <h2> elements."
       },
       {
-        key: "C",
-        label: "h2",
-        css: "h2 { color: #F97316 !important; }",
-        correct: true,
-        explanation: 'In CSS, writing the plain tag name "h2" is an Element Selector. It directly targets and styles every <h2> element across the entire document.'
+        "key": "C",
+        "label": "h2",
+        "css": "h2 { color: #F97316 !important; }",
+        "correct": true,
+        "explanation": "In CSS, writing the plain tag name \"h2\" is an Element Selector. It directly targets and styles every <h2> element across the entire document."
       },
       {
-        key: "D",
-        label: "<h2>",
-        css: "/* Invalid CSS selector */",
-        correct: false,
-        explanation: '"<h2>" is HTML tag syntax with angle brackets. In CSS, tag selectors omit the angle brackets and are written simply as h2.'
+        "key": "D",
+        "label": "<h2>",
+        "css": "/* Invalid CSS selector */",
+        "correct": false,
+        "explanation": "\"<h2>\" is HTML tag syntax with angle brackets. In CSS, tag selectors omit the angle brackets and are written simply as h2."
       }
     ]
   },
   {
-    id: 2,
-    title: "Text Color",
-    property: "color",
-    q: "Which CSS property changes the color of text?",
-    purpose: "Learn that the 'color' property specifically controls text foreground color.",
-    options: [
+    "id": 2,
+    "title": "Text Color",
+    "property": "color",
+    "q": "Which CSS property changes the color of text?",
+    "purpose": "Learn that the 'color' property specifically controls text foreground color.",
+    "options": [
       {
-        key: "A",
-        label: "background",
-        css: "body { background: #111827 !important; color: #ffffff !important; }",
-        correct: false,
-        explanation: '"background" fills the canvas behind the text rather than changing the text characters themselves.'
+        "key": "A",
+        "label": "background",
+        "css": "body { background: #111827 !important; color: #ffffff !important; }",
+        "correct": false,
+        "explanation": "\"background\" fills the canvas behind the text rather than changing the text characters themselves."
       },
       {
-        key: "B",
-        label: "color",
-        css: "body { color: #111827 !important; }",
-        correct: true,
-        explanation: 'In CSS, the "color" property sets the text foreground color. Setting "color: #111827" renders clean, high-contrast dark text.'
+        "key": "B",
+        "label": "color",
+        "css": "body { color: #111827 !important; }",
+        "correct": true,
+        "explanation": "In CSS, the \"color\" property sets the text foreground color. Setting \"color: #111827\" renders clean, high-contrast dark text."
       },
       {
-        key: "C",
-        label: "text-color",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"text-color" is not a standard CSS property. The correct property is simply "color".'
+        "key": "C",
+        "label": "text-color",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"text-color\" is not a standard CSS property. The correct property is simply \"color\"."
       },
       {
-        key: "D",
-        label: "font-color",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"font-color" was an obsolete HTML attribute from 1995 (<font color="...">). CSS uses the "color" property.'
+        "key": "D",
+        "label": "font-color",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"font-color\" was an obsolete HTML attribute from 1995 (<font color=\"...\">). CSS uses the \"color\" property."
       }
     ]
   },
   {
-    id: 3,
-    title: "Background Color",
-    property: "background-color",
-    q: "Which CSS property changes the background color of an element?",
-    purpose: "Learn the distinction between 'color' (text) and 'background-color' (fill).",
-    options: [
+    "id": 3,
+    "title": "Background Color",
+    "property": "background-color",
+    "q": "Which CSS property changes the background color of an element?",
+    "purpose": "Learn the distinction between 'color' (text) and 'background-color' (fill).",
+    "options": [
       {
-        key: "A",
-        label: "background-color",
-        css: "body { background-color: #F8FAFC !important; }",
-        correct: true,
-        explanation: '"background-color" sets the background fill color. Setting "background-color: #F8FAFC" replaces the stark white with a soft, modern off-white foundation.'
+        "key": "A",
+        "label": "background-color",
+        "css": "body { background-color: #F8FAFC !important; }",
+        "correct": true,
+        "explanation": "\"background-color\" sets the background fill color. Setting \"background-color: #F8FAFC\" replaces the stark white with a soft, modern off-white foundation."
       },
       {
-        key: "B",
-        label: "color-background",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"color-background" is not a valid CSS property. CSS uses "background-color".'
+        "key": "B",
+        "label": "color-background",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"color-background\" is not a valid CSS property. CSS uses \"background-color\"."
       },
       {
-        key: "C",
-        label: "bgcolor",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"bgcolor" is a legacy HTML attribute deprecated since HTML 4. Modern CSS uses "background-color".'
+        "key": "C",
+        "label": "bgcolor",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"bgcolor\" is a legacy HTML attribute deprecated since HTML 4. Modern CSS uses \"background-color\"."
       },
       {
-        key: "D",
-        label: "background-text",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"background-text" is not a valid CSS property. To color element backgrounds, use "background-color".'
+        "key": "D",
+        "label": "background-text",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"background-text\" is not a valid CSS property. To color element backgrounds, use \"background-color\"."
       }
     ]
   },
   {
-    id: 4,
-    title: "Font Size",
-    property: "font-size",
-    q: "Which CSS property controls the size of text?",
-    purpose: "Learn how font-size controls typography scale and visual hierarchy.",
-    options: [
+    "id": 4,
+    "title": "Font Size",
+    "property": "font-size",
+    "q": "Which CSS property controls the size of text?",
+    "purpose": "Learn how font-size controls typography scale and visual hierarchy.",
+    "options": [
       {
-        key: "A",
-        label: "text-size",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"text-size" is not a standard CSS property. In CSS, typography dimensions are set via "font-size".'
+        "key": "A",
+        "label": "text-size",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"text-size\" is not a standard CSS property. In CSS, typography dimensions are set via \"font-size\"."
       },
       {
-        key: "B",
-        label: "font-style",
-        css: "h1 { font-style: italic !important; }",
-        correct: false,
-        explanation: '"font-style" controls font styling variants like italic or oblique, not font dimensions.'
+        "key": "B",
+        "label": "font-style",
+        "css": "h1 { font-style: italic !important; }",
+        "correct": false,
+        "explanation": "\"font-style\" controls font styling variants like italic or oblique, not font dimensions."
       },
       {
-        key: "C",
-        label: "font-size",
-        css: "h1 { font-size: 42px !important; margin-bottom: 12px !important; }",
-        correct: true,
-        explanation: '"font-size" controls the physical dimensions of text characters (e.g. 42px, 2.5rem). The main heading now stands out prominently at 42px.'
+        "key": "C",
+        "label": "font-size",
+        "css": "h1 { font-size: 42px !important; margin-bottom: 12px !important; }",
+        "correct": true,
+        "explanation": "\"font-size\" controls the physical dimensions of text characters (e.g. 42px, 2.5rem). The main heading now stands out prominently at 42px."
       },
       {
-        key: "D",
-        label: "text-scale",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"text-scale" is not a standard CSS property. CSS uses "font-size".'
+        "key": "D",
+        "label": "text-scale",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"text-scale\" is not a standard CSS property. CSS uses \"font-size\"."
       }
     ]
   },
   {
-    id: 5,
-    title: "Font Weight",
-    property: "font-weight",
-    q: "You want the main heading to appear bold.\nWhich CSS property should you use?",
-    purpose: "Learn how font-weight controls character stroke thickness.",
-    options: [
+    "id": 5,
+    "title": "Font Weight",
+    "property": "font-weight",
+    "q": "You want the main heading to appear bold.\nWhich CSS property should you use?",
+    "purpose": "Learn how font-weight controls character stroke thickness.",
+    "options": [
       {
-        key: "A",
-        label: "font-bold",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"font-bold" is not a CSS property. Boldness is configured through "font-weight: bold" or numeric values like 700.'
+        "key": "A",
+        "label": "font-bold",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"font-bold\" is not a CSS property. Boldness is configured through \"font-weight: bold\" or numeric values like 700."
       },
       {
-        key: "B",
-        label: "text-weight",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"text-weight" is not a valid CSS property. CSS uses "font-weight".'
+        "key": "B",
+        "label": "text-weight",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"text-weight\" is not a valid CSS property. CSS uses \"font-weight\"."
       },
       {
-        key: "C",
-        label: "font-weight",
-        css: "h1 { font-weight: 700 !important; }",
-        correct: true,
-        explanation: '"font-weight" specifies the boldness/stroke weight of typography (e.g. 400 = regular, 700 = bold). Setting "font-weight: 700" gives the main title a strong presence.'
+        "key": "C",
+        "label": "font-weight",
+        "css": "h1 { font-weight: 700 !important; }",
+        "correct": true,
+        "explanation": "\"font-weight\" specifies the boldness/stroke weight of typography (e.g. 400 = regular, 700 = bold). Setting \"font-weight: 700\" gives the main title a strong presence."
       },
       {
-        key: "D",
-        label: "bold-text",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"bold-text" is not a valid CSS property.'
+        "key": "D",
+        "label": "bold-text",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"bold-text\" is not a valid CSS property."
       }
     ]
   },
   {
-    id: 6,
-    title: "Text Alignment",
-    property: "text-align",
-    q: "Which CSS property controls whether text is aligned left, center, or right?",
-    purpose: "Learn how text-align aligns inline content horizontally inside its container.",
-    options: [
+    "id": 6,
+    "title": "Text Alignment",
+    "property": "text-align",
+    "q": "Which CSS property controls whether text is aligned left, center, or right?",
+    "purpose": "Learn how text-align aligns inline content horizontally inside its container.",
+    "options": [
       {
-        key: "A",
-        label: "align-text",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"align-text" is not a valid CSS property. The correct CSS property name is "text-align".'
+        "key": "A",
+        "label": "align-text",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"align-text\" is not a valid CSS property. The correct CSS property name is \"text-align\"."
       },
       {
-        key: "B",
-        label: "text-align",
-        css: "header, .hero-content { text-align: center !important; }",
-        correct: true,
-        explanation: '"text-align" controls the horizontal alignment of inline content (left, center, right, justify). Setting "text-align: center" centers the introductory header.'
+        "key": "B",
+        "label": "text-align",
+        "css": "header, .hero-content { text-align: center !important; }",
+        "correct": true,
+        "explanation": "\"text-align\" controls the horizontal alignment of inline content (left, center, right, justify). Setting \"text-align: center\" centers the introductory header."
       },
       {
-        key: "C",
-        label: "text-position",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"text-position" is not a standard CSS property.'
+        "key": "C",
+        "label": "text-position",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"text-position\" is not a standard CSS property."
       },
       {
-        key: "D",
-        label: "font-align",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"font-align" is not a valid CSS property. Alignment is set via "text-align".'
+        "key": "D",
+        "label": "font-align",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"font-align\" is not a valid CSS property. Alignment is set via \"text-align\"."
       }
     ]
   },
   {
-    id: 7,
-    title: "Margin",
-    property: "margin",
-    q: "The content sections are too close together.\nWhich CSS property adds space OUTSIDE an element?",
-    purpose: "Learn the CSS Box Model: Margin is the outermost layer outside the border.",
-    options: [
+    "id": 7,
+    "title": "Margin",
+    "property": "margin",
+    "q": "You want to add space OUTSIDE an element's border to push other elements away.\nWhich property should you use?",
+    "purpose": "Learn that margin creates external clearance around an element.",
+    "options": [
       {
-        key: "A",
-        label: "padding",
-        css: "section { padding: 32px !important; background: rgba(0,0,0,0.03) !important; }",
-        correct: false,
-        explanation: '"padding" creates space INSIDE the element\'s border. To create space OUTSIDE the element, use "margin".'
+        "key": "A",
+        "label": "padding",
+        "css": "header, section { padding: 40px !important; }",
+        "correct": false,
+        "explanation": "\"padding\" creates space inside the element's boundary between content and border, not outside."
       },
       {
-        key: "B",
-        label: "margin",
-        css: "section { margin-bottom: 32px !important; }",
-        correct: true,
-        explanation: '"margin" creates empty space OUTSIDE an element, separating it from neighboring elements.\n\nBox Model Hierarchy:\nContent ↓ Border ↓ Margin = OUTSIDE space'
+        "key": "B",
+        "label": "margin",
+        "css": "header { margin-bottom: 36px !important; }\nsection { margin-bottom: 40px !important; }",
+        "correct": true,
+        "explanation": "\"margin\" creates space outside an element's perimeter, pushing neighboring elements away. Setting margins creates generous breathing room between sections."
       },
       {
-        key: "C",
-        label: "border-spacing",
-        css: "section { border-spacing: 32px !important; }",
-        correct: false,
-        explanation: '"border-spacing" only applies to HTML <table> elements with separated borders, not <div> or <section> elements.'
+        "key": "C",
+        "label": "outer-space",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"outer-space\" is not a CSS property. External spacing is controlled via \"margin\"."
       },
       {
-        key: "D",
-        label: "gap-outside",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"gap-outside" is not a valid CSS property.'
+        "key": "D",
+        "label": "spacing",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"spacing\" is not a valid CSS box model property. Use \"margin\" for external space."
       }
     ]
   },
   {
-    id: 8,
-    title: "Padding",
-    property: "padding",
-    q: "A course section has content touching its border.\nWhich CSS property adds space INSIDE the element?",
-    purpose: "Learn that Padding adds breathing space between content and its border.",
-    options: [
+    "id": 8,
+    "title": "Padding",
+    "property": "padding",
+    "q": "You want to add space INSIDE the course cards, between their text and their border.\nWhich property creates inner space?",
+    "purpose": "Learn that padding creates internal clearance inside the element's box.",
+    "options": [
       {
-        key: "A",
-        label: "margin",
-        css: ".course-section { margin: 24px !important; background: #fff !important; }",
-        correct: false,
-        explanation: '"margin" pushes the outside of the card away, but the content inside remains cramped touching the card\'s inner boundary.'
+        "key": "A",
+        "label": "margin",
+        "css": ".course-card { margin: 30px !important; }",
+        "correct": false,
+        "explanation": "\"margin\" creates outer clearance outside the border, not inner clearance between content and border."
       },
       {
-        key: "B",
-        label: "padding",
-        css: ".course-section, .course-card { padding: 24px !important; }",
-        correct: true,
-        explanation: '"padding" adds space INSIDE an element, creating breathing room between the inner content and the outer border.\n\nComparison:\n• margin → space outside\n• padding → space inside'
+        "key": "B",
+        "label": "padding",
+        "css": ".course-card, .content-card { padding: 24px !important; }",
+        "correct": true,
+        "explanation": "\"padding\" creates internal clearance between an element's content and its border. Adding \"padding: 24px\" gives cards clean inner spacing."
       },
       {
-        key: "C",
-        label: "spacing",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"spacing" is not a CSS property. CSS uses "padding" for inside spacing and "margin" for outside spacing.'
+        "key": "C",
+        "label": "inner-space",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"inner-space\" is not a valid CSS property. Internal clearance is controlled via \"padding\"."
       },
       {
-        key: "D",
-        label: "inner-margin",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"inner-margin" is not a valid CSS property. In CSS, internal space is named "padding".'
+        "key": "D",
+        "label": "indent",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"indent\" (or \"text-indent\") only indents the first line of text, rather than adding all-around inner padding."
       }
     ]
   },
   {
-    id: 9,
-    title: "Border",
-    property: "border",
-    q: "Which CSS property adds a visible border around an element?",
-    purpose: "Learn the border shorthand: width style color.",
-    options: [
+    "id": 9,
+    "title": "Border",
+    "property": "border",
+    "q": "Which CSS shorthand property sets the width, style, and color of a border all in one line?",
+    "purpose": "Learn the border shorthand syntax: border: [width] [style] [color].",
+    "options": [
       {
-        key: "A",
-        label: "outline-border",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"outline-border" is not a CSS property. To add a visible border, use the "border" property.'
+        "key": "A",
+        "label": "border",
+        "css": ".course-card, .content-card { border: 1px solid #E2E8F0 !important; }",
+        "correct": true,
+        "explanation": "The \"border\" shorthand cleanly combines width (1px), line style (solid), and color (#E2E8F0) into a single concise rule."
       },
       {
-        key: "B",
-        label: "element-border",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"element-border" is not a valid CSS property.'
+        "key": "B",
+        "label": "outline-style",
+        "css": ".course-card { outline-style: solid !important; }",
+        "correct": false,
+        "explanation": "\"outline-style\" only controls the outline style and does not participate in the box model dimensions like border."
       },
       {
-        key: "C",
-        label: "border",
-        css: ".course-section, .course-card { border: 1px solid #E5E7EB !important; }",
-        correct: true,
-        explanation: 'The "border" shorthand specifies width, style, and color in a single declaration: "border: 1px solid #E5E7EB;". Course sections now have clean, subtle frames.'
+        "key": "C",
+        "label": "line",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"line\" is not a valid CSS property. Element perimeters are configured via \"border\"."
       },
       {
-        key: "D",
-        label: "box-line",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"box-line" is not a valid CSS property.'
+        "key": "D",
+        "label": "box-border",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"box-border\" is not a standard CSS property. CSS uses \"border\"."
       }
     ]
   },
   {
-    id: 10,
-    title: "Border Radius",
-    property: "border-radius",
-    q: "Which CSS property creates rounded corners?",
-    purpose: "Learn how border-radius curves rectangular box corners.",
-    options: [
+    "id": 10,
+    "title": "Border Radius",
+    "property": "border-radius",
+    "q": "You want the course cards and buttons to have smooth rounded corners.\nWhich CSS property rounds the corners of an element?",
+    "purpose": "Learn how border-radius softens harsh rectangular edges into modern cards.",
+    "options": [
       {
-        key: "A",
-        label: "corner-radius",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"corner-radius" is not a CSS property. CSS uses "border-radius".'
+        "key": "A",
+        "label": "corner-round",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"corner-round\" is not a CSS property. Corner curvature is controlled via \"border-radius\"."
       },
       {
-        key: "B",
-        label: "border-round",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"border-round" is not a valid CSS property.'
+        "key": "B",
+        "label": "round-edge",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"round-edge\" is not a valid CSS property."
       },
       {
-        key: "C",
-        label: "border-radius",
-        css: ".course-section, .course-card, header img { border-radius: 12px !important; }",
-        correct: true,
-        explanation: '"border-radius" curves the outer corners of an element:\n• 0 = sharp square corners\n• 12px = modern smooth corners\n• 50% = circular / pill shape'
+        "key": "C",
+        "label": "border-radius",
+        "css": ".course-card, .content-card, header img, button, input, select { border-radius: 10px !important; }",
+        "correct": true,
+        "explanation": "\"border-radius\" rounds the corners of an element's outer border edge. Setting \"border-radius: 10px\" gives cards and controls a polished, modern look."
       },
       {
-        key: "D",
-        label: "radius-border",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"radius-border" is not a valid CSS property.'
+        "key": "D",
+        "label": "curve",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"curve\" is not a valid CSS property. Corner rounding is set with \"border-radius\"."
       }
     ]
   },
   {
-    id: 11,
-    title: "Width and Max-Width",
-    property: "max-width & margin auto",
-    q: "The webpage is stretching across the entire screen and becoming difficult to read.\nWhich CSS approach creates a readable maximum content width?",
-    purpose: "Learn how max-width and auto margins center responsive layouts on desktop screens.",
-    options: [
+    "id": 11,
+    "title": "Max Width & Centering",
+    "property": "max-width + margin: 0 auto",
+    "q": "You want the webpage container to stay centered on wide screens with a maximum width of 960px.\nWhich combination of properties achieves this standard layout pattern?",
+    "purpose": "Learn the canonical page container pattern: max-width + margin: 0 auto.",
+    "options": [
       {
-        key: "A",
-        label: "width: 2000px;",
-        css: "main, .page-container, header, nav, footer { width: 2000px !important; max-width: none !important; }",
-        correct: false,
-        explanation: '"width: 2000px" forces the webpage wider than most desktop screens, causing unwanted horizontal scrollbars.'
+        "key": "A",
+        "label": "align: center",
+        "css": "body { align: center !important; }",
+        "correct": false,
+        "explanation": "\"align: center\" is not a standard CSS property for block centering."
       },
       {
-        key: "B",
-        label: "max-width: 1200px;\nmargin: 0 auto;\npadding: 0 24px;",
-        css: "main, .page-container, header, nav, footer { max-width: 1200px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 24px !important; padding-right: 24px !important; }",
-        correct: true,
-        explanation: '"max-width: 1200px" caps line width on wide monitors, while "margin: 0 auto" automatically centers the block container with balanced margins.'
+        "key": "B",
+        "label": "max-width: 960px; margin: 0 auto;",
+        "css": "body, .page-container, header { max-width: 960px !important; margin-left: auto !important; margin-right: auto !important; }",
+        "correct": true,
+        "explanation": "Combining \"max-width: 960px\" with \"margin: 0 auto\" (or margin-left/right: auto) is the classic CSS technique to constrain and center content on wide displays."
       },
       {
-        key: "C",
-        label: "width: 100px;",
-        css: "main, .page-container, header, nav, footer { width: 100px !important; max-width: 100px !important; }",
-        correct: false,
-        explanation: '"width: 100px" squashes the entire desktop webpage into a tiny 100px column.'
+        "key": "C",
+        "label": "center-block: true",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"center-block\" is not a valid CSS property. Centering blocks requires auto horizontal margins."
       },
       {
-        key: "D",
-        label: "max-width: 100px;",
-        css: "main, .page-container, header, nav, footer { max-width: 100px !important; }",
-        correct: false,
-        explanation: '"max-width: 100px" restricts content to 100px, which is far too small for readable desktop interfaces.'
+        "key": "D",
+        "label": "width: 100%; float: center;",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"float: center\" does not exist in CSS. Float only supports left, right, none, and inherit."
       }
     ]
   },
   {
-    id: 12,
-    title: "Display & Flexbox",
-    property: "display: flex",
-    q: "The navigation links are currently displayed vertically.\nWhich CSS property can be used to create a horizontal Flexbox layout?",
-    purpose: "Learn the core Flexbox concepts: display: flex, gap, and align-items.",
-    options: [
+    "id": 12,
+    "title": "Flexbox Layout",
+    "property": "display: flex",
+    "q": "You want the 3 course cards to sit side-by-side in a horizontal row instead of stacking vertically.\nWhich CSS declaration turns the parent container into a flexible flex layout?",
+    "purpose": "Learn how display: flex enables powerful 1D row/column layouts.",
+    "options": [
       {
-        key: "A",
-        label: "display: block;",
-        css: "nav ul { display: block !important; }",
-        correct: false,
-        explanation: '"display: block" keeps list items stacked vertically in standard document flow.'
+        "key": "A",
+        "label": "display: block",
+        "css": ".course-list { display: block !important; }",
+        "correct": false,
+        "explanation": "\"display: block\" is the default behavior where elements stack vertically on top of each other."
       },
       {
-        key: "B",
-        label: "display: inline;",
-        css: "nav ul { display: inline !important; }",
-        correct: false,
-        explanation: '"display: inline" flows with text but does not enable flex gap, alignment, or flex distribution properties.'
+        "key": "B",
+        "label": "layout: row",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"layout: row\" is not a standard CSS property. CSS uses \"display: flex\" with \"flex-direction: row\"."
       },
       {
-        key: "C",
-        label: "display: flex;",
-        css: "nav ul { display: flex !important; gap: 24px !important; align-items: center !important; list-style: none !important; padding: 0 !important; margin: 20px 0 !important; border-bottom: 1px solid #E5E7EB !important; padding-bottom: 16px !important; } .course-list { display: flex !important; gap: 20px !important; flex-wrap: wrap !important; } .course-card, .course-section { flex: 1 1 300px !important; }",
-        correct: true,
-        explanation: '"display: flex" establishes a Flexbox container. Children line up horizontally by default. "gap: 24px" sets space between items, and "align-items: center" aligns them along the cross axis.'
+        "key": "C",
+        "label": "display: flex",
+        "css": ".course-list { display: flex !important; flex-direction: row !important; gap: 20px !important; flex-wrap: wrap !important; }\nnav ul { display: flex !important; gap: 24px !important; list-style: none !important; padding: 0 !important; }",
+        "correct": true,
+        "explanation": "\"display: flex\" activates the Flexible Box layout model on the container. The child course cards and navigation links instantly arrange horizontally in a clean row."
       },
       {
-        key: "D",
-        label: "display: table;",
-        css: "nav ul { display: table !important; }",
-        correct: false,
-        explanation: '"display: table" uses legacy tabular rendering; modern responsive navigation uses Flexbox.'
+        "key": "D",
+        "label": "position: horizontal",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"position: horizontal\" is not a valid CSS declaration. CSS positioning uses static, relative, absolute, fixed, or sticky."
       }
     ]
   },
   {
-    id: 13,
-    title: "Hover Pseudo-Class",
-    property: ":hover",
-    q: "You want a navigation link to change color when the mouse moves over it.\nWhich CSS selector is correct?",
-    purpose: "Learn how pseudo-classes like :hover attach styling to user interactions.",
-    options: [
+    "id": 13,
+    "title": "Hover Pseudo-Class",
+    "property": ":hover",
+    "q": "You want buttons and links to change appearance when the user moves their mouse pointer over them.\nWhich CSS pseudo-class targets the hover state?",
+    "purpose": "Learn how the :hover pseudo-class provides interactive tactile feedback.",
+    "options": [
       {
-        key: "A",
-        label: "nav a:hover",
-        css: "nav a { color: #111827 !important; text-decoration: none !important; font-weight: 600 !important; transition: color 0.15s ease !important; } nav a:hover { color: #F97316 !important; }",
-        correct: true,
-        explanation: '":hover" is a CSS pseudo-class that matches when the user positions a cursor over an element. Move your mouse over navigation links to see them turn orange!'
+        "key": "A",
+        "label": ":mouse-on",
+        "css": "/* Invalid CSS pseudo-class */",
+        "correct": false,
+        "explanation": "\":mouse-on\" is not a standard CSS pseudo-class."
       },
       {
-        key: "B",
-        label: "nav a:mouse",
-        css: "/* Invalid pseudo-class */",
-        correct: false,
-        explanation: '":mouse" is not a valid CSS pseudo-class. The standard pseudo-class for pointer hover is ":hover".'
+        "key": "B",
+        "label": ":active",
+        "css": "button:active { transform: scale(0.95) !important; }",
+        "correct": false,
+        "explanation": "\":active\" matches only during the exact moment an element is being clicked/pressed down, not during cursor hover."
       },
       {
-        key: "C",
-        label: "nav a:click",
-        css: "/* Invalid pseudo-class */",
-        correct: false,
-        explanation: '":click" is not a CSS pseudo-class. In CSS, clicked state uses ":active" and mouseover uses ":hover".'
+        "key": "C",
+        "label": ":hover",
+        "css": "button:hover, .primary-action:hover { background: #EA6C0A !important; transform: translateY(-2px) !important; }\nnav a:hover { color: #EA6C0A !important; text-decoration: underline !important; }\n.course-card:hover { transform: translateY(-4px) !important; border-color: #FDBA74 !important; }",
+        "correct": true,
+        "explanation": "The \":hover\" pseudo-class applies styles when the user hovers over an element with a pointer. Buttons, navigation links, and cards now react dynamically."
       },
       {
-        key: "D",
-        label: "nav a:change",
-        css: "/* Invalid pseudo-class */",
-        correct: false,
-        explanation: '":change" is not a valid CSS pseudo-class.'
+        "key": "D",
+        "label": ":pointer",
+        "css": "/* Invalid CSS pseudo-class */",
+        "correct": false,
+        "explanation": "\":pointer\" is not a pseudo-class for hover states. CSS uses \":hover\"."
       }
     ]
   },
   {
-    id: 14,
-    title: "Box Shadow",
-    property: "box-shadow",
-    q: "You want to give the course cards a subtle sense of depth.\nWhich CSS property should you use?",
-    purpose: "Learn how box-shadow adds depth: offset-x, offset-y, blur-radius, and color.",
-    options: [
+    "id": 14,
+    "title": "Box Shadow",
+    "property": "box-shadow",
+    "q": "Which CSS property adds a subtle drop shadow to cards and forms to create visual depth and elevation?",
+    "purpose": "Learn how box-shadow adds elevation, realism, and visual hierarchy.",
+    "options": [
       {
-        key: "A",
-        label: "element-shadow",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"element-shadow" is not a valid CSS property. CSS uses "box-shadow".'
+        "key": "A",
+        "label": "text-shadow",
+        "css": "body { text-shadow: 2px 2px #999999 !important; }",
+        "correct": false,
+        "explanation": "\"text-shadow\" casts shadows behind font glyphs, not the rectangular box container itself."
       },
       {
-        key: "B",
-        label: "box-shadow",
-        css: ".course-section, .course-card, form, table { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important; }",
-        correct: true,
-        explanation: '"box-shadow: 0 4px 14px rgba(0,0,0,0.06)" adds clean depth with 0 horizontal offset, 4px vertical drop, 14px soft blur, and a gentle translucent black shadow.'
+        "key": "B",
+        "label": "box-shadow",
+        "css": ".course-card, .content-card, form { box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important; transition: all 0.2s ease !important; }\n.course-card:hover { box-shadow: 0 10px 25px rgba(249,115,22,0.15) !important; }",
+        "correct": true,
+        "explanation": "\"box-shadow\" casts shadows from the frame of an element. Setting \"box-shadow: 0 4px 16px rgba(0,0,0,0.06)\" gives cards elegant depth and elevation."
       },
       {
-        key: "C",
-        label: "card-shadow",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"card-shadow" is not a valid CSS property.'
+        "key": "C",
+        "label": "elevation-level",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"elevation-level\" is not a standard CSS property. Elevation in CSS is rendered using \"box-shadow\"."
       },
       {
-        key: "D",
-        label: "shadow-box",
-        css: "/* Invalid CSS property */",
-        correct: false,
-        explanation: '"shadow-box" is inverted syntax. The correct property name is "box-shadow".'
+        "key": "D",
+        "label": "card-depth",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"card-depth\" is not a CSS property. Depth is created via \"box-shadow\"."
       }
     ]
   },
   {
-    id: 15,
-    title: "CSS Color System & Hierarchy",
-    property: "Unified Color System",
-    q: "You are designing a professional student registration website.\nWhich color system provides the best visual hierarchy for this application?",
-    purpose: "Learn how professional websites combine backgrounds, cards, typography, and accents into a unified system.",
-    options: [
+    "id": 15,
+    "title": "CSS Color System & Accents",
+    "property": "background: #F97316 (Brand Accent)",
+    "q": "To give the portal a cohesive brand identity, you want to style primary action buttons with a vibrant brand orange (#F97316) and clean white text.\nWhich CSS declaration achieves this?",
+    "purpose": "Learn how brand colors and accent highlights unify visual aesthetics.",
+    "options": [
       {
-        key: "A",
-        label: "Background: #000000\nText: #FFFFFF\nAccent: #FF00FF",
-        css: "body { background: #000000 !important; color: #FFFFFF !important; } a, button { background: #FF00FF !important; color: #fff !important; }",
-        correct: false,
-        explanation: "Harsh black and neon magenta causes eye fatigue and lacks clear visual hierarchy for a student portal."
+        "key": "A",
+        "label": "background: #F97316; color: #FFFFFF; border: none;",
+        "css": "button, .primary-action { background: #F97316 !important; color: #FFFFFF !important; border: none !important; font-weight: 700 !important; padding: 12px 26px !important; }\nth { background: #F1F5F9 !important; font-weight: 700 !important; color: #0F172A !important; }\nnav a { font-weight: 600 !important; color: #F97316 !important; text-decoration: none !important; }",
+        "correct": true,
+        "explanation": "Setting \"background: #F97316\", \"color: #FFFFFF\", and \"border: none\" turns raw default browser buttons into vibrant, high-conversion primary call-to-action buttons."
       },
       {
-        key: "B",
-        label: "Background: #F8FAFC\nText: #111827\nAccent: #F97316\nCards: #FFFFFF",
-        css: `body { background: #F8FAFC !important; color: #111827 !important; font-family: Arial, sans-serif !important; }
-.course-section, .course-card, form, table { background: #FFFFFF !important; border: 1px solid #E5E7EB !important; }
-h1, h2, h3 { color: #111827 !important; }
-h2, .accent-text, em, header p strong { color: #F97316 !important; }
-p, li, td { color: #374151 !important; line-height: 1.6 !important; }
-table { width: 100% !important; border-collapse: collapse !important; border-radius: 8px !important; overflow: hidden !important; }
-th { background: #111827 !important; color: #FFFFFF !important; text-align: left !important; padding: 14px 16px !important; }
-td { padding: 14px 16px !important; border-bottom: 1px solid #E5E7EB !important; }
-tr:hover { background: #FFF7ED !important; }
-form { padding: 32px !important; border-radius: 14px !important; max-width: 700px !important; }
-input, select { width: 100% !important; padding: 12px 14px !important; border: 1px solid #D1D5DB !important; border-radius: 8px !important; font-size: 15px !important; margin-top: 6px !important; margin-bottom: 14px !important; }
-input:focus, select:focus { outline: none !important; border-color: #F97316 !important; box-shadow: 0 0 0 3px rgba(249,115,22,0.15) !important; }
-button, input[type='submit'] { background: #F97316 !important; color: #FFFFFF !important; padding: 13px 24px !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 700 !important; cursor: pointer !important; transition: background 0.2s ease, transform 0.2s ease !important; }
-button:hover, input[type='submit']:hover { background: #EA580C !important; transform: translateY(-1px) !important; }
-header img { width: 100% !important; max-width: 100% !important; height: 360px !important; object-fit: cover !important; border-radius: 16px !important; display: block !important; margin: 16px 0 !important; }
-footer { text-align: center !important; padding: 32px 0 !important; border-top: 1px solid #E5E7EB !important; color: #6B7280 !important; margin-top: 48px !important; font-size: 14px !important; }`,
-        correct: true,
-        explanation: "Option B establishes a cohesive, professional design system:\n• #F8FAFC → Canvas background\n• #FFFFFF → Cards and containers\n• #111827 → Primary text and headers\n• #374151 → Readable secondary body text\n• #F97316 → Warm energetic action accent\n• #E5E7EB → Structural dividers and borders"
+        "key": "B",
+        "label": "button-skin: orange",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"button-skin\" is not a valid CSS property."
       },
       {
-        key: "C",
-        label: "Background: #FF0000\nText: #FFFF00\nAccent: #0000FF",
-        css: "body { background: #FF0000 !important; color: #FFFF00 !important; }",
-        correct: false,
-        explanation: "High-saturation red and yellow colors create severe visual vibration and make text unreadable."
+        "key": "C",
+        "label": "theme: #F97316",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"theme\" is not a native CSS property for styling elements."
       },
       {
-        key: "D",
-        label: "Background: #7C3AED\nText: #FFFFFF\nAccent: #00FF00",
-        css: "body { background: #7C3AED !important; color: #FFFFFF !important; }",
-        correct: false,
-        explanation: "Saturated purple with neon green lacks the subtle contrast needed for clean academic portals."
+        "key": "D",
+        "label": "accent-fill: orange-dark",
+        "css": "/* Invalid CSS property */",
+        "correct": false,
+        "explanation": "\"accent-fill\" is not a valid standard CSS property."
       }
     ]
   }
 ];
 
 /* ===========================================================================
-   STATE
+   STATE MANAGEMENT
    =========================================================================== */
 const state = {
   currentView: 'html',
@@ -1110,9 +1833,21 @@ const state = {
   qScore: 0
 };
 
+// HTML Round 1 Quiz State
+const htmlQuizState = {
+  currentIndex: 0,
+  selectedOption: null,
+  isCorrect: false,
+  totalAttempts: 0,
+  additionalAttempts: 0,
+  questionAttempts: {}, // questionIndex -> count
+  portalRevealed: false
+};
+
+// CSS Challenge Quiz State
 const quizState = {
-  solvedQuestions: {}, // index -> chosen option object with { key, css, label, explanation }
-  currentTry: null,    // chosen option object with { key, css, label, explanation }
+  solvedQuestions: {}, // index -> chosen option object
+  currentTry: null,
   qAnswered: false
 };
 
@@ -1128,14 +1863,15 @@ function toast(msg) {
 }
 
 function escapeHtml(str) {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function toggleFullscreen(viewType) {
   let targetEl;
   let btnEl;
   if (viewType === 'html') {
-    targetEl = document.querySelector('.html-view-body');
+    targetEl = document.getElementById('htmlPortalContainer');
     btnEl = document.getElementById('btnFsHtml');
   } else if (viewType === 'css') {
     targetEl = document.querySelector('.css-preview');
@@ -1189,35 +1925,266 @@ function switchView(v) {
     document.getElementById(viewMap[k]).classList.toggle('active', k === v);
     document.getElementById(navMap[k]).classList.toggle('active', k === v);
   });
+  if (v === 'html') {
+    if (htmlQuizState.portalRevealed) {
+      renderHtmlPreview();
+    } else {
+      renderHtmlQuestion();
+    }
+  }
   if (v === 'css') renderCssPreview();
   if (v === 'js')  renderJsPreview();
 }
 
 /* ===========================================================================
-   ROUND 1 — HTML
+   ROUND 1: 30-QUESTION INTERACTIVE HTML QUIZ LOGIC
+   =========================================================================== */
+function renderHtmlQuestion() {
+  const qArea = document.getElementById('hqQuestionArea');
+  const counterText = document.getElementById('hqCounterText');
+  const progressBar = document.getElementById('hqProgressBar');
+  const statsTag = document.getElementById('hqStatsTag');
+  const feedbackCard = document.getElementById('hqFeedbackCard');
+  const navRow = document.getElementById('hqNavRow');
+  const completionContainer = document.getElementById('hqCompletionContainer');
+  const topCard = document.getElementById('hqTopCard');
+  const portalContainer = document.getElementById('htmlPortalContainer');
+  const quizBody = document.getElementById('htmlQuizBody');
+
+  if (htmlQuizState.portalRevealed) {
+    quizBody.style.display = 'none';
+    portalContainer.classList.add('show');
+    document.getElementById('btnInspector').style.display = 'inline-flex';
+    document.getElementById('btnGoToCssFromHtml').style.display = 'inline-flex';
+    document.getElementById('htmlHeaderTitle').textContent = 'Student Registration Portal — Raw HTML';
+    document.getElementById('htmlHeaderDesc').textContent = 'Explore tags using the Tag Inspector. Click CSS Challenge when ready.';
+    renderHtmlPreview();
+    return;
+  }
+
+  // Ensure quiz elements are visible
+  quizBody.style.display = 'flex';
+  portalContainer.classList.remove('show');
+  document.getElementById('btnInspector').style.display = 'none';
+  document.getElementById('btnGoToCssFromHtml').style.display = 'none';
+  document.getElementById('htmlHeaderTitle').textContent = 'HTML Round 1 — Interactive Learning Quiz';
+  document.getElementById('htmlHeaderDesc').textContent = 'Answer all 30 foundational questions to unlock the Student Registration Portal.';
+
+  const total = HTML_QUESTIONS.length;
+  const idx = htmlQuizState.currentIndex;
+
+  if (idx >= total) {
+    // Show completion screen
+    qArea.innerHTML = '';
+    feedbackCard.classList.remove('show');
+    navRow.classList.remove('show');
+    topCard.style.display = 'none';
+    completionContainer.classList.add('show');
+
+    document.getElementById('hqStatCompleted').textContent = `${total} / ${total}`;
+    document.getElementById('hqStatTotalAttempts').textContent = htmlQuizState.totalAttempts;
+    document.getElementById('hqStatAdditionalAttempts').textContent = htmlQuizState.additionalAttempts;
+    return;
+  }
+
+  topCard.style.display = 'flex';
+  completionContainer.classList.remove('show');
+
+  const q = HTML_QUESTIONS[idx];
+  counterText.textContent = `Question ${idx + 1} / ${total}`;
+  const pct = Math.max(3.33, ((idx) / total) * 100);
+  progressBar.style.width = pct + '%';
+  statsTag.textContent = `Attempts: ${htmlQuizState.totalAttempts}`;
+
+  // Build Options HTML (A, B, C, D)
+  const letters = ['A', 'B', 'C', 'D'];
+  const optsHtml = q.options.map((optText, i) => {
+    const isSelected = htmlQuizState.selectedOption === i;
+    const selectedClass = isSelected ? 'selected' : '';
+    return `
+      <button class="hq-option ${selectedClass}" id="hqOpt_${i}" onclick="selectHtmlOption(${i})">
+        <span class="hq-opt-letter">${letters[i]}</span>
+        <span class="hq-opt-text">${escapeHtml(optText)}</span>
+      </button>
+    `;
+  }).join('');
+
+  qArea.innerHTML = `
+    <div class="hq-card">
+      <div class="hq-topic-badge">${escapeHtml(q.topic)}</div>
+      <h3 class="hq-question-text">${escapeHtml(q.question)}</h3>
+      <div class="hq-options">
+        ${optsHtml}
+      </div>
+    </div>
+  `;
+
+  // Check feedback state
+  if (htmlQuizState.selectedOption !== null) {
+    renderHtmlFeedback();
+  } else {
+    feedbackCard.classList.remove('show');
+    navRow.classList.remove('show');
+  }
+}
+
+function selectHtmlOption(optIdx) {
+  const idx = htmlQuizState.currentIndex;
+  const q = HTML_QUESTIONS[idx];
+  
+  htmlQuizState.totalAttempts++;
+  if (!htmlQuizState.questionAttempts[idx]) {
+    htmlQuizState.questionAttempts[idx] = 1;
+  } else {
+    htmlQuizState.questionAttempts[idx]++;
+    htmlQuizState.additionalAttempts++;
+  }
+
+  htmlQuizState.selectedOption = optIdx;
+  const isCorrect = (optIdx === q.answer);
+  htmlQuizState.isCorrect = isCorrect;
+
+  // Update UI selection on buttons
+  q.options.forEach((_, i) => {
+    const btn = document.getElementById('hqOpt_' + i);
+    if (btn) {
+      btn.classList.toggle('selected', i === optIdx);
+    }
+  });
+
+  const statsTag = document.getElementById('hqStatsTag');
+  if (statsTag) statsTag.textContent = `Attempts: ${htmlQuizState.totalAttempts}`;
+
+  renderHtmlFeedback();
+}
+
+function renderHtmlFeedback() {
+  const idx = htmlQuizState.currentIndex;
+  const q = HTML_QUESTIONS[idx];
+  const optIdx = htmlQuizState.selectedOption;
+  if (optIdx === null) return;
+
+  const feedbackCard = document.getElementById('hqFeedbackCard');
+  const feedbackTitle = document.getElementById('hqFeedbackTitle');
+  const feedbackBody = document.getElementById('hqFeedbackBody');
+  const navRow = document.getElementById('hqNavRow');
+  const btnNext = document.getElementById('btnHqNext');
+
+  feedbackCard.classList.add('show');
+
+  if (htmlQuizState.isCorrect) {
+    // CORRECT SELECTION — Display concept explanation without green colors or "Correct" labels
+    feedbackTitle.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--orange);"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      Concept Explanation
+    `;
+
+    let formattedExplanation = escapeHtml(q.explanation).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+    if (formattedExplanation.includes('&lt;pre&gt;') || formattedExplanation.includes('```html')) {
+      formattedExplanation = formattedExplanation
+        .replace(/```html([\s\S]*?)```/g, '<pre>$1</pre>');
+    }
+
+    feedbackBody.innerHTML = `
+      <p>${formattedExplanation}</p>
+    `;
+
+    // Enable / Show Next Question button
+    navRow.classList.add('show');
+    if (idx === HTML_QUESTIONS.length - 1) {
+      btnNext.innerHTML = 'Complete Round 1 &rarr;';
+    } else {
+      btnNext.innerHTML = 'Next Question &rarr;';
+    }
+  } else {
+    // WRONG SELECTION — Neutral explanation of why that selected option is not right without revealing the answer
+    feedbackTitle.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--orange);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Think about what this HTML element is responsible for.
+    `;
+
+    const wrongText = q.wrongExplanations[optIdx] || "Consider how standard HTML elements divide responsibilities between content, markup, styling, and server execution.";
+    feedbackBody.innerHTML = `
+      <p>${escapeHtml(wrongText)}</p>
+    `;
+
+    // Hide Next Question button on incorrect attempt
+    navRow.classList.remove('show');
+  }
+}
+
+function nextHtmlQuestion() {
+  if (!htmlQuizState.isCorrect) return;
+
+  htmlQuizState.currentIndex++;
+  htmlQuizState.selectedOption = null;
+  htmlQuizState.isCorrect = false;
+
+  renderHtmlQuestion();
+
+  // Smooth scroll back to top of quiz body
+  const quizBody = document.getElementById('htmlQuizBody');
+  if (quizBody) quizBody.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetHtmlQuiz() {
+  htmlQuizState.currentIndex = 0;
+  htmlQuizState.selectedOption = null;
+  htmlQuizState.isCorrect = false;
+  htmlQuizState.totalAttempts = 0;
+  htmlQuizState.additionalAttempts = 0;
+  htmlQuizState.questionAttempts = {};
+  htmlQuizState.portalRevealed = false;
+
+  renderHtmlQuestion();
+  toast('HTML Round 1 Quiz reset to Question 1.');
+}
+
+function revealStudentPortal() {
+  htmlQuizState.portalRevealed = true;
+  renderHtmlQuestion();
+  toast('Student Registration Portal Revealed! Inspect tags or proceed to Round 2.');
+}
+
+function backToHtmlQuiz() {
+  htmlQuizState.portalRevealed = false;
+  renderHtmlQuestion();
+}
+
+/* ===========================================================================
+   HTML PREVIEW & TAG INSPECTOR
    =========================================================================== */
 function renderHtmlPreview() {
   let html = BASE_HTML;
   if (state.inspectorOn) {
     html = html.replace('</body>', `
-    <style>*:hover{outline:2px dashed #2563eb!important;cursor:help;position:relative;}
-    *:hover::before{content:attr(data-tag);position:absolute;top:-20px;left:0;background:#2563eb;color:#fff;font:700 11px monospace;padding:2px 7px;border-radius:3px;z-index:99999;pointer-events:none;white-space:nowrap;}</style>
-    <script>document.querySelectorAll('*').forEach(el=>{el.dataset.tag='<'+el.tagName.toLowerCase()+'>';});<\/script></body>`);
+    <style>
+      *:hover { outline: 2px dashed #F97316 !important; cursor: help; position: relative; }
+      *:hover::before { content: attr(data-tag); position: absolute; top: -22px; left: 0; background: #F97316; color: #fff; font: 700 11px monospace; padding: 2px 7px; border-radius: 3px; z-index: 99999; pointer-events: none; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    </style>
+    <script>
+      document.querySelectorAll('*').forEach(el => {
+        if (el.tagName !== 'HTML' && el.tagName !== 'HEAD' && el.tagName !== 'BODY') {
+          el.dataset.tag = '<' + el.tagName.toLowerCase() + '>';
+        }
+      });
+    <\/script></body>`);
   }
-  document.getElementById('frameHtml').srcdoc = html;
+  const frame = document.getElementById('frameHtml');
+  if (frame) frame.srcdoc = html;
 }
 
 function toggleInspector() {
   state.inspectorOn = !state.inspectorOn;
   document.getElementById('inspectorLabel').textContent = state.inspectorOn ? 'ON' : 'OFF';
   const btn = document.getElementById('btnInspector');
-  btn.classList.toggle('is-on', state.inspectorOn);
+  if (btn) btn.classList.toggle('is-on', state.inspectorOn);
   renderHtmlPreview();
   toast('Tag Inspector ' + (state.inspectorOn ? 'enabled' : 'disabled'));
 }
 
 /* ===========================================================================
-   ROUND 2 — 15 PROGRESSIVE CSS ENGINE
+   ROUND 2: 15 PROGRESSIVE CSS ENGINE
    =========================================================================== */
 function renderProgressDots() {
   const container = document.getElementById('qDots');
@@ -1264,7 +2231,7 @@ function renderQuestion() {
   const qCompletion = document.getElementById('qCompletion');
 
   if (state.qIndex >= QUESTIONS.length) {
-    container.innerHTML = '';
+    if (container) container.innerHTML = '';
     if (qNum) qNum.textContent = QUESTIONS.length;
     if (qCompletion) {
       qCompletion.classList.add('show');
@@ -1288,19 +2255,21 @@ function renderQuestion() {
       <span class="q-opt-text">${escapeHtml(o.label)}</span>
     </button>`).join('');
 
-  container.innerHTML = `
-    <div class="q-card">
-      <div class="q-topic-tag">${q.title}</div>
-      <h3 class="q-text">${escapeHtml(q.q)}</h3>
-      <div class="q-purpose">${escapeHtml(q.purpose)}</div>
-      <div class="q-options">${optsHtml}</div>
-    </div>
-    <div class="q-feedback" id="qFeedback"></div>
-    <div class="q-nav-row" id="qNavRow">
-      <button class="btn btn-orange" onclick="nextQuestion()" style="flex:1;justify-content:center;">
-        ${state.qIndex < QUESTIONS.length - 1 ? 'Next Question &rarr;' : 'Review Final Styled Page &#10003;'}
-      </button>
-    </div>`;
+  if (container) {
+    container.innerHTML = `
+      <div class="q-card">
+        <div class="q-topic-tag">${q.title}</div>
+        <h3 class="q-text">${escapeHtml(q.q)}</h3>
+        <div class="q-purpose">${escapeHtml(q.purpose)}</div>
+        <div class="q-options">${optsHtml}</div>
+      </div>
+      <div class="q-feedback" id="qFeedback"></div>
+      <div class="q-nav-row" id="qNavRow">
+        <button class="btn btn-orange" onclick="nextQuestion()" style="flex:1;justify-content:center;">
+          ${state.qIndex < QUESTIONS.length - 1 ? 'Next Question &rarr;' : 'Review Final Styled Page &#10003;'}
+        </button>
+      </div>`;
+  }
 
   renderCssPreview();
 }
@@ -1316,15 +2285,11 @@ function selectAnswer(optIdx) {
   const correctOpt = q.options.find(o => o.correct);
 
   if (!isCorrect) {
-    // 1. Mark this specific button as incorrect (RED) and disable it
     btn.disabled = true;
     btn.classList.add('incorrect');
-
-    // 2. Apply this wrong CSS to preview so student sees what happens
     quizState.currentTry = chosen;
     renderCssPreview();
 
-    // 3. Show structured educational error feedback with the correct answer
     const fb = document.getElementById('qFeedback');
     fb.className = 'q-feedback incorrect';
     fb.innerHTML = `
@@ -1334,14 +2299,10 @@ function selectAnswer(optIdx) {
         <p style="margin:0 0 6px 0;color:#7F1D1D;"><strong>Correct Answer:</strong> Option ${correctOpt.key} (<code>${escapeHtml(correctOpt.label.split('\n')[0])}</code>)</p>
       </div>
       <div class="q-feedback-hint">Notice what changed in the live preview. Click the correct answer (${correctOpt.key}) to apply the proper CSS and continue!</div>`;
-    
-    // Other options remain clickable.
   } else {
-    // Correct answer clicked!
     quizState.qAnswered = true;
     btn.classList.add('correct');
 
-    // Check if answered on first try (no incorrect options clicked yet for this question)
     const hadMistakes = q.options.some((_, i) => {
       const b = document.getElementById('qopt_' + i);
       return b && b.classList.contains('incorrect');
@@ -1350,19 +2311,16 @@ function selectAnswer(optIdx) {
       state.qScore++;
     }
 
-    // Disable all option buttons for this question
     q.options.forEach((_, i) => {
       const b = document.getElementById('qopt_' + i);
       if (b) b.disabled = true;
     });
 
-    // Save this question into solved state
     quizState.solvedQuestions[state.qIndex] = chosen;
     quizState.currentTry = null;
     renderCssPreview();
     renderProgressDots();
 
-    // Show correct feedback
     const fb = document.getElementById('qFeedback');
     fb.className = 'q-feedback correct';
     fb.innerHTML = `
@@ -1372,7 +2330,6 @@ function selectAnswer(optIdx) {
         <p style="margin:0;"><strong>What you learned:</strong><br>${escapeHtml(chosen.explanation).replace(/\n/g, '<br>')}</p>
       </div>`;
 
-    // Reveal Next Question button
     const navRow = document.getElementById('qNavRow');
     if (navRow) navRow.classList.add('show');
   }
@@ -1401,17 +2358,15 @@ function redoAll() {
 }
 
 /* ===========================================================================
-   ROUND 3 — JS PREVIEW
+   ROUND 3: JS PREVIEW & ZIP EXPORT
    =========================================================================== */
 function renderJsPreview() {
   const css = buildCssString();
   const html = BASE_HTML.replace('</head>', `<style>${css}</style></head>`);
-  document.getElementById('frameJs').srcdoc = html;
+  const frame = document.getElementById('frameJs');
+  if (frame) frame.srcdoc = html;
 }
 
-/* ===========================================================================
-   ZIP DOWNLOAD
-   =========================================================================== */
 const STARTER_JS = `// ==========================================================================
 // WEB DEVELOPMENT CHALLENGE — ROUND 3: JAVASCRIPT IMPLEMENTATION
 // Student Registration Portal — Form Validation
@@ -1425,15 +2380,14 @@ const STARTER_JS = `// =========================================================
 document.addEventListener("DOMContentLoaded", () => {
 
   // TASK 1: Select the form and input elements using getElementById / querySelector
-  // const form = ...;
-  // const fullName = ...;
-  // const email = ...;
-  // const phone = ...;
-  // const courseSelect = ...;
-  // const password = ...;
-  // const confirmPassword = ...;
-  // const formSuccess = ...;
-
+  // const form = document.getElementById('registrationForm');
+  // const fullName = document.getElementById('fullName');
+  // const email = document.getElementById('email');
+  // const phone = document.getElementById('phone');
+  // const courseSelect = document.getElementById('courseSelect');
+  // const password = document.getElementById('password');
+  // const confirmPassword = document.getElementById('confirmPassword');
+  // const formSuccess = document.getElementById('formSuccess');
 
   // TASK 2: Attach a 'submit' event listener to the form
   // form.addEventListener('submit', (event) => {
@@ -1525,13 +2479,12 @@ function downloadZip() {
 }
 
 /* ===========================================================================
-   INIT
+   INITIALIZATION
    =========================================================================== */
 window.addEventListener('DOMContentLoaded', () => {
-  renderHtmlPreview();
+  renderHtmlQuestion();
   renderQuestion();
 });
 </script>
 </body>
 </html>
-

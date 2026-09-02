@@ -6,10 +6,11 @@ An interactive, high-performance web development challenge arena and instructor 
 
 ## 🌟 Key Features & Rounds
 
-### 1. ⚡ HTML Rapid Fire & Tag Inspector
-- **Interactive Live Preview**: Instant rendering of the semantic **Student Registration Portal**.
-- **Visual Tag Inspector**: Real-time tooltip overlay displaying element tag names (\<header>\, \<nav>\, \<main>\, \<article>\, \<table>\, \<form>\, etc.) upon hover.
-- **Fast Question Conductor HUD**: 10 rapid-fire HTML architectural questions testing semantic markup, form attributes, landmarks, and tables.
+### 1. ⚡ HTML Round 1: 30-Question Interactive Learning Quiz
+- **Discovery-Based Pedagogy**: Students reason through 30 foundational HTML questions one by one with neutral error feedback that explains concepts without revealing answers or using red/green markings.
+- **Dynamic Progress & Attempt Tracking**: Real-time progress bar, question counter, and attempt statistics.
+- **Student Registration Portal Reveal**: Once all 30 questions are mastered, the full live Student Registration Portal is unlocked with interactive Tag Inspector and Fullscreen support.
+
 
 ### 2. 🎨 Progressive CSS Challenge (15 Learning Modules)
 - **Concept-First Pedagogy**: Rather than simply memorizing answers, students learn foundational CSS concepts through immediate cause-and-effect interaction.
