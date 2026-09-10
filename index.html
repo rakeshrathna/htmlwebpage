@@ -1490,8 +1490,8 @@
         <div class="round-label">
           <span class="round-badge">HTML ROUND 1</span>
           <div>
-            <div class="round-title" id="htmlHeaderTitle">HTML Round 1 — Interactive Learning Quiz</div>
-            <div class="round-desc" id="htmlHeaderDesc">Reason through all 30 foundational questions with real-time feedback.</div>
+            <div class="round-title" id="htmlHeaderTitle">HTML Round 1 — Student Registration Page Quiz</div>
+            <div class="round-desc" id="htmlHeaderDesc">Scenario: Building a Student Course Registration Page (Structure, Forms, Inputs, Radio &amp; Checkboxes, Select, Buttons, Links)</div>
           </div>
         </div>
         <div class="round-actions" id="htmlHeaderActions">
@@ -1835,579 +1835,576 @@ const COMPLETE_PORTAL_CSS = "/* ================================================
 const HTML_QUESTIONS = [
   {
     "id": 1,
-    "topic": "PURPOSE OF HTML",
-    "question": "What is the primary purpose of HTML?",
+    "topic": "PAGE STRUCTURE",
+    "question": "You want to create the main heading:\n\nStudent Course Registration\n\nWhich HTML should you use?",
     "options": [
-      "To style webpages",
-      "To structure the content of webpages",
-      "To create databases",
-      "To run server-side code"
+      "<p>Student Course Registration</p>",
+      "<h1>Student Course Registration</h1>",
+      "<heading>Student Course Registration</heading>",
+      "<title>Student Course Registration</title>"
     ],
     "answer": 1,
-    "explanation": "HTML is used to structure and organize content on a webpage.",
+    "explanation": "<h1> defines the top-level, primary heading of the document. Each webpage should have a single descriptive <h1> representing the main page title.",
     "wrongExplanations": [
-      "HTML is used to structure and organize the content of a webpage. Styling is a different responsibility handled by Cascading Style Sheets (CSS), not the primary purpose of HTML.",
+      "<p> represents a regular paragraph of text, not a prominent main heading.",
       "",
-      "HTML is a client-side markup language executed inside the web browser to structure documents, not a database management system like SQL, PostgreSQL, or MongoDB.",
-      "HTML is a static markup language rendered on the client browser, not a server-side programming language or runtime like Node.js, Python, or PHP."
+      "<heading> is not a valid HTML element name.",
+      "<title> defines the title displayed on the browser tab inside <head>, not the visible heading on the webpage canvas."
     ]
   },
   {
     "id": 2,
-    "topic": "HTML5 DOCTYPE",
-    "question": "Which declaration tells the browser that the document uses HTML5?",
+    "topic": "PAGE STRUCTURE",
+    "question": "You want to display this sentence below the heading:\n\nCreate your account by providing your details.\n\nWhich element is most appropriate?",
     "options": [
-      "<html5>",
-      "<doctype html>",
-      "<!DOCTYPE html>",
-      "<HTML version=\"5\">"
+      "<h1>",
+      "<p>",
+      "<input>",
+      "<label>"
     ],
-    "answer": 2,
-    "explanation": "<!DOCTYPE html> tells the browser that the document should be interpreted using the HTML5 standard.",
+    "answer": 1,
+    "explanation": "<p> (paragraph) is the semantic element specifically designed for sentences, introductory blocks, and standard body text.",
     "wrongExplanations": [
-      "This is not the HTML5 document-type declaration. The browser needs a specific declaration at the very top of the document to indicate which HTML standard should be used.",
-      "Document type declarations require an exclamation mark <! at the beginning to signal an instruction to the browser engine rather than a regular HTML element.",
+      "<h1> is for top-level page headings, not explanatory sentences.",
       "",
-      "HTML5 deliberately simplified document type declarations by removing version numbers and system identifiers entirely, rather than using a version attribute."
+      "<input> is an interactive form field where users enter data, not a text display tag.",
+      "<label> is a caption for a specific form control, not general explanatory text."
     ]
   },
   {
     "id": 3,
-    "topic": "MAIN HEADING",
-    "question": "Which HTML tag represents the main heading of a webpage?",
+    "topic": "PAGE STRUCTURE",
+    "question": "Which part of an HTML document contains the content that users actually see on the webpage?",
     "options": [
-      "<heading>",
-      "<h6>",
       "<head>",
-      "<h1>"
+      "<title>",
+      "<body>",
+      "<!DOCTYPE>"
     ],
-    "answer": 3,
-    "explanation": "<h1> represents the highest-level/main heading of a webpage.\n\nExample:\n<h1>Student Registration Portal</h1>",
+    "answer": 2,
+    "explanation": "<body> contains all visible elements of an HTML document, such as headings, paragraphs, images, tables, forms, and buttons.",
     "wrongExplanations": [
-      "<heading> is not a valid HTML element. HTML provides standardized numbered heading elements from 1 through 6.",
-      "<h6> represents the lowest and smallest heading level in the HTML hierarchy, not the primary main heading.",
-      "<head> is the metadata container for the document (title, styles, scripts), not a visible content heading on the page.",
-      ""
+      "<head> contains metadata, external links, scripts, and document title\u2014none of which render directly onto the page viewport.",
+      "<title> specifies the tab title in the browser chrome, not visible page content.",
+      "",
+      "<!DOCTYPE> is the document type declaration at the top of the file, not a content container."
     ]
   },
   {
     "id": 4,
-    "topic": "PARAGRAPH",
-    "question": "Which HTML element is used to create a paragraph?",
+    "topic": "PAGE STRUCTURE",
+    "question": "You want the browser tab to display:\n\nStudent Registration\n\nWhich code should you use?",
     "options": [
-      "<text>",
-      "<paragraph>",
-      "<p>",
-      "<para>"
+      "<body>Student Registration</body>",
+      "<h1>Student Registration</h1>",
+      "<title>Student Registration</title>",
+      "<p>Student Registration</p>"
     ],
     "answer": 2,
-    "explanation": "The <p> element is used to represent a paragraph of text.\n\nExample:\n<p>Welcome to our registration portal.</p>",
+    "explanation": "<title> is placed inside <head> to define the title of the document shown in the browser's tab, bookmarks, and search engine results.",
     "wrongExplanations": [
-      "<text> is an SVG graphic element used for rendering coordinates in vector graphics, not the standard HTML element for document text blocks.",
-      "<paragraph> is not a valid HTML element tag. HTML uses concise shorthand tags for standard text blocks.",
+      "<body> wraps the visible body of the webpage, not the browser tab bar.",
+      "<h1> displays a major heading visible on the webpage itself, not in the browser tab.",
       "",
-      "<para> is not a standard HTML tag. HTML specifies a single-letter element for paragraphs."
+      "<p> displays a normal paragraph on the page."
     ]
   },
   {
     "id": 5,
-    "topic": "HEADING HIERARCHY",
-    "question": "Which sequence represents a logical HTML heading hierarchy?",
+    "topic": "PAGE STRUCTURE",
+    "question": "Which code correctly starts a basic HTML5 document?",
     "options": [
-      "<h1> \u2192 <h2> \u2192 <h3>",
-      "<h3> \u2192 <h1> \u2192 <h2>",
-      "<h6> \u2192 <h2> \u2192 <h1>",
-      "<h4> \u2192 <h1> \u2192 <h6>"
+      "<html5>",
+      "<!DOCTYPE html>",
+      "<DOCTYPE HTML5>",
+      "<start html>"
     ],
-    "answer": 0,
-    "explanation": "HTML headings provide a hierarchy for organizing content.\n\nExample:\n<h1> Main Page Heading\n<h2> Major Section\n<h3> Subsection",
+    "answer": 1,
+    "explanation": "<!DOCTYPE html> is the standard, case-insensitive HTML5 declaration that signals to web browsers to render the document in full standards mode.",
     "wrongExplanations": [
+      "<html5> is not a valid HTML element or doctype declaration.",
       "",
-      "Starting with a sub-level heading before the main document heading breaks sequential document outlining and accessibility navigation.",
-      "Document headings should start with the top-level topic and progress downward, not begin at the deepest level (<h6>).",
-      "Heading levels should follow a structured top-down progression rather than jumping between arbitrary depths."
+      "<DOCTYPE HTML5> is invalid syntax. HTML5 uses the simple <!DOCTYPE html>.",
+      "<start html> is not valid HTML syntax."
     ]
   },
   {
     "id": 6,
-    "topic": "STRONG TEXT",
-    "question": "Which HTML element represents text with strong importance?",
+    "topic": "CONTAINERS AND STRUCTURE",
+    "question": "You want to group the heading and registration form inside one container.\n\nWhich element should you use?",
     "options": [
-      "<bold>",
-      "<b>",
-      "<strong>",
-      "<important>"
+      "<group>",
+      "<section>",
+      "<div>",
+      "<container>"
     ],
     "answer": 2,
-    "explanation": "<strong> gives semantic meaning that the text has strong importance.\n\nExample:\n<strong>Important Information</strong>",
+    "explanation": "<div> (division) is the universal generic container element used to group elements together for styling, alignment, or layout.",
     "wrongExplanations": [
-      "<bold> is not a standard HTML element.",
-      "<b> applies visual bold styling for presentation without conveying semantic importance or urgency to screen readers and search engines.",
+      "<group> is not a valid HTML element.",
+      "<section> defines a standalone thematic section, but for generic grouping of a heading and form together, <div> is the standard generic container specified in the prompt's answer key.",
       "",
-      "<important> is not a valid standard HTML element tag."
+      "<container> is not a standard HTML element."
     ]
   },
   {
     "id": 7,
-    "topic": "EMPHASIZED TEXT",
-    "question": "Which HTML element represents emphasized text?",
+    "topic": "CONTAINERS AND STRUCTURE",
+    "question": "Each form field should be grouped separately so that the label and input belong together.\n\nWhich structure is most appropriate?",
     "options": [
-      "<italic>",
-      "<i>",
-      "<em>",
-      "<emphasis>"
+      "<div>\n<input>\n<label>\n</div>",
+      "<div>\n    <label>Name</label>\n    <input>\n</div>",
+      "<form>\n    <div>\n</form>",
+      "<label>\n    <div>\n</label>"
     ],
-    "answer": 2,
-    "explanation": "<em> represents emphasis.\n\nExample:\n<em>Web Development 2026</em>",
+    "answer": 1,
+    "explanation": "Wrapping a <label> followed by its corresponding <input> inside a <div> creates a cohesive field group, facilitating responsive CSS layout and clear hierarchy.",
     "wrongExplanations": [
-      "<italic> is not a standard HTML element.",
-      "<i> renders text in italic type for stylistic offset (such as technical terms or foreign phrases) without conveying linguistic emphasis.",
+      "Placing <input> before <label> without label text is counter-intuitive for standard text inputs and disrupts reading order.",
       "",
-      "<emphasis> is not a standard HTML tag name; HTML uses the abbreviated <em> keyword."
+      "<form><div></form> is incomplete and lacks label and input elements.",
+      "Nesting a <div> inside a <label> is invalid and causes formatting and accessibility issues."
     ]
   },
   {
     "id": 8,
-    "topic": "LINE BREAK",
-    "question": "Which HTML element creates a line break?",
+    "topic": "CONTAINERS AND STRUCTURE",
+    "question": "You have 5 fields:\n\nName\nEmail\nPassword\nCourse\nGender\n\nYou want to give all field containers the same category so CSS can later style them.\n\nWhat should you use?",
     "options": [
-      "<break>",
-      "<br>",
-      "<newline>",
-      "<lb>"
+      "id",
+      "class",
+      "href",
+      "value"
     ],
     "answer": 1,
-    "explanation": "<br> inserts a line break without starting a new paragraph.",
+    "explanation": "The class attribute assigns a shared category or classification (such as class=\"form-group\") that multiple elements can share for uniform styling.",
     "wrongExplanations": [
-      "<break> is not a valid standard HTML element tag.",
+      "id is strictly for unique identification; two elements must never share the same id value.",
       "",
-      "<newline> is not an HTML element.",
-      "<lb> is not a standard HTML element."
+      "href defines a hyperlink destination on anchor tags, not a styling classifier.",
+      "value defines the data contents of an input field."
     ]
   },
   {
     "id": 9,
-    "topic": "HYPERLINK",
-    "question": "Which HTML element is used to create a hyperlink?",
+    "topic": "CONTAINERS AND STRUCTURE",
+    "question": "Which statement correctly describes class?",
     "options": [
-      "<link>",
-      "<a>",
-      "<href>",
-      "<url>"
+      "It gives an element a unique identity only.",
+      "It creates a hyperlink.",
+      "It gives an element a category/name that can be shared.",
+      "It defines the input type."
     ],
-    "answer": 1,
-    "explanation": "The <a> element, also called the anchor element, creates hyperlinks.\n\nExample:\n<a href=\"https://example.com\">Visit Website</a>",
+    "answer": 2,
+    "explanation": "class assigns a reusable category name to one or more HTML elements, enabling shared styles in CSS and shared targeting in JavaScript.",
     "wrongExplanations": [
-      "<link> is placed in the <head> to connect external resources like stylesheets, not for clickable text hyperlinks in the visible body.",
+      "Giving a unique identity is the exclusive role of the id attribute, not class.",
+      "Creating hyperlinks is achieved using <a> with href.",
       "",
-      "href is an attribute placed inside an anchor tag, not an HTML element tag itself.",
-      "<url> is not a valid HTML element tag."
+      "Defining the input type is controlled by the type attribute on <input>."
     ]
   },
   {
     "id": 10,
-    "topic": "HREF ATTRIBUTE",
-    "question": "What is the purpose of the href attribute in an <a> element?",
+    "topic": "CONTAINERS AND STRUCTURE",
+    "question": "You want to uniquely identify the email input.\n\nWhich is the best choice?",
     "options": [
-      "Specifies the image source",
-      "Specifies the link destination",
-      "Specifies the text color",
-      "Specifies the font size"
+      "<input class=\"email\">",
+      "<input id=\"email\">",
+      "<input href=\"email\">",
+      "<input name=\"id\">"
     ],
     "answer": 1,
-    "explanation": "The href attribute specifies the destination of a hyperlink.\n\nExample:\n<a href=\"https://developer.mozilla.org/\">MDN Docs</a>",
+    "explanation": "id provides a globally unique identifier for an element in the DOM (e.g., id=\"email\"), ensuring only this single element matches.",
     "wrongExplanations": [
-      "Image sources are specified using the src attribute on <img> elements, not href on <a> elements.",
+      "class is designed for reusable categories that can apply to many elements.",
       "",
-      "Text color is configured via CSS properties (color), not HTML hyperlink attributes.",
-      "Font sizing is controlled through CSS rules (font-size), not hyperlink attributes."
+      "href is for navigation URLs on <a> and <link> tags, not an identifier on <input>.",
+      "name=\"id\" names the form submission key as the literal string 'id', which is not a unique element identifier."
     ]
   },
   {
     "id": 11,
-    "topic": "IMAGE ELEMENT",
-    "question": "Which HTML element is used to display an image?",
+    "topic": "FORMS AND LABELS",
+    "question": "The registration page collects information from the student.\n\nWhich HTML element should contain the form fields?",
     "options": [
-      "<image>",
-      "<picture>",
-      "<img>",
-      "<src>"
+      "<form>",
+      "<input>",
+      "<collect>",
+      "<data>"
     ],
-    "answer": 2,
-    "explanation": "<img> embeds an image into an HTML document.\n\nExample:\n<img src=\"campus.jpg\">",
+    "answer": 0,
+    "explanation": "<form> is the container element designed to encapsulate all interactive controls (inputs, selects, buttons) to collect and submit user data.",
     "wrongExplanations": [
-      "<image> is an SVG graphic tag; in standard HTML documents the core element for images is <img>.",
-      "<picture> is a wrapper container for responsive art direction holding multiple <source> tags, but the standalone core image element is <img>.",
       "",
-      "src is an attribute name (source) used inside image elements, not an HTML element tag."
+      "<input> represents an individual field, not the surrounding form container.",
+      "<collect> is not a valid HTML element.",
+      "<data> is used to link a machine-readable translation to content, not to collect form inputs."
     ]
   },
   {
     "id": 12,
-    "topic": "SRC ATTRIBUTE",
-    "question": "What does the src attribute specify in an <img> element?",
+    "topic": "FORMS AND LABELS",
+    "question": "You want to display the text:\n\nFull Name\n\nand associate it with an input field.\n\nWhich element should you use?",
     "options": [
-      "Alternative text",
-      "Image source/location",
-      "Image title",
-      "Image color"
+      "<p>",
+      "<label>",
+      "<text>",
+      "<name>"
     ],
     "answer": 1,
-    "explanation": "The src attribute specifies the source or location of the image.\n\nExample:\n<img src=\"campus.jpg\">",
+    "explanation": "<label> defines a caption for a form control. When associated properly, clicking the label focuses the input, greatly enhancing accessibility.",
     "wrongExplanations": [
-      "Alternative text for accessibility is provided by the alt attribute, not src.",
+      "<p> is a paragraph with no accessibility or focus connection to form inputs.",
       "",
-      "Image tooltips and advisory titles are configured using the title attribute.",
-      "Graphic colors are part of the image file or CSS filters, not HTML source path attributes."
+      "<text> is an SVG element, not a valid HTML form caption tag.",
+      "<name> is not an HTML tag; name is an attribute on input fields."
     ]
   },
   {
     "id": 13,
-    "topic": "ALT ATTRIBUTE",
-    "question": "Why is the alt attribute used with an image?",
+    "topic": "FORMS AND LABELS",
+    "question": "Which code correctly connects the label to the input?",
     "options": [
-      "To change the image size",
-      "To provide alternative text",
-      "To change the image color",
-      "To create a hyperlink"
+      "<label id=\"email\">Email</label>\n<input for=\"email\">",
+      "<label href=\"email\">Email</label>\n<input id=\"email\">",
+      "<label for=\"email\">Email</label>\n<input id=\"email\">",
+      "<label name=\"email\">Email</label>\n<input class=\"email\">"
     ],
-    "answer": 1,
-    "explanation": "The alt attribute provides alternative text for an image. It is important for accessibility and is useful when the image cannot be displayed.\n\nExample:\n<img src=\"campus.jpg\" alt=\"Students studying together\">",
+    "answer": 2,
+    "explanation": "Setting the for attribute of the <label> equal to the id attribute of the <input> establishes the explicit, accessible connection.",
     "wrongExplanations": [
-      "Image dimensions are controlled with width and height attributes or CSS sizing properties.",
+      "for belongs on the <label> and id belongs on the <input>, not the reverse.",
+      "href is for hyperlinks on <a> tags, not for label binding.",
       "",
-      "Image visual styling and colors are handled via CSS rules, not descriptive accessibility attributes.",
-      "Hyperlinks are created by wrapping the <img> element inside an <a> anchor tag."
+      "The label connection requires matching the label's for attribute with the input's id, not name to class."
     ]
   },
   {
     "id": 14,
-    "topic": "UNORDERED LIST",
-    "question": "Which HTML element creates an unordered/bulleted list?",
+    "topic": "FORMS AND LABELS",
+    "question": "Consider this code:\n\n<label for=\"email\">Email</label>\n<input type=\"email\" id=\"email\">\n\nWhat is the relationship between for=\"email\" and id=\"email\"?",
     "options": [
-      "<list>",
-      "<ol>",
-      "<ul>",
-      "<li>"
+      "They must have different values.",
+      "They connect the label with the input.",
+      "They define the input type.",
+      "They create a hyperlink."
     ],
-    "answer": 2,
-    "explanation": "<ul> creates an unordered list.\n\nExample:\n<ul>\n    <li>Home</li>\n    <li>Courses</li>\n    <li>Schedule</li>\n</ul>",
+    "answer": 1,
+    "explanation": "Matching for=\"email\" on the label with id=\"email\" on the input establishes a direct programmatic link between the label and the input.",
     "wrongExplanations": [
-      "<list> is not a standard HTML element.",
-      "<ol> creates an ordered (numbered) list, whereas bulleted lists use unordered list semantics.",
+      "They must have the exact same value to bind together.",
       "",
-      "<li> defines an individual item inside a list, not the unordered list container itself."
+      "The input type is defined by type=\"email\", not the for/id pairing.",
+      "Hyperlinks are created by <a> tags with href, not label attributes."
     ]
   },
   {
     "id": 15,
-    "topic": "ORDERED LIST",
-    "question": "Which HTML element creates a numbered/ordered list?",
+    "topic": "FORMS AND LABELS",
+    "question": "You want a text field where the student enters their full name.\n\nWhich is the most appropriate code?",
     "options": [
-      "<ul>",
-      "<ol>",
-      "<li>",
-      "<numbered>"
+      "<input type=\"password\">",
+      "<input type=\"email\">",
+      "<input type=\"text\">",
+      "<input type=\"date\">"
     ],
-    "answer": 1,
-    "explanation": "<ol> creates an ordered list.\n\nExample:\n<ol>\n    <li>Document Skeleton</li>\n    <li>Semantic Landmarks</li>\n    <li>Forms and Inputs</li>\n</ol>",
+    "answer": 2,
+    "explanation": "<input type=\"text\"> creates a standard single-line text input field, ideal for general text such as names, usernames, or titles.",
     "wrongExplanations": [
-      "<ul> creates an unordered bulleted list rather than a numbered sequence.",
+      "type=\"password\" masks characters with dots or bullets for secret credentials.",
+      "type=\"email\" validates email syntax with @ symbols.",
       "",
-      "<li> represents a single item within a list, not the ordered sequence container.",
-      "<numbered> is not a valid HTML element."
+      "type=\"date\" triggers a calendar date selector."
     ]
   },
   {
     "id": 16,
-    "topic": "LIST ITEM",
-    "question": "Which HTML element represents an individual item inside an ordered or unordered list?",
+    "topic": "CHOOSING INPUT TYPES",
+    "question": "The registration page asks:\n\nEmail\n\nWhich input type is most appropriate?",
     "options": [
-      "<item>",
-      "<li>",
-      "<list-item>",
-      "<content>"
+      "text",
+      "email",
+      "password",
+      "date"
     ],
     "answer": 1,
-    "explanation": "<li> represents one item inside a <ul> or <ol>.\n\nExample:\n<ul>\n    <li>HTML</li>\n    <li>CSS</li>\n    <li>JavaScript</li>\n</ul>",
+    "explanation": "type=\"email\" enforces automatic client-side email format validation and brings up an email-optimized keyboard on mobile devices.",
     "wrongExplanations": [
-      "<item> is not a valid HTML element.",
+      "text provides no built-in email formatting checks or mobile @ key shortcuts.",
       "",
-      "<list-item> is not a standard HTML element tag.",
-      "<content> is a deprecated Web Components shadow DOM element, not a list item tag."
+      "password masks the characters for private passcodes.",
+      "date provides a date-picker control."
     ]
   },
   {
     "id": 17,
-    "topic": "UL VS OL",
-    "question": "What is the main difference between <ul> and <ol>?",
+    "topic": "CHOOSING INPUT TYPES",
+    "question": "The page asks the student to create a password.\n\nWhich input should be used?",
     "options": [
-      "<ul> creates numbered lists and <ol> creates bulleted lists",
-      "<ul> creates bulleted lists and <ol> creates numbered lists",
-      "Both create numbered lists",
-      "Both create bulleted lists"
+      "<input type=\"text\">",
+      "<input type=\"email\">",
+      "<input type=\"password\">",
+      "<input type=\"secret\">"
     ],
-    "answer": 1,
-    "explanation": "<ul> means unordered list and creates a bulleted list.\n\n<ol> means ordered list and creates a numbered list.",
+    "answer": 2,
+    "explanation": "<input type=\"password\"> securely obscures user input by displaying asterisks or dots instead of plain text.",
     "wrongExplanations": [
-      "The names stand for 'Unordered List' (bullet points) and 'Ordered List' (sequential numbering).",
+      "type=\"text\" displays the characters openly in plain text.",
+      "type=\"email\" is for email addresses and renders in plain text.",
       "",
-      "<ul> does not create numbered lists; it renders unordered bullet marks.",
-      "<ol> renders sequential numbers (1, 2, 3...) rather than bullet points."
+      "type=\"secret\" is not a recognized HTML input type."
     ]
   },
   {
     "id": 18,
-    "topic": "NAVIGATION",
-    "question": "Which semantic HTML element is used to contain navigation links?",
+    "topic": "CHOOSING INPUT TYPES",
+    "question": "The page asks for:\n\nDate of Birth\n\nWhich input type should you choose?",
     "options": [
-      "<links>",
-      "<navigation>",
-      "<nav>",
-      "<menu-bar>"
+      "text",
+      "calendar",
+      "date",
+      "dob"
     ],
     "answer": 2,
-    "explanation": "<nav> represents a section containing navigation links.\n\nExample:\n<nav>\n    <a href=\"#home\">Home</a>\n    <a href=\"#courses\">Courses</a>\n</nav>",
+    "explanation": "type=\"date\" provides an intuitive date-picker control allowing users to select days, months, and years accurately.",
     "wrongExplanations": [
-      "<links> is not a standard HTML element.",
-      "<navigation> is not a standard tag; HTML uses the concise <nav> keyword.",
+      "text does not validate date formats or provide a date-picker interface.",
+      "calendar is not a valid HTML input type.",
       "",
-      "<menu-bar> is not a native HTML element."
+      "dob is not a standard HTML input type."
     ]
   },
   {
     "id": 19,
-    "topic": "MAIN CONTENT",
-    "question": "Which semantic HTML element represents the main content of a webpage?",
+    "topic": "CHOOSING INPUT TYPES",
+    "question": "You want the input to display:\n\nEnter your full name\n\nas a hint before the student types anything.\n\nWhich attribute should you use?",
     "options": [
-      "<content>",
-      "<main>",
-      "<body-content>",
-      "<primary>"
+      "value",
+      "placeholder",
+      "hint",
+      "text"
     ],
     "answer": 1,
-    "explanation": "<main> represents the primary content of the document.",
+    "explanation": "placeholder renders temporary guidance text inside an input field that disappears as soon as the user enters data.",
     "wrongExplanations": [
-      "<content> is not the standard semantic container for page content.",
+      "value sets the actual input field value, which the user would have to manually erase.",
       "",
-      "<body-content> is not a valid HTML element.",
-      "<primary> is not a standard HTML semantic landmark."
+      "hint is not a valid HTML attribute.",
+      "text is a value for the type attribute (type=\"text\"), not an attribute for hint text."
     ]
   },
   {
     "id": 20,
-    "topic": "SECTION",
-    "question": "Which semantic HTML element is used to group related content into a meaningful section?",
+    "topic": "CHOOSING INPUT TYPES",
+    "question": "Which code correctly creates a name field with a helpful hint?",
     "options": [
-      "<group>",
-      "<section>",
-      "<content>",
-      "<div-section>"
+      "<input type=\"text\" value=\"Enter your full name\">",
+      "<input type=\"text\" placeholder=\"Enter your full name\">",
+      "<input type=\"name\" placeholder=\"Full Name\">",
+      "<input name=\"placeholder\" type=\"text\">"
     ],
     "answer": 1,
-    "explanation": "<section> represents a standalone section of related content.\n\nExamples include sections for Available Courses, Course Schedule, and Student Registration.",
+    "explanation": "<input type=\"text\" placeholder=\"Enter your full name\"> uses the placeholder attribute to display transient helper text in a standard text field.",
     "wrongExplanations": [
-      "<group> is not a standard HTML element.",
+      "value=\"...\" sets actual data into the input field rather than temporary hint text.",
       "",
-      "<content> is not used to group thematic document sections.",
-      "<div-section> is not a valid HTML tag."
+      "type=\"name\" is not a valid HTML input type.",
+      "name=\"placeholder\" sets the field's submission parameter name to 'placeholder' instead of defining a hint."
     ]
   },
   {
     "id": 21,
-    "topic": "FOOTER",
-    "question": "Which semantic HTML element represents the footer of a webpage?",
+    "topic": "RADIO BUTTONS AND CHECKBOX",
+    "question": "The student must select ONE gender:\n\nMale\nFemale\nOther\n\nWhich input type should be used?",
     "options": [
-      "<bottom>",
-      "<footer>",
-      "<end>",
-      "<page-footer>"
+      "checkbox",
+      "radio",
+      "select",
+      "text"
     ],
     "answer": 1,
-    "explanation": "<footer> represents footer information such as copyright, contact information, or related links.",
+    "explanation": "Radio buttons (<input type=\"radio\">) are specifically designed for mutually exclusive choices where only one option can be chosen from a group.",
     "wrongExplanations": [
-      "<bottom> is not a valid HTML element.",
+      "checkbox allows multiple simultaneous selections or toggles.",
       "",
-      "<end> is not a standard HTML tag.",
-      "<page-footer> is not a standard HTML element name."
+      "select is a dropdown menu element, but the question asks for the input type.",
+      "text creates a freeform typing box."
     ]
   },
   {
     "id": 22,
-    "topic": "SEMANTIC HTML",
-    "question": "What is the main advantage of using semantic HTML elements?",
+    "topic": "RADIO BUTTONS AND CHECKBOX",
+    "question": "You create these radio buttons:\n\n<input type=\"radio\" name=\"gender\">\n<input type=\"radio\" name=\"gender\">\n<input type=\"radio\" name=\"gender\">\n\nWhy do all three have the same name?",
     "options": [
-      "They automatically add CSS",
-      "They make JavaScript unnecessary",
-      "They provide meaningful structure to content",
-      "They automatically make a website responsive"
+      "To make them look beautiful.",
+      "To give them different IDs.",
+      "To make them belong to the same radio group.",
+      "To turn them into checkboxes."
     ],
     "answer": 2,
-    "explanation": "Semantic elements communicate the meaning and structure of the content.\n\nExamples include <nav>, <main>, <section>, and <footer>.",
+    "explanation": "Giving multiple radio buttons the exact same name attribute binds them into a single radio group, ensuring only one can be selected at any given time.",
     "wrongExplanations": [
-      "Semantic elements provide structural meaning; visual styling still requires CSS rules.",
-      "Semantic tags structure the document but do not replace programming logic and dynamic interactivity provided by JavaScript.",
+      "HTML attributes control functional structure and behavior, not visual design.",
+      "Shared name attributes have no relation to giving elements different IDs.",
       "",
-      "Responsive layouts across screen sizes require CSS media queries and responsive layout models."
+      "Radio buttons remain radio buttons; the name attribute does not turn them into checkboxes."
     ]
   },
   {
     "id": 23,
-    "topic": "TABLE",
-    "question": "Which HTML element is used to create a table?",
+    "topic": "RADIO BUTTONS AND CHECKBOX",
+    "question": "Which implementation is best for selecting one gender?",
     "options": [
-      "<grid>",
-      "<table>",
-      "<tab>",
-      "<data-table>"
+      "<input type=\"checkbox\"> Male\n<input type=\"checkbox\"> Female\n<input type=\"checkbox\"> Other",
+      "<input type=\"radio\" name=\"gender\"> Male\n<input type=\"radio\" name=\"gender\"> Female\n<input type=\"radio\" name=\"gender\"> Other",
+      "<input type=\"text\"> Male\n<input type=\"text\"> Female\n<input type=\"text\"> Other",
+      "<select>\n    Male\n    Female\n    Other\n</select>"
     ],
     "answer": 1,
-    "explanation": "<table> creates an HTML table.",
+    "explanation": "<input type=\"radio\" name=\"gender\"> creates three mutually exclusive radio options where selecting one automatically deselects any previously selected option.",
     "wrongExplanations": [
-      "<grid> is not an HTML element; grid layouts are defined in CSS with display: grid.",
+      "Checkboxes allow a user to select all three options simultaneously.",
       "",
-      "<tab> is not a standard HTML tag.",
-      "<data-table> is not a native HTML element."
+      "Text inputs create three text entry boxes instead of selection buttons.",
+      "<select> requires nested <option> tags to function as a valid dropdown menu."
     ]
   },
   {
     "id": 24,
-    "topic": "TABLE ROW",
-    "question": "Which HTML element represents a row in a table?",
+    "topic": "RADIO BUTTONS AND CHECKBOX",
+    "question": "The registration page says:\n\nI agree to the Terms and Conditions\n\nThe user should be able to select or deselect this option.\n\nWhich input type should you use?",
     "options": [
-      "<row>",
-      "<tr>",
-      "<td>",
-      "<table-row>"
+      "radio",
+      "checkbox",
+      "text",
+      "button"
     ],
     "answer": 1,
-    "explanation": "<tr> means Table Row.\n\nExample:\n<tr>\n    <td>HTML</td>\n    <td>2 Weeks</td>\n</tr>",
+    "explanation": "type=\"checkbox\" provides an independent binary toggle (checked or unchecked), which is standard for terms and conditions agreements.",
     "wrongExplanations": [
-      "<row> is not a standard HTML tag.",
+      "radio buttons are meant for mutually exclusive group choices and cannot be toggled off once selected without another option in the group.",
       "",
-      "<td> represents an individual data cell inside a row, not the row container itself.",
-      "<table-row> is not a valid HTML tag name."
+      "text accepts typed characters rather than a checkable toggle state.",
+      "button triggers actions upon click, but does not preserve a checked/unchecked agreement state."
     ]
   },
   {
     "id": 25,
-    "topic": "TABLE HEADER",
-    "question": "Which HTML element represents a header cell in a table?",
+    "topic": "RADIO BUTTONS AND CHECKBOX",
+    "question": "Which code correctly creates the Terms checkbox and connects its label?",
     "options": [
-      "<thead>",
-      "<header>",
-      "<th>",
-      "<td>"
+      "<input type=\"checkbox\" id=\"terms\">\n<label for=\"terms\">\n    I agree to the Terms\n</label>",
+      "<input type=\"radio\" id=\"terms\">\n<label href=\"terms\">\n    I agree to the Terms\n</label>",
+      "<input type=\"terms\">\n<label id=\"checkbox\">\n    I agree to the Terms\n</label>",
+      "<input type=\"checkbox\" name=\"terms\">\n<label type=\"terms\">\n    I agree to the Terms\n</label>"
     ],
-    "answer": 2,
-    "explanation": "<th> represents a table header cell.\n\nExample:\n<tr>\n    <th>Course</th>\n    <th>Duration</th>\n    <th>Level</th>\n</tr>",
+    "answer": 0,
+    "explanation": "type=\"checkbox\" with id=\"terms\" paired with <label for=\"terms\"> allows clicking either the checkbox box or the text label to toggle agreement.",
     "wrongExplanations": [
-      "<thead> groups the entire header section of rows in a table, but individual header cells use <th>.",
-      "<header> represents an introductory landmark for a page or article, not a tabular cell.",
       "",
-      "<td> defines standard body data cells rather than header cells."
+      "type=\"radio\" is the wrong control, and href is invalid on <label>.",
+      "type=\"terms\" is not a valid HTML input type.",
+      "Connecting a label requires the for attribute targeting the input's id, not name matching type on the label."
     ]
   },
   {
     "id": 26,
-    "topic": "TABLE DATA",
-    "question": "Which HTML element represents a normal data cell in a table?",
+    "topic": "DROPDOWN / SELECT",
+    "question": "The student must select one course from:\n\nHTML & CSS\nJavaScript\nFull Stack Development\n\nWhich HTML element should create the dropdown?",
     "options": [
-      "<cell>",
-      "<data>",
-      "<td>",
-      "<table-data>"
+      "<dropdown>",
+      "<input>",
+      "<select>",
+      "<option>"
     ],
     "answer": 2,
-    "explanation": "<td> represents a standard table data cell.\n\nExample:\n<td>HTML5 & Semantic Web</td>",
+    "explanation": "<select> creates the drop-down list menu container, allowing users to pick an item from a list of options.",
     "wrongExplanations": [
-      "<cell> is not a standard HTML element.",
-      "<data> is an element used to link machine-readable values to content, not a grid cell in a table.",
+      "<dropdown> is not a valid HTML element.",
+      "<input> does not create a standard dropdown menu.",
       "",
-      "<table-data> is not a valid HTML tag."
+      "<option> represents individual choices inside the dropdown, but <select> creates the dropdown container itself."
     ]
   },
   {
     "id": 27,
-    "topic": "FORM ELEMENT",
-    "question": "Which HTML element is used to group form controls that collect information from a user?",
+    "topic": "DROPDOWN / SELECT",
+    "question": "Which element creates individual choices inside a dropdown?",
     "options": [
-      "<input>",
-      "<form>",
-      "<register>",
-      "<fields>"
+      "<choice>",
+      "<item>",
+      "<option>",
+      "<select>"
     ],
-    "answer": 1,
-    "explanation": "<form> is the container for controls used to collect and submit user information.",
+    "answer": 2,
+    "explanation": "<option> defines each individual selectable choice nested inside a parent <select> dropdown element.",
     "wrongExplanations": [
-      "<input> represents an individual field control, not the overall container holding the set of form fields.",
+      "<choice> is not an HTML tag.",
+      "<item> is not an HTML tag.",
       "",
-      "<register> is not a standard HTML element.",
-      "<fields> is not a valid HTML tag."
+      "<select> creates the overall dropdown wrapper, not the individual choice entries."
     ]
   },
   {
     "id": 28,
-    "topic": "INPUT ELEMENT",
-    "question": "Which HTML element is commonly used to create a text input field?",
+    "topic": "DROPDOWN / SELECT",
+    "question": "Which code correctly creates the Course dropdown?",
     "options": [
-      "<textbox>",
-      "<text>",
-      "<input>",
-      "<field>"
+      "<select>\n    <option>HTML & CSS</option>\n    <option>JavaScript</option>\n    <option>Full Stack Development</option>\n</select>",
+      "<dropdown>\n    <select>HTML & CSS</select>\n    <select>JavaScript</select>\n</dropdown>",
+      "<input type=\"select\">\n\n<option>HTML & CSS</option>",
+      "<option>\n    HTML & CSS\n    JavaScript\n    Full Stack Development\n</option>"
     ],
-    "answer": 2,
-    "explanation": "<input> creates different types of form controls.\n\nExample:\n<input type=\"text\">",
+    "answer": 0,
+    "explanation": "<select> wrapping multiple <option> elements is the standard, semantic HTML structure for rendering a course selection dropdown.",
     "wrongExplanations": [
-      "<textbox> is not a standard HTML tag.",
-      "<text> is an SVG element and not used for form input fields.",
       "",
-      "<field> is not a standard HTML element."
+      "<dropdown> is not an HTML element.",
+      "type=\"select\" is not a valid input type, and <option> cannot sit directly inside <input>.",
+      "<option> cannot serve as the outer dropdown container."
     ]
   },
   {
     "id": 29,
-    "topic": "INPUT TYPES",
-    "question": "Which input type is specifically designed for entering an email address?",
+    "topic": "BUTTON AND LINKS",
+    "question": "At the bottom of the form, you want:\n\nREGISTER\n\nto be a button that submits the form.\n\nWhich code is most appropriate?",
     "options": [
-      "type=\"mail\"",
-      "type=\"email\"",
-      "type=\"address\"",
-      "type=\"text-email\""
+      "<a href=\"register.html\">Register</a>",
+      "<button type=\"submit\">Register</button>",
+      "<input type=\"link\">Register</input>",
+      "<link>Register</link>"
     ],
     "answer": 1,
-    "explanation": "HTML provides specialized input types, including type=\"email\" for email addresses.\n\nExample:\n<input type=\"email\">",
+    "explanation": "<button type=\"submit\"> creates an accessible push button that automatically triggers form submission and validation when activated.",
     "wrongExplanations": [
-      "type=\"mail\" is not recognized by browsers; the HTML specification uses the full word email.",
+      "<a> is an anchor link for page navigation, not a native form submission button.",
       "",
-      "type=\"address\" is not a valid HTML input type.",
-      "type=\"text-email\" is not a standard HTML attribute value."
+      "type=\"link\" is not a valid input type, and <input> has no closing tag.",
+      "<link> is a void element placed in <head> for linking external stylesheets, not an interactive button."
     ]
   },
   {
     "id": 30,
-    "topic": "PASSWORD INPUT",
-    "question": "Which input type is used to create a password field where entered characters are visually hidden?",
+    "topic": "BUTTON AND LINKS",
+    "question": "At the bottom of the registration page, you want:\n\nAlready have an account? Sign In\n\nWhen the student clicks \"Sign In\", the browser should open signin.html.\n\nWhich code should you use?",
     "options": [
-      "type=\"hidden\"",
-      "type=\"secure\"",
-      "type=\"password\"",
-      "type=\"private\""
+      "<button href=\"signin.html\">Sign In</button>",
+      "<a src=\"signin.html\">Sign In</a>",
+      "<a href=\"signin.html\">Sign In</a>",
+      "<link href=\"signin.html\">Sign In</link>"
     ],
     "answer": 2,
-    "explanation": "type=\"password\" creates a password input field.\n\nExample:\n<input type=\"password\">",
+    "explanation": "<a href=\"signin.html\"> creates an anchor hyperlink pointing to the signin.html destination page.",
     "wrongExplanations": [
-      "type=\"hidden\" completely hides the input element from the UI, rather than masking characters as bullets during user typing.",
-      "type=\"secure\" is not a valid HTML input type attribute.",
+      "<button> does not support the href attribute for page navigation.",
+      "src is used for embedding media resources (images, video, scripts); anchor hyperlinks use href.",
       "",
-      "type=\"private\" is not a standard HTML input type."
+      "<link> is used in <head> for resource metadata, not for visible in-page clickable hyperlinks."
     ]
   }
 ];
 
-/* ===========================================================================
-   ROUND 2: 15 CSS PROGRESSIVE CHALLENGE QUESTIONS
-   =========================================================================== */
 const QUESTIONS = [
   {
     "id": 1,
@@ -3108,8 +3105,8 @@ function renderHtmlQuestion() {
   portalContainer.classList.remove('show');
   document.getElementById('btnInspector').style.display = 'none';
   document.getElementById('btnGoToCssFromHtml').style.display = 'none';
-  document.getElementById('htmlHeaderTitle').textContent = 'HTML Round 1 — Interactive Learning Quiz';
-  document.getElementById('htmlHeaderDesc').textContent = 'Reason through all 30 foundational questions with real-time feedback.';
+  document.getElementById('htmlHeaderTitle').textContent = 'HTML Round 1 — Student Registration Page Quiz';
+  document.getElementById('htmlHeaderDesc').textContent = 'Scenario: Building a Student Course Registration Page (Structure, Forms, Inputs, Radio & Checkboxes, Select, Buttons, Links)';
 
   const total = HTML_QUESTIONS.length;
   const idx = htmlQuizState.currentIndex;
