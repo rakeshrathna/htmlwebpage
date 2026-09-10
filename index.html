@@ -1632,11 +1632,11 @@
         <!-- LEFT PANEL -->
         <div class="css-controls">
           <div class="css-controls-scroll">
-            <!-- CSS CHALLENGE (15 QUESTIONS) -->
+            <!-- CSS CHALLENGE (30 QUESTIONS) -->
             <div id="panelQuiz">
               <div class="q-header-meta">
                 <span class="q-badge">CSS CHALLENGE</span>
-                <span class="q-counter">Question <span id="qNum">1</span> of 15</span>
+                <span class="q-counter">Question <span id="qNum">1</span> of 30</span>
               </div>
               <div class="q-dots-indicator" id="qDots"></div>
               <div id="qContainer"></div>
@@ -1644,7 +1644,7 @@
                 <div style="font-size:2.2rem;margin-bottom:6px;">&#127881;</div>
                 <h3>CSS CHALLENGE COMPLETE</h3>
                 <p style="color:var(--gray-600);margin-bottom:12px;">The Student Registration Portal has been successfully styled.</p>
-                <div class="q-completion-score" id="qFinalScore">15 / 15 Styling Challenges Completed</div>
+                <div class="q-completion-score" id="qFinalScore">30 / 30 Styling Challenges Completed</div>
                 <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
                   <button class="btn btn-redo" onclick="redoAll()">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -1775,7 +1775,7 @@ const BASE_HTML = `<!DOCTYPE html>
     <section id="registration">
       <h2>Student Registration</h2>
       <p>Complete all required fields to register for the upcoming cohort.</p>
-      <form id="registrationForm" class="content-card" novalidate>
+      <form id="registrationForm" class="content-card form-container" novalidate>
         <div class="form-group">
           <label for="fullName">Full Name:</label>
           <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
@@ -1811,9 +1811,22 @@ const BASE_HTML = `<!DOCTYPE html>
           <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required>
           <span class="error-msg" id="confirmError"></span>
         </div>
-        <div class="form-actions">
-          <button type="submit" id="submitBtn" class="primary-action">Register for Course</button>
+        <div class="form-group">
+          <label>Gender:</label>
+          <div style="display:flex;gap:16px;margin-top:6px;">
+            <label style="display:inline-flex;align-items:center;gap:6px;font-weight:500;cursor:pointer;"><input type="radio" name="gender" value="male" style="width:auto;"> Male</label>
+            <label style="display:inline-flex;align-items:center;gap:6px;font-weight:500;cursor:pointer;"><input type="radio" name="gender" value="female" style="width:auto;"> Female</label>
+            <label style="display:inline-flex;align-items:center;gap:6px;font-weight:500;cursor:pointer;"><input type="radio" name="gender" value="other" style="width:auto;"> Other</label>
+          </div>
         </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+          <input type="checkbox" id="terms" name="terms" required style="width:auto;cursor:pointer;">
+          <label for="terms" style="margin-bottom:0;font-weight:500;cursor:pointer;">I accept the Terms and Conditions</label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" id="submitBtn" class="primary-action">Register</button>
+        </div>
+        <p class="signin-text" style="margin-top:16px;font-size:0.9rem;text-align:center;color:#4B5563;">Already have an account? <a href="signin.html" id="signinLink" style="color:#F97316;font-weight:600;">Sign In</a></p>
         <div id="formSuccess" class="success-message" style="display:none;"></div>
       </form>
     </section>
@@ -2408,556 +2421,1111 @@ const HTML_QUESTIONS = [
 const QUESTIONS = [
   {
     "id": 1,
-    "title": "CSS Selectors",
-    "property": "Element Selector (h2)",
-    "q": "You want to change the color of ALL <h2> headings on the page.\nWhich CSS selector correctly targets every <h2> element?",
-    "purpose": "Learn how element selectors target all instances of an HTML tag.",
+    "title": "CSS Basics \u2014 Text Color",
+    "property": "color",
+    "q": "You want to change the text color of the main heading to blue.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how the color property controls the foreground text color of an element.",
     "options": [
       {
         "key": "A",
-        "label": ".h2",
-        "css": "h2 { color: #F97316 !important; }",
+        "label": "background-color",
+        "css": "h1 { background-color: #2563eb !important; color: #ffffff !important; }",
         "correct": false,
-        "explanation": "The dot prefix \".h2\" targets elements with a class name of \"h2\" (e.g. <div class=\"h2\">), not standard <h2> HTML tags."
+        "explanation": "background-color changes the background fill behind the element, not the text color."
       },
       {
         "key": "B",
-        "label": "#h2",
-        "css": "h2 { color: #F97316 !important; }",
-        "correct": false,
-        "explanation": "The hash prefix \"#h2\" targets a single element with an ID of \"h2\" (e.g. <h2 id=\"h2\">), not all <h2> elements."
+        "label": "color",
+        "css": "h1 { color: #2563eb !important; }",
+        "correct": true,
+        "explanation": "In CSS, the color property directly sets the text color of HTML elements."
       },
       {
         "key": "C",
-        "label": "h2",
-        "css": "h2 { color: #F97316 !important; }",
-        "correct": true,
-        "explanation": "In CSS, writing the plain tag name \"h2\" is an Element Selector. It directly targets and styles every <h2> element across the entire document."
+        "label": "text-color",
+        "css": "/* 'text-color' is invalid CSS */",
+        "correct": false,
+        "explanation": "text-color is not a valid CSS property. CSS uses the property name 'color' for text."
       },
       {
         "key": "D",
-        "label": "<h2>",
-        "css": "/* Invalid CSS selector */",
+        "label": "font-color",
+        "css": "/* 'font-color' is invalid CSS */",
         "correct": false,
-        "explanation": "\"<h2>\" is HTML tag syntax with angle brackets. In CSS, tag selectors omit the angle brackets and are written simply as h2."
+        "explanation": "font-color was an old HTML attribute (<font color=...>) and does not exist in CSS."
       }
     ]
   },
   {
     "id": 2,
-    "title": "Text Color",
-    "property": "color",
-    "q": "Which CSS property changes the color of text?",
-    "purpose": "Learn that the 'color' property specifically controls text foreground color.",
+    "title": "CSS Basics \u2014 Background Color",
+    "property": "background-color",
+    "q": "You want to change the background color of the entire webpage to light gray.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how background-color sets the canvas background for elements or the page body.",
     "options": [
       {
         "key": "A",
-        "label": "background",
-        "css": "body { background: #111827 !important; color: #ffffff !important; }",
+        "label": "color",
+        "css": "body { color: #94a3b8 !important; }",
         "correct": false,
-        "explanation": "\"background\" fills the canvas behind the text rather than changing the text characters themselves."
+        "explanation": "color changes text color; applying it to body turns all page text gray instead of the background."
       },
       {
         "key": "B",
-        "label": "color",
-        "css": "body { color: #111827 !important; }",
-        "correct": true,
-        "explanation": "In CSS, the \"color\" property sets the text foreground color. Setting \"color: #111827\" renders clean, high-contrast dark text."
+        "label": "background",
+        "css": "body { background: #f1f5f9 !important; }",
+        "correct": false,
+        "explanation": "While background is a shorthand that can accept a color, background-color is the explicit property dedicated to setting background color."
       },
       {
         "key": "C",
-        "label": "text-color",
-        "css": "/* Invalid CSS property */",
-        "correct": false,
-        "explanation": "\"text-color\" is not a standard CSS property. The correct property is simply \"color\"."
+        "label": "background-color",
+        "css": "body { background-color: #f1f5f9 !important; }",
+        "correct": true,
+        "explanation": "background-color explicitly specifies the background fill color for an element or the entire page body."
       },
       {
         "key": "D",
-        "label": "font-color",
-        "css": "/* Invalid CSS property */",
+        "label": "page-color",
+        "css": "/* 'page-color' is invalid CSS */",
         "correct": false,
-        "explanation": "\"font-color\" was an obsolete HTML attribute from 1995 (<font color=\"...\">). CSS uses the \"color\" property."
+        "explanation": "page-color is not a recognized CSS property."
       }
     ]
   },
   {
     "id": 3,
-    "title": "Background Color",
-    "property": "background-color",
-    "q": "Which CSS property changes the background color of an element?",
-    "purpose": "Learn the distinction between 'color' (text) and 'background-color' (fill).",
+    "title": "CSS Basics \u2014 Heading Size",
+    "property": "font-size",
+    "q": "You want the main heading to become larger.\n\nWhich CSS property should you use?",
+    "purpose": "Understand that font-size controls typography scaling across devices.",
     "options": [
       {
         "key": "A",
-        "label": "background-color",
-        "css": "body { background-color: #F8FAFC !important; }",
+        "label": "font-size",
+        "css": "h1 { font-size: 42px !important; }",
         "correct": true,
-        "explanation": "\"background-color\" sets the background fill color. Setting \"background-color: #F8FAFC\" replaces the stark white with a soft, modern off-white foundation."
+        "explanation": "font-size sets the size of the font glyphs, making headings or text larger or smaller."
       },
       {
         "key": "B",
-        "label": "color-background",
-        "css": "/* Invalid CSS property */",
+        "label": "text-size",
+        "css": "/* 'text-size' is invalid CSS */",
         "correct": false,
-        "explanation": "\"color-background\" is not a valid CSS property. CSS uses \"background-color\"."
+        "explanation": "text-size is not a valid CSS property; font sizing is always handled by font-size."
       },
       {
         "key": "C",
-        "label": "bgcolor",
-        "css": "/* Invalid CSS property */",
+        "label": "size",
+        "css": "/* 'size' is not a font property */",
         "correct": false,
-        "explanation": "\"bgcolor\" is a legacy HTML attribute deprecated since HTML 4. Modern CSS uses \"background-color\"."
+        "explanation": "size is not used for typography sizing in CSS stylesheets."
       },
       {
         "key": "D",
-        "label": "background-text",
-        "css": "/* Invalid CSS property */",
+        "label": "font-height",
+        "css": "/* 'font-height' is invalid CSS */",
         "correct": false,
-        "explanation": "\"background-text\" is not a valid CSS property. To color element backgrounds, use \"background-color\"."
+        "explanation": "font-height does not exist; CSS uses line-height for vertical line spacing and font-size for glyph dimensions."
       }
     ]
   },
   {
     "id": 4,
-    "title": "Font Size",
-    "property": "font-size",
-    "q": "Which CSS property controls the size of text?",
-    "purpose": "Learn how font-size controls typography scale and visual hierarchy.",
+    "title": "CSS Basics \u2014 Font Family",
+    "property": "font-family",
+    "q": "You want all paragraph text to use the Arial font.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how font-family defines typeface choice and typography stacks.",
     "options": [
       {
         "key": "A",
-        "label": "text-size",
-        "css": "/* Invalid CSS property */",
+        "label": "font-style",
+        "css": "p { font-style: italic; }",
         "correct": false,
-        "explanation": "\"text-size\" is not a standard CSS property. In CSS, typography dimensions are set via \"font-size\"."
+        "explanation": "font-style controls font posture (like italic or normal), not the typeface family."
       },
       {
         "key": "B",
-        "label": "font-style",
-        "css": "h1 { font-style: italic !important; }",
-        "correct": false,
-        "explanation": "\"font-style\" controls font styling variants like italic or oblique, not font dimensions."
+        "label": "font-family",
+        "css": "p { font-family: Arial, sans-serif !important; }",
+        "correct": true,
+        "explanation": "font-family specifies the typeface or list of fallback typefaces for the selected elements."
       },
       {
         "key": "C",
-        "label": "font-size",
-        "css": "h1 { font-size: 42px !important; margin-bottom: 12px !important; }",
-        "correct": true,
-        "explanation": "\"font-size\" controls the physical dimensions of text characters (e.g. 42px, 2.5rem). The main heading now stands out prominently at 42px."
+        "label": "font-type",
+        "css": "/* 'font-type' is invalid CSS */",
+        "correct": false,
+        "explanation": "font-type is not a recognized CSS property."
       },
       {
         "key": "D",
-        "label": "text-scale",
-        "css": "/* Invalid CSS property */",
+        "label": "text-font",
+        "css": "/* 'text-font' is invalid CSS */",
         "correct": false,
-        "explanation": "\"text-scale\" is not a standard CSS property. CSS uses \"font-size\"."
+        "explanation": "text-font is not a valid CSS property."
       }
     ]
   },
   {
     "id": 5,
-    "title": "Font Weight",
-    "property": "font-weight",
-    "q": "You want the main heading to appear bold.\nWhich CSS property should you use?",
-    "purpose": "Learn how font-weight controls character stroke thickness.",
+    "title": "CSS Basics \u2014 Rule Syntax",
+    "property": "CSS Syntax",
+    "q": "Which CSS syntax correctly changes the heading color to red?",
+    "purpose": "Master standard CSS syntax: selector followed by { property: value; } declaration block.",
     "options": [
       {
         "key": "A",
-        "label": "font-bold",
-        "css": "/* Invalid CSS property */",
+        "label": "h1 (\n    color: red;\n)",
+        "css": "/* Parentheses ( ) are invalid declaration block delimiters */",
         "correct": false,
-        "explanation": "\"font-bold\" is not a CSS property. Boldness is configured through \"font-weight: bold\" or numeric values like 700."
+        "explanation": "CSS declaration blocks require curly braces { }, not parentheses ( )."
       },
       {
         "key": "B",
-        "label": "text-weight",
-        "css": "/* Invalid CSS property */",
-        "correct": false,
-        "explanation": "\"text-weight\" is not a valid CSS property. CSS uses \"font-weight\"."
+        "label": "h1 {\n    color: red;\n}",
+        "css": "h1 { color: #dc2626 !important; }",
+        "correct": true,
+        "explanation": "The proper CSS rule structure is: selector, opening curly brace {, property: value;, and closing curly brace }."
       },
       {
         "key": "C",
-        "label": "font-weight",
-        "css": "h1 { font-weight: 700 !important; }",
-        "correct": true,
-        "explanation": "\"font-weight\" specifies the boldness/stroke weight of typography (e.g. 400 = regular, 700 = bold). Setting \"font-weight: 700\" gives the main title a strong presence."
+        "label": "<h1 color=\"red\">",
+        "css": "/* HTML attribute syntax cannot be used in a CSS stylesheet */",
+        "correct": false,
+        "explanation": "This is inline HTML attribute syntax from older HTML standards, not valid CSS."
       },
       {
         "key": "D",
-        "label": "bold-text",
-        "css": "/* Invalid CSS property */",
+        "label": "h1: color = red;",
+        "css": "/* Equals sign = and colon after selector are invalid */",
         "correct": false,
-        "explanation": "\"bold-text\" is not a valid CSS property."
+        "explanation": "CSS uses curly braces for rule blocks and colons (not equals signs =) to assign values."
       }
     ]
   },
   {
     "id": 6,
-    "title": "Text Alignment",
-    "property": "text-align",
-    "q": "Which CSS property controls whether text is aligned left, center, or right?",
-    "purpose": "Learn how text-align aligns inline content horizontally inside its container.",
+    "title": "Selectors \u2014 Element Selector",
+    "property": "h1 (Element Selector)",
+    "q": "You want to style all <h1> headings on the page.\n\nWhich selector should you use?",
+    "purpose": "Learn how element selectors style every occurrence of an HTML tag.",
     "options": [
       {
         "key": "A",
-        "label": "align-text",
-        "css": "/* Invalid CSS property */",
+        "label": ".h1",
+        "css": ".h1 { color: #ea580c !important; }",
         "correct": false,
-        "explanation": "\"align-text\" is not a valid CSS property. The correct CSS property name is \"text-align\"."
+        "explanation": ".h1 is a class selector that only matches elements with class=\"h1\", not <h1> tags."
       },
       {
         "key": "B",
-        "label": "text-align",
-        "css": "header, .hero-content { text-align: center !important; }",
-        "correct": true,
-        "explanation": "\"text-align\" controls the horizontal alignment of inline content (left, center, right, justify). Setting \"text-align: center\" centers the introductory header."
+        "label": "#h1",
+        "css": "#h1 { color: #ea580c !important; }",
+        "correct": false,
+        "explanation": "#h1 is an ID selector that matches an element with id=\"h1\"."
       },
       {
         "key": "C",
-        "label": "text-position",
-        "css": "/* Invalid CSS property */",
-        "correct": false,
-        "explanation": "\"text-position\" is not a standard CSS property."
+        "label": "h1",
+        "css": "h1 { color: #ea580c !important; letter-spacing: -0.02em !important; }",
+        "correct": true,
+        "explanation": "Using the plain tag name 'h1' as an element selector targets all <h1> elements across the document."
       },
       {
         "key": "D",
-        "label": "font-align",
-        "css": "/* Invalid CSS property */",
+        "label": "*h1",
+        "css": "/* '*h1' is invalid selector syntax */",
         "correct": false,
-        "explanation": "\"font-align\" is not a valid CSS property. Alignment is set via \"text-align\"."
+        "explanation": "*h1 is invalid syntax; element selectors do not take an asterisk prefix."
       }
     ]
   },
   {
     "id": 7,
-    "title": "Margin",
-    "property": "margin",
-    "q": "You want to add space OUTSIDE an element's border to push other elements away.\nWhich property should you use?",
-    "purpose": "Learn that margin creates external clearance around an element.",
+    "title": "Selectors \u2014 Class Selector",
+    "property": ".form-group (Class Selector)",
+    "q": "You have several form fields with class=\"form-group\".\n\nWhich selector targets this class?",
+    "purpose": "Understand how the dot prefix designates class selectors for reusable styles.",
     "options": [
       {
         "key": "A",
-        "label": "padding",
-        "css": "header, section { padding: 40px !important; }",
+        "label": "form-group",
+        "css": "form-group { outline: 1px dashed red; }",
         "correct": false,
-        "explanation": "\"padding\" creates space inside the element's boundary between content and border, not outside."
+        "explanation": "Without a dot, form-group targets an HTML tag named <form-group>, which is not a standard tag."
       },
       {
         "key": "B",
-        "label": "margin",
-        "css": "header { margin-bottom: 36px !important; }\nsection { margin-bottom: 40px !important; }",
+        "label": ".form-group",
+        "css": ".form-group { margin-bottom: 20px !important; }",
         "correct": true,
-        "explanation": "\"margin\" creates space outside an element's perimeter, pushing neighboring elements away. Setting margins creates generous breathing room between sections."
+        "explanation": "The dot (.) prefix identifies a Class Selector, correctly targeting all elements with class=\"form-group\"."
       },
       {
         "key": "C",
-        "label": "outer-space",
-        "css": "/* Invalid CSS property */",
+        "label": "#form-group",
+        "css": "#form-group { outline: 1px dashed red; }",
         "correct": false,
-        "explanation": "\"outer-space\" is not a CSS property. External spacing is controlled via \"margin\"."
+        "explanation": "The hash (#) prefix designates an ID selector, matching id=\"form-group\" rather than class=\"form-group\"."
       },
       {
         "key": "D",
-        "label": "spacing",
-        "css": "/* Invalid CSS property */",
+        "label": "@form-group",
+        "css": "/* '@' is reserved for CSS at-rules */",
         "correct": false,
-        "explanation": "\"spacing\" is not a valid CSS box model property. Use \"margin\" for external space."
+        "explanation": "The @ symbol is used for at-rules like @media and @keyframes, not class selectors."
       }
     ]
   },
   {
     "id": 8,
-    "title": "Padding",
-    "property": "padding",
-    "q": "You want to add space INSIDE the course cards, between their text and their border.\nWhich property creates inner space?",
-    "purpose": "Learn that padding creates internal clearance inside the element's box.",
+    "title": "Selectors \u2014 ID Selector",
+    "property": "#email (ID Selector)",
+    "q": "You have an input field with id=\"email\".\n\nWhich selector targets this specific input?",
+    "purpose": "Learn how the hash prefix designates ID selectors for unique element styling.",
     "options": [
       {
         "key": "A",
-        "label": "margin",
-        "css": ".course-card { margin: 30px !important; }",
+        "label": ".email",
+        "css": ".email { border: 2px solid #2563eb !important; }",
         "correct": false,
-        "explanation": "\"margin\" creates outer clearance outside the border, not inner clearance between content and border."
+        "explanation": ".email targets elements with class=\"email\", not id=\"email\"."
       },
       {
         "key": "B",
-        "label": "padding",
-        "css": ".course-card, .content-card { padding: 24px !important; }",
-        "correct": true,
-        "explanation": "\"padding\" creates internal clearance between an element's content and its border. Adding \"padding: 24px\" gives cards clean inner spacing."
+        "label": "email",
+        "css": "email { border: 2px solid #2563eb !important; }",
+        "correct": false,
+        "explanation": "email without a prefix looks for an HTML element <email>, not an element with that ID."
       },
       {
         "key": "C",
-        "label": "inner-space",
-        "css": "/* Invalid CSS property */",
-        "correct": false,
-        "explanation": "\"inner-space\" is not a valid CSS property. Internal clearance is controlled via \"padding\"."
+        "label": "#email",
+        "css": "#email { border: 2px solid #2563eb !important; background-color: #eff6ff !important; }",
+        "correct": true,
+        "explanation": "The hash (#) prefix denotes an ID selector, uniquely targeting the single element with id=\"email\"."
       },
       {
         "key": "D",
-        "label": "indent",
-        "css": "/* Invalid CSS property */",
+        "label": "*email",
+        "css": "/* '*email' is invalid selector syntax */",
         "correct": false,
-        "explanation": "\"indent\" (or \"text-indent\") only indents the first line of text, rather than adding all-around inner padding."
+        "explanation": "*email is invalid selector syntax."
       }
     ]
   },
   {
     "id": 9,
-    "title": "Border",
-    "property": "border",
-    "q": "Which CSS shorthand property sets the width, style, and color of a border all in one line?",
-    "purpose": "Learn the border shorthand syntax: border: [width] [style] [color].",
+    "title": "Selectors \u2014 Grouping Selector",
+    "property": "h1, p, button (Grouping)",
+    "q": "You want to apply the same font to both:\n- <h1>\n- <p>\n- <button>\n\nWhich selector should you use?",
+    "purpose": "Understand that commas group multiple selectors to share the same rule block.",
     "options": [
       {
         "key": "A",
-        "label": "border",
-        "css": ".course-card, .content-card { border: 1px solid #E2E8F0 !important; }",
-        "correct": true,
-        "explanation": "The \"border\" shorthand cleanly combines width (1px), line style (solid), and color (#E2E8F0) into a single concise rule."
+        "label": "h1 + p + button",
+        "css": "/* '+' is the adjacent sibling combinator */",
+        "correct": false,
+        "explanation": "The plus (+) symbol is an adjacent sibling combinator, requiring elements to directly follow each other."
       },
       {
         "key": "B",
-        "label": "outline-style",
-        "css": ".course-card { outline-style: solid !important; }",
-        "correct": false,
-        "explanation": "\"outline-style\" only controls the outline style and does not participate in the box model dimensions like border."
+        "label": "h1, p, button {\n    ...\n}",
+        "css": "h1, p, button { font-family: 'Segoe UI', system-ui, sans-serif !important; }",
+        "correct": true,
+        "explanation": "Commas (,) separate selectors into a Grouping Selector, applying identical styles to all listed selectors."
       },
       {
         "key": "C",
-        "label": "line",
-        "css": "/* Invalid CSS property */",
+        "label": "h1 and p and button",
+        "css": "/* 'and' is not valid in CSS selectors */",
         "correct": false,
-        "explanation": "\"line\" is not a valid CSS property. Element perimeters are configured via \"border\"."
+        "explanation": "'and' is used in media queries, not for separating selectors in CSS rules."
       },
       {
         "key": "D",
-        "label": "box-border",
-        "css": "/* Invalid CSS property */",
+        "label": "h1 & p & button",
+        "css": "/* '&' is used in CSS nesting, not selector grouping */",
         "correct": false,
-        "explanation": "\"box-border\" is not a standard CSS property. CSS uses \"border\"."
+        "explanation": "'&' is for parent nesting in modern CSS / preprocessors, not for grouping distinct tags."
       }
     ]
   },
   {
     "id": 10,
-    "title": "Border Radius",
-    "property": "border-radius",
-    "q": "You want the course cards and buttons to have smooth rounded corners.\nWhich CSS property rounds the corners of an element?",
-    "purpose": "Learn how border-radius softens harsh rectangular edges into modern cards.",
+    "title": "Selectors \u2014 Universal Selector",
+    "property": "* (Universal Selector)",
+    "q": "Which selector targets EVERY element on the webpage?",
+    "purpose": "Learn how the universal selector matches all elements, ideal for CSS resets.",
     "options": [
       {
         "key": "A",
-        "label": "corner-round",
-        "css": "/* Invalid CSS property */",
+        "label": "all",
+        "css": "/* 'all' is a property, not a selector */",
         "correct": false,
-        "explanation": "\"corner-round\" is not a CSS property. Corner curvature is controlled via \"border-radius\"."
+        "explanation": "'all' is a CSS property (e.g. all: unset;), not a selector that matches elements."
       },
       {
         "key": "B",
-        "label": "round-edge",
-        "css": "/* Invalid CSS property */",
+        "label": "body",
+        "css": "body { box-sizing: border-box; }",
         "correct": false,
-        "explanation": "\"round-edge\" is not a valid CSS property."
+        "explanation": "body only selects the <body> tag itself, not all nested elements throughout the document."
       },
       {
         "key": "C",
-        "label": "border-radius",
-        "css": ".course-card, .content-card, header img, button, input, select { border-radius: 10px !important; }",
+        "label": "*",
+        "css": "* { box-sizing: border-box; }",
         "correct": true,
-        "explanation": "\"border-radius\" rounds the corners of an element's outer border edge. Setting \"border-radius: 10px\" gives cards and controls a polished, modern look."
+        "explanation": "The asterisk (*) is the Universal Selector, matching every single HTML element in the entire document."
       },
       {
         "key": "D",
-        "label": "curve",
-        "css": "/* Invalid CSS property */",
+        "label": "page",
+        "css": "/* 'page' is not a universal selector */",
         "correct": false,
-        "explanation": "\"curve\" is not a valid CSS property. Corner rounding is set with \"border-radius\"."
+        "explanation": "'page' would select a custom HTML tag named <page>, not all elements."
       }
     ]
   },
   {
     "id": 11,
-    "title": "Max Width & Centering",
-    "property": "max-width + margin: 0 auto",
-    "q": "You want the webpage container to stay centered on wide screens with a maximum width of 960px.\nWhich combination of properties achieves this standard layout pattern?",
-    "purpose": "Learn the canonical page container pattern: max-width + margin: 0 auto.",
+    "title": "Text & Font \u2014 Font Weight",
+    "property": "font-weight",
+    "q": "You want to make the main heading bold.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how font-weight controls typographic boldness and weight.",
     "options": [
       {
         "key": "A",
-        "label": "align: center",
-        "css": "body { align: center !important; }",
-        "correct": false,
-        "explanation": "\"align: center\" is not a standard CSS property for block centering."
+        "label": "font-weight",
+        "css": "h1 { font-weight: 800 !important; }",
+        "correct": true,
+        "explanation": "font-weight sets the weight or boldness of the font (e.g. bold, 600, 700, 800)."
       },
       {
         "key": "B",
-        "label": "max-width: 960px; margin: 0 auto;",
-        "css": "body, .page-container, header { max-width: 960px !important; margin-left: auto !important; margin-right: auto !important; }",
-        "correct": true,
-        "explanation": "Combining \"max-width: 960px\" with \"margin: 0 auto\" (or margin-left/right: auto) is the classic CSS technique to constrain and center content on wide displays."
+        "label": "font-bold",
+        "css": "/* 'font-bold' is invalid CSS */",
+        "correct": false,
+        "explanation": "font-bold is not a property; 'bold' is a possible value for font-weight."
       },
       {
         "key": "C",
-        "label": "center-block: true",
-        "css": "/* Invalid CSS property */",
+        "label": "text-weight",
+        "css": "/* 'text-weight' is invalid CSS */",
         "correct": false,
-        "explanation": "\"center-block\" is not a valid CSS property. Centering blocks requires auto horizontal margins."
+        "explanation": "text-weight does not exist in standard CSS."
       },
       {
         "key": "D",
-        "label": "width: 100%; float: center;",
-        "css": "/* Invalid CSS property */",
+        "label": "bold",
+        "css": "/* 'bold' is a value, not a property */",
         "correct": false,
-        "explanation": "\"float: center\" does not exist in CSS. Float only supports left, right, none, and inherit."
+        "explanation": "'bold' is a value, not a property name."
       }
     ]
   },
   {
     "id": 12,
-    "title": "Flexbox Layout",
-    "property": "display: flex",
-    "q": "You want the 3 course cards to sit side-by-side in a horizontal row instead of stacking vertically.\nWhich CSS declaration turns the parent container into a flexible flex layout?",
-    "purpose": "Learn how display: flex enables powerful 1D row/column layouts.",
+    "title": "Text & Font \u2014 Text Alignment",
+    "property": "text-align",
+    "q": "You want to center the text of the heading.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how text-align controls horizontal alignment of inline content.",
     "options": [
       {
         "key": "A",
-        "label": "display: block",
-        "css": ".course-list { display: block !important; }",
+        "label": "align",
+        "css": "/* 'align' is an obsolete HTML attribute, not CSS */",
         "correct": false,
-        "explanation": "\"display: block\" is the default behavior where elements stack vertically on top of each other."
+        "explanation": "align was an outdated HTML attribute (<h1 align=center>), not a CSS property."
       },
       {
         "key": "B",
-        "label": "layout: row",
-        "css": "/* Invalid CSS property */",
-        "correct": false,
-        "explanation": "\"layout: row\" is not a standard CSS property. CSS uses \"display: flex\" with \"flex-direction: row\"."
+        "label": "text-align",
+        "css": "header h1, header p { text-align: center !important; }",
+        "correct": true,
+        "explanation": "text-align sets horizontal text alignment (left, center, right, justify)."
       },
       {
         "key": "C",
-        "label": "display: flex",
-        "css": ".course-list { display: flex !important; flex-direction: row !important; gap: 20px !important; flex-wrap: wrap !important; }\nnav ul { display: flex !important; gap: 24px !important; list-style: none !important; padding: 0 !important; }",
-        "correct": true,
-        "explanation": "\"display: flex\" activates the Flexible Box layout model on the container. The child course cards and navigation links instantly arrange horizontally in a clean row."
+        "label": "center-text",
+        "css": "/* 'center-text' is invalid CSS */",
+        "correct": false,
+        "explanation": "center-text is not a valid CSS property."
       },
       {
         "key": "D",
-        "label": "position: horizontal",
-        "css": "/* Invalid CSS property */",
+        "label": "align-text",
+        "css": "/* 'align-text' is invalid CSS */",
         "correct": false,
-        "explanation": "\"position: horizontal\" is not a valid CSS declaration. CSS positioning uses static, relative, absolute, fixed, or sticky."
+        "explanation": "align-text is not valid; the standard property is text-align."
       }
     ]
   },
   {
     "id": 13,
-    "title": "Hover Pseudo-Class",
-    "property": ":hover",
-    "q": "You want buttons and links to change appearance when the user moves their mouse pointer over them.\nWhich CSS pseudo-class targets the hover state?",
-    "purpose": "Learn how the :hover pseudo-class provides interactive tactile feedback.",
+    "title": "Text & Font \u2014 Text Decoration",
+    "property": "text-decoration",
+    "q": "You want to underline the \"Sign In\" link.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how text-decoration manages decorative lines like underline or line-through.",
     "options": [
       {
         "key": "A",
-        "label": ":mouse-on",
-        "css": "/* Invalid CSS pseudo-class */",
-        "correct": false,
-        "explanation": "\":mouse-on\" is not a standard CSS pseudo-class."
+        "label": "text-decoration",
+        "css": "#signinLink, .signin-text a { text-decoration: underline !important; font-weight: 600 !important; }",
+        "correct": true,
+        "explanation": "text-decoration controls line styling on text, such as underline, line-through, or none."
       },
       {
         "key": "B",
-        "label": ":active",
-        "css": "button:active { transform: scale(0.95) !important; }",
+        "label": "underline",
+        "css": "/* 'underline' is a value, not a property */",
         "correct": false,
-        "explanation": "\":active\" matches only during the exact moment an element is being clicked/pressed down, not during cursor hover."
+        "explanation": "underline is a value for the text-decoration property, not a property name."
       },
       {
         "key": "C",
-        "label": ":hover",
-        "css": "button:hover, .primary-action:hover { background: #EA6C0A !important; transform: translateY(-2px) !important; }\nnav a:hover { color: #EA6C0A !important; text-decoration: underline !important; }\n.course-card:hover { transform: translateY(-4px) !important; border-color: #FDBA74 !important; }",
-        "correct": true,
-        "explanation": "The \":hover\" pseudo-class applies styles when the user hovers over an element with a pointer. Buttons, navigation links, and cards now react dynamically."
+        "label": "font-line",
+        "css": "/* 'font-line' is invalid CSS */",
+        "correct": false,
+        "explanation": "font-line does not exist in CSS."
       },
       {
         "key": "D",
-        "label": ":pointer",
-        "css": "/* Invalid CSS pseudo-class */",
+        "label": "text-line",
+        "css": "/* 'text-line' is invalid CSS */",
         "correct": false,
-        "explanation": "\":pointer\" is not a pseudo-class for hover states. CSS uses \":hover\"."
+        "explanation": "text-line is not a valid CSS property."
       }
     ]
   },
   {
     "id": 14,
-    "title": "Box Shadow",
-    "property": "box-shadow",
-    "q": "Which CSS property adds a subtle drop shadow to cards and forms to create visual depth and elevation?",
-    "purpose": "Learn how box-shadow adds elevation, realism, and visual hierarchy.",
+    "title": "Text & Font \u2014 Font Style",
+    "property": "font-style",
+    "q": "You want the description text below the heading to be italic.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how font-style: italic changes text posture.",
     "options": [
       {
         "key": "A",
-        "label": "text-shadow",
-        "css": "body { text-shadow: 2px 2px #999999 !important; }",
+        "label": "text-italic",
+        "css": "/* 'text-italic' is invalid CSS */",
         "correct": false,
-        "explanation": "\"text-shadow\" casts shadows behind font glyphs, not the rectangular box container itself."
+        "explanation": "text-italic is not a valid CSS property."
       },
       {
         "key": "B",
-        "label": "box-shadow",
-        "css": ".course-card, .content-card, form { box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important; transition: all 0.2s ease !important; }\n.course-card:hover { box-shadow: 0 10px 25px rgba(249,115,22,0.15) !important; }",
+        "label": "font-style",
+        "css": "header p { font-style: italic !important; }",
         "correct": true,
-        "explanation": "\"box-shadow\" casts shadows from the frame of an element. Setting \"box-shadow: 0 4px 16px rgba(0,0,0,0.06)\" gives cards elegant depth and elevation."
+        "explanation": "font-style specifies normal, italic, or oblique face styling for text."
       },
       {
         "key": "C",
-        "label": "elevation-level",
-        "css": "/* Invalid CSS property */",
+        "label": "font-italic",
+        "css": "/* 'font-italic' is invalid CSS */",
         "correct": false,
-        "explanation": "\"elevation-level\" is not a standard CSS property. Elevation in CSS is rendered using \"box-shadow\"."
+        "explanation": "font-italic does not exist; 'italic' is a value assigned to font-style."
       },
       {
         "key": "D",
-        "label": "card-depth",
-        "css": "/* Invalid CSS property */",
+        "label": "italic-text",
+        "css": "/* 'italic-text' is invalid CSS */",
         "correct": false,
-        "explanation": "\"card-depth\" is not a CSS property. Depth is created via \"box-shadow\"."
+        "explanation": "italic-text is not a valid CSS property."
       }
     ]
   },
   {
     "id": 15,
-    "title": "CSS Color System & Accents",
-    "property": "background: #F97316 (Brand Accent)",
-    "q": "To give the portal a cohesive brand identity, you want to style primary action buttons with a vibrant brand orange (#F97316) and clean white text.\nWhich CSS declaration achieves this?",
-    "purpose": "Learn how brand colors and accent highlights unify visual aesthetics.",
+    "title": "Text & Font \u2014 Bold Heading Rule",
+    "property": "font-weight: bold",
+    "q": "Which CSS rule makes the heading bold?",
+    "purpose": "Review proper CSS rule declaration for bold typography.",
     "options": [
       {
         "key": "A",
-        "label": "background: #F97316; color: #FFFFFF; border: none;",
-        "css": "button, .primary-action { background: #F97316 !important; color: #FFFFFF !important; border: none !important; font-weight: 700 !important; padding: 12px 26px !important; }\nth { background: #F1F5F9 !important; font-weight: 700 !important; color: #0F172A !important; }\nnav a { font-weight: 600 !important; color: #F97316 !important; text-decoration: none !important; }",
+        "label": "h1 {\n    font-weight: bold;\n}",
+        "css": "h1 { font-weight: bold !important; }",
         "correct": true,
-        "explanation": "Setting \"background: #F97316\", \"color: #FFFFFF\", and \"border: none\" turns raw default browser buttons into vibrant, high-conversion primary call-to-action buttons."
+        "explanation": "h1 { font-weight: bold; } accurately targets <h1> and sets its font-weight to bold."
       },
       {
         "key": "B",
-        "label": "button-skin: orange",
-        "css": "/* Invalid CSS property */",
+        "label": "h1 {\n    text-weight: bold;\n}",
+        "css": "/* text-weight is invalid */",
         "correct": false,
-        "explanation": "\"button-skin\" is not a valid CSS property."
+        "explanation": "text-weight is not valid CSS; font-weight is the standard property."
       },
       {
         "key": "C",
-        "label": "theme: #F97316",
-        "css": "/* Invalid CSS property */",
+        "label": "h1 {\n    font-style: bold;\n}",
+        "css": "/* 'bold' is not a valid value for font-style */",
         "correct": false,
-        "explanation": "\"theme\" is not a native CSS property for styling elements."
+        "explanation": "font-style only accepts values like normal, italic, or oblique, not bold."
       },
       {
         "key": "D",
-        "label": "accent-fill: orange-dark",
-        "css": "/* Invalid CSS property */",
+        "label": "h1 {\n    bold: true;\n}",
+        "css": "/* 'bold: true' is invalid syntax */",
         "correct": false,
-        "explanation": "\"accent-fill\" is not a valid standard CSS property."
+        "explanation": "bold: true is invalid syntax; CSS properties do not use boolean true/false for boldness."
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "title": "Box Model \u2014 Padding",
+    "property": "padding",
+    "q": "You want space inside the form container, between the content and the border.\n\nWhich CSS property should you use?",
+    "purpose": "Learn the box model: padding is the interior buffer between content and border.",
+    "options": [
+      {
+        "key": "A",
+        "label": "margin",
+        "css": ".form-container { margin: 28px !important; }",
+        "correct": false,
+        "explanation": "margin creates spacing OUTSIDE the element border, not inside."
+      },
+      {
+        "key": "B",
+        "label": "padding",
+        "css": ".form-container { padding: 32px !important; }",
+        "correct": true,
+        "explanation": "padding creates internal spacing between the element's content and its border."
+      },
+      {
+        "key": "C",
+        "label": "spacing",
+        "css": "/* 'spacing' is invalid CSS */",
+        "correct": false,
+        "explanation": "spacing is not a valid CSS property."
+      },
+      {
+        "key": "D",
+        "label": "border-space",
+        "css": "/* 'border-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "border-space is not a valid property; border-spacing is only used on tables."
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "title": "Box Model \u2014 Margin",
+    "property": "margin",
+    "q": "You want space outside the form, separating it from other elements on the page.\n\nWhich CSS property should you use?",
+    "purpose": "Understand that margin clears space outside borders to separate sibling components.",
+    "options": [
+      {
+        "key": "A",
+        "label": "padding",
+        "css": ".form-container { padding: 32px; }",
+        "correct": false,
+        "explanation": "padding creates space inside the element, not outside it."
+      },
+      {
+        "key": "B",
+        "label": "margin",
+        "css": ".form-container { margin: 36px auto !important; }",
+        "correct": true,
+        "explanation": "margin creates an exterior buffer around the element, separating it from neighbors."
+      },
+      {
+        "key": "C",
+        "label": "outer-space",
+        "css": "/* 'outer-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "outer-space is not a CSS property."
+      },
+      {
+        "key": "D",
+        "label": "gap-space",
+        "css": "/* 'gap-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "gap-space is not a CSS property."
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "title": "Box Model \u2014 Border",
+    "property": "border",
+    "q": "You want to add a line around the form.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how the border shorthand frames elements with width, style, and color.",
+    "options": [
+      {
+        "key": "A",
+        "label": "outline-line",
+        "css": "/* 'outline-line' is invalid CSS */",
+        "correct": false,
+        "explanation": "outline-line is not a valid CSS property."
+      },
+      {
+        "key": "B",
+        "label": "border",
+        "css": ".form-container { border: 2px solid #2563eb !important; }",
+        "correct": true,
+        "explanation": "border defines the line width, style, and color surrounding an element."
+      },
+      {
+        "key": "C",
+        "label": "box-border",
+        "css": "/* 'box-border' is invalid CSS */",
+        "correct": false,
+        "explanation": "box-border is not a CSS property."
+      },
+      {
+        "key": "D",
+        "label": "edge",
+        "css": "/* 'edge' is invalid CSS */",
+        "correct": false,
+        "explanation": "edge is not a valid CSS property."
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "title": "Box Model \u2014 Form Padding Rule",
+    "property": "padding: 20px",
+    "q": "Which CSS code correctly adds 20px space inside the form?",
+    "purpose": "Verify internal spacing syntax on containers.",
+    "options": [
+      {
+        "key": "A",
+        "label": ".form-container {\n    margin: 20px;\n}",
+        "css": ".form-container { margin: 20px !important; }",
+        "correct": false,
+        "explanation": "margin: 20px adds space outside the form, not inside."
+      },
+      {
+        "key": "B",
+        "label": ".form-container {\n    padding: 20px;\n}",
+        "css": ".form-container { padding: 20px !important; }",
+        "correct": true,
+        "explanation": ".form-container { padding: 20px; } adds 20px of inner spacing on all sides."
+      },
+      {
+        "key": "C",
+        "label": ".form-container {\n    inner-space: 20px;\n}",
+        "css": "/* 'inner-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "inner-space is not a valid CSS property."
+      },
+      {
+        "key": "D",
+        "label": ".form-container {\n    inside-space: 20px;\n}",
+        "css": "/* 'inside-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "inside-space is not a valid CSS property."
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "title": "Box Model \u2014 Form Margin Rule",
+    "property": "margin: 20px",
+    "q": "Which CSS code correctly adds 20px space outside the form?",
+    "purpose": "Verify external spacing syntax on containers.",
+    "options": [
+      {
+        "key": "A",
+        "label": ".form-container {\n    padding: 20px;\n}",
+        "css": ".form-container { padding: 20px !important; }",
+        "correct": false,
+        "explanation": "padding adds space inside the form container."
+      },
+      {
+        "key": "B",
+        "label": ".form-container {\n    margin: 20px;\n}",
+        "css": ".form-container { margin: 20px !important; }",
+        "correct": true,
+        "explanation": ".form-container { margin: 20px; } adds 20px of outer space around the form."
+      },
+      {
+        "key": "C",
+        "label": ".form-container {\n    outer-space: 20px;\n}",
+        "css": "/* 'outer-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "outer-space is not a valid CSS property."
+      },
+      {
+        "key": "D",
+        "label": ".form-container {\n    outside-space: 20px;\n}",
+        "css": "/* 'outside-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "outside-space is not a valid CSS property."
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "title": "Sizing \u2014 Container Width",
+    "property": "width",
+    "q": "You want the registration form to be 400px wide.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how the width property establishes element horizontal dimensions.",
+    "options": [
+      {
+        "key": "A",
+        "label": "size",
+        "css": "/* 'size' is not for layout width */",
+        "correct": false,
+        "explanation": "size is not used for container widths in CSS layout."
+      },
+      {
+        "key": "B",
+        "label": "width",
+        "css": ".form-container { max-width: 400px !important; width: 100% !important; }",
+        "correct": true,
+        "explanation": "width explicitly sets the horizontal dimension of block-level elements."
+      },
+      {
+        "key": "C",
+        "label": "form-width",
+        "css": "/* 'form-width' is invalid CSS */",
+        "correct": false,
+        "explanation": "form-width is not a recognized CSS property."
+      },
+      {
+        "key": "D",
+        "label": "element-width",
+        "css": "/* 'element-width' is invalid CSS */",
+        "correct": false,
+        "explanation": "element-width does not exist in standard CSS."
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "title": "Sizing & Corners \u2014 Border Radius",
+    "property": "border-radius",
+    "q": "You want the corners of the Register button to be rounded.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how border-radius softens harsh rectangular corners.",
+    "options": [
+      {
+        "key": "A",
+        "label": "border-radius",
+        "css": "button, .primary-action { border-radius: 12px !important; }",
+        "correct": true,
+        "explanation": "border-radius rounds the outer corner curvature of an element's border box."
+      },
+      {
+        "key": "B",
+        "label": "corner-radius",
+        "css": "/* 'corner-radius' is invalid CSS */",
+        "correct": false,
+        "explanation": "corner-radius is common in mobile UI frameworks, but CSS uses border-radius."
+      },
+      {
+        "key": "C",
+        "label": "round-corner",
+        "css": "/* 'round-corner' is invalid CSS */",
+        "correct": false,
+        "explanation": "round-corner is not a valid CSS property."
+      },
+      {
+        "key": "D",
+        "label": "border-corner",
+        "css": "/* 'border-corner' is invalid CSS */",
+        "correct": false,
+        "explanation": "border-corner is not a valid CSS property."
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "title": "Sizing & Corners \u2014 Button Color Rule",
+    "property": "button { background-color: green; }",
+    "q": "Which CSS code changes the Register button background to green?",
+    "purpose": "Reinforce styling button backgrounds with background-color.",
+    "options": [
+      {
+        "key": "A",
+        "label": "button {\n    color: green;\n}",
+        "css": "button, .primary-action { color: #16a34a !important; }",
+        "correct": false,
+        "explanation": "color: green changes the text color to green, leaving the button background unaffected."
+      },
+      {
+        "key": "B",
+        "label": "button {\n    background-color: green;\n}",
+        "css": "button, .primary-action { background-color: #16a34a !important; color: #ffffff !important; }",
+        "correct": true,
+        "explanation": "button { background-color: green; } correctly fills the button's background."
+      },
+      {
+        "key": "C",
+        "label": "button {\n    button-color: green;\n}",
+        "css": "/* 'button-color' is invalid CSS */",
+        "correct": false,
+        "explanation": "button-color does not exist in CSS."
+      },
+      {
+        "key": "D",
+        "label": "button {\n    text green;\n}",
+        "css": "/* 'text green;' is invalid syntax */",
+        "correct": false,
+        "explanation": "text green; is malformed syntax missing both a valid property and a colon."
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "title": "Sizing & Corners \u2014 Input Border Rule",
+    "property": "input { border: 1px solid black; }",
+    "q": "Which CSS code adds a black border around input boxes?",
+    "purpose": "Learn the border shorthand: width style color on input elements.",
+    "options": [
+      {
+        "key": "A",
+        "label": "input {\n    border: 1px solid black;\n}",
+        "css": "input[type=\"text\"], input[type=\"email\"], input[type=\"password\"], select { border: 1.5px solid #0f172a !important; }",
+        "correct": true,
+        "explanation": "border: 1px solid black; specifies a 1-pixel solid black line around input fields."
+      },
+      {
+        "key": "B",
+        "label": "input {\n    line: 1px solid black;\n}",
+        "css": "/* 'line' is invalid CSS */",
+        "correct": false,
+        "explanation": "line is not a valid CSS property."
+      },
+      {
+        "key": "C",
+        "label": "input {\n    outline-border: 1px solid black;\n}",
+        "css": "/* 'outline-border' is invalid CSS */",
+        "correct": false,
+        "explanation": "outline-border is not a valid CSS property; standard properties are border or outline."
+      },
+      {
+        "key": "D",
+        "label": "input {\n    border-style 1px black;\n}",
+        "css": "/* Missing colon and border-style only takes style keywords */",
+        "correct": false,
+        "explanation": "border-style only accepts style keywords (like solid or dashed), missing a colon."
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "title": "Interactive States \u2014 Button Hover",
+    "property": "button:hover",
+    "q": "You want the button background to turn dark blue when the student hovers over it.\n\nWhich CSS property and pseudo-class should you use?",
+    "purpose": "Learn how the :hover pseudo-class activates interactive visual feedback on mouseover.",
+    "options": [
+      {
+        "key": "A",
+        "label": "color with :hover",
+        "css": "button:hover, .primary-action:hover { color: #1e3a8a !important; }",
+        "correct": false,
+        "explanation": "color with :hover changes only the text color upon hovering, not the button background."
+      },
+      {
+        "key": "B",
+        "label": "background-color with :hover",
+        "css": "button:hover, .primary-action:hover { background-color: #1e3a8a !important; color: #ffffff !important; }",
+        "correct": true,
+        "explanation": "Combining background-color with the :hover pseudo-class styles the button background when mouse cursor is placed over it."
+      },
+      {
+        "key": "C",
+        "label": "hover-color",
+        "css": "/* 'hover-color' is invalid CSS */",
+        "correct": false,
+        "explanation": "hover-color is not a valid CSS property."
+      },
+      {
+        "key": "D",
+        "label": "fill-color",
+        "css": "/* 'fill-color' is invalid CSS */",
+        "correct": false,
+        "explanation": "fill-color is not a standard CSS property for HTML elements."
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "title": "Form Styling \u2014 Input Padding",
+    "property": "input { padding: 10px; }",
+    "q": "You want to make the text inside input boxes easier to read by adding space inside the input.\n\nWhich CSS code should you use?",
+    "purpose": "Learn how inner padding makes form fields comfortable to read and tap.",
+    "options": [
+      {
+        "key": "A",
+        "label": "input {\n    margin: 10px;\n}",
+        "css": "input[type=\"text\"], input[type=\"email\"], input[type=\"password\"], select { margin: 10px 0 !important; }",
+        "correct": false,
+        "explanation": "margin creates space outside each input field, leaving the interior cramped."
+      },
+      {
+        "key": "B",
+        "label": "input {\n    padding: 10px;\n}",
+        "css": "input[type=\"text\"], input[type=\"email\"], input[type=\"password\"], select { padding: 12px 14px !important; font-size: 1rem !important; }",
+        "correct": true,
+        "explanation": "padding: 10px; provides breathing room inside the input box, preventing text from pressing against borders."
+      },
+      {
+        "key": "C",
+        "label": "input {\n    inner-space: 10px;\n}",
+        "css": "/* 'inner-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "inner-space is not a valid CSS property."
+      },
+      {
+        "key": "D",
+        "label": "input {\n    inside-space: 10px;\n}",
+        "css": "/* 'inside-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "inside-space is not a valid CSS property."
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "title": "Form Styling \u2014 Full Width Inputs",
+    "property": "width: 100%",
+    "q": "You want all input fields to span the full width of the form.\n\nWhich CSS property should you use?",
+    "purpose": "Learn how width: 100% creates cohesive vertical form layouts.",
+    "options": [
+      {
+        "key": "A",
+        "label": "width",
+        "css": "input[type=\"text\"], input[type=\"email\"], input[type=\"password\"], select { width: 100% !important; display: block !important; }",
+        "correct": true,
+        "explanation": "Setting width: 100% expands input elements to span the full width of their parent container."
+      },
+      {
+        "key": "B",
+        "label": "full-width",
+        "css": "/* 'full-width' is invalid CSS */",
+        "correct": false,
+        "explanation": "full-width is not a valid CSS property."
+      },
+      {
+        "key": "C",
+        "label": "input-width",
+        "css": "/* 'input-width' is invalid CSS */",
+        "correct": false,
+        "explanation": "input-width is not a valid CSS property."
+      },
+      {
+        "key": "D",
+        "label": "display-width",
+        "css": "/* 'display-width' is invalid CSS */",
+        "correct": false,
+        "explanation": "display-width does not exist in standard CSS."
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "title": "Form Styling \u2014 Field Spacing",
+    "property": "margin-bottom",
+    "q": "You want each form field to have space below it.\n\nWhich CSS property can be used?",
+    "purpose": "Understand directional margin properties like margin-bottom for vertical rhythm.",
+    "options": [
+      {
+        "key": "A",
+        "label": "margin-bottom",
+        "css": ".form-group { margin-bottom: 22px !important; }",
+        "correct": true,
+        "explanation": "margin-bottom creates space directly below an element, spacing consecutive fields apart."
+      },
+      {
+        "key": "B",
+        "label": "padding-bottom-only",
+        "css": "/* 'padding-bottom-only' is invalid CSS */",
+        "correct": false,
+        "explanation": "padding-bottom-only is not a CSS property; padding-bottom adds space inside, not outside."
+      },
+      {
+        "key": "C",
+        "label": "bottom-space",
+        "css": "/* 'bottom-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "bottom-space is not a valid CSS property."
+      },
+      {
+        "key": "D",
+        "label": "field-space",
+        "css": "/* 'field-space' is invalid CSS */",
+        "correct": false,
+        "explanation": "field-space does not exist in CSS."
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "title": "Form Styling \u2014 Complete Button Rule",
+    "property": "button styling",
+    "q": "You want the Register button to have:\n- background: blue\n- text: white\n- padding: 10px\n\nWhich CSS code is correct?",
+    "purpose": "Synthesize multiple declarations into a clean, complete CSS rule block.",
+    "options": [
+      {
+        "key": "A",
+        "label": "button {\n    background-color: blue;\n    color: white;\n    padding: 10px;\n}",
+        "css": "button, .primary-action { background-color: #2563eb !important; color: #ffffff !important; padding: 12px 24px !important; border: none !important; border-radius: 8px !important; font-weight: 700 !important; cursor: pointer !important; }",
+        "correct": true,
+        "explanation": "This rule accurately bundles background-color: blue, color: white, and padding: 10px together."
+      },
+      {
+        "key": "B",
+        "label": "button {\n    color: blue;\n    background: white;\n    margin: 10px;\n}",
+        "css": "button, .primary-action { color: #2563eb !important; background: #ffffff !important; margin: 10px !important; }",
+        "correct": false,
+        "explanation": "This option reverses the foreground and background colors and uses margin instead of padding."
+      },
+      {
+        "key": "C",
+        "label": "button {\n    bg: blue;\n    text: white;\n    space: 10px;\n}",
+        "css": "/* 'bg', 'text', and 'space' are invalid properties */",
+        "correct": false,
+        "explanation": "bg, text, and space are shorthand slang and invalid in standard CSS."
+      },
+      {
+        "key": "D",
+        "label": "button {\n    background: blue;\n    font-color: white;\n    inside: 10px;\n}",
+        "css": "/* 'font-color' and 'inside' are invalid */",
+        "correct": false,
+        "explanation": "font-color and inside are not valid CSS properties (CSS uses color and padding)."
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "title": "Form Styling \u2014 Form Layout Container",
+    "property": "Container Sizing & Spacing",
+    "q": "You want the entire registration page to look cleaner.\n\nYour requirements are:\n- Form should have a width of 400px\n- Form should have internal spacing of 20px\n- Form should have a border\n\nWhich CSS rule achieves this?",
+    "purpose": "Final mastery: combine width, padding, and border into a polished production card.",
+    "options": [
+      {
+        "key": "A",
+        "label": ".form-container {\n    width: 400px;\n    padding: 20px;\n    border: 1px solid black;\n}",
+        "css": ".form-container { max-width: 420px !important; width: 100% !important; padding: 28px !important; border: 1.5px solid #0f172a !important; border-radius: 12px !important; box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important; margin: 24px auto !important; background: #ffffff !important; }",
+        "correct": true,
+        "explanation": "This rule fulfills all three requirements: width: 400px, padding: 20px for internal spacing, and border: 1px solid black."
+      },
+      {
+        "key": "B",
+        "label": ".form-container {\n    margin: 400px;\n    border-radius: 20px;\n    color: black;\n}",
+        "css": ".form-container { margin: 40px !important; border-radius: 20px !important; }",
+        "correct": false,
+        "explanation": "margin: 400px adds huge external spacing rather than width, and no border is declared."
+      },
+      {
+        "key": "C",
+        "label": ".form-container {\n    size: 400px;\n    space: 20px;\n    border-style: black;\n}",
+        "css": "/* 'size', 'space' are invalid, border-style takes style keywords */",
+        "correct": false,
+        "explanation": "size and space are not valid CSS properties, and border-style does not accept colors."
+      },
+      {
+        "key": "D",
+        "label": ".form-container {\n    width: 400px;\n    margin: 20px;\n}",
+        "css": ".form-container { width: 400px !important; margin: 20px !important; }",
+        "correct": false,
+        "explanation": "This rule uses margin (external spacing) instead of padding (internal spacing) and is missing the border."
       }
     ]
   }
@@ -3369,7 +3937,7 @@ function toggleInspector() {
 }
 
 /* ===========================================================================
-   ROUND 2: 15 PROGRESSIVE CSS ENGINE
+   ROUND 2: 30 PROGRESSIVE CSS ENGINE
    =========================================================================== */
 function renderProgressDots() {
   const container = document.getElementById('qDots');
