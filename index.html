@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <style>
     /* =====================================================================
        WEB DEV ARENA — 3D COMPETITION ARENA
@@ -1393,125 +1392,6 @@
     .is-fullscreen .btn-fullscreen:hover { background: var(--orange-dark); }
 
     /* =====================================================================
-       ROUND 3: JAVASCRIPT CHALLENGE WITH 3D DEPTH
-       ===================================================================== */
-    .js-body { flex: 1; display: grid; grid-template-columns: 420px 1fr; overflow: hidden; perspective: 1200px; }
-    @media (max-width: 1100px) { .js-body { grid-template-columns: 360px 1fr; } }
-    .js-panel {
-      border-right: 1px solid var(--border);
-      overflow-y: auto;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      background: #FFFFFF;
-      transform-style: preserve-3d;
-    }
-    .task-section-title {
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-3);
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-      font-family: var(--mono);
-    }
-    .task-list { display: flex; flex-direction: column; gap: 8px; }
-    .task-item {
-      display: flex;
-      gap: 12px;
-      padding: 12px 14px;
-      background: var(--bg-s2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      border-left: 3px solid var(--orange);
-      align-items: flex-start;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 2px 0 var(--border), 0 3px 6px rgba(15, 23, 42, 0.03);
-      transform-style: preserve-3d;
-    }
-    .task-item:hover {
-      background: #FFFFFF;
-      transform: perspective(600px) translateY(-2px) translateZ(10px);
-      box-shadow: 0 4px 0 var(--orange-border), 0 8px 18px rgba(15, 23, 42, 0.08);
-    }
-    .task-num {
-      font-size: 0.65rem;
-      font-weight: 800;
-      color: var(--orange);
-      background: var(--orange-dim);
-      padding: 2px 6px;
-      border-radius: 3px;
-      flex-shrink: 0;
-      margin-top: 2px;
-      font-family: var(--mono);
-      letter-spacing: 0.04em;
-      transform: translateZ(12px);
-    }
-    .task-text { font-size: 0.85rem; color: var(--text-1); line-height: 1.5; transform: translateZ(8px); }
-    .task-text code {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 1px 5px;
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--orange-dark);
-      font-weight: 700;
-    }
-
-    /* 3D DOWNLOAD CARD */
-    .dl-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: var(--shadow-lg);
-      transform-style: preserve-3d;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .dl-card:hover {
-      transform: perspective(600px) translateY(-3px) translateZ(12px);
-      box-shadow: var(--shadow-xl);
-    }
-    .dl-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, var(--orange), transparent);
-    }
-    .dl-card h3 {
-      font-size: 0.92rem;
-      font-weight: 800;
-      color: var(--text-1);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-family: var(--mono);
-      transform: translateZ(14px);
-    }
-    .dl-card p { font-size: 0.82rem; color: var(--text-3); margin-bottom: 14px; line-height: 1.5; transform: translateZ(8px); }
-    .dl-contents { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 16px; transform: translateZ(10px); }
-    .dl-file-badge {
-      background: var(--bg-s3);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 4px 10px;
-      font-size: 0.75rem;
-      font-family: var(--mono);
-      color: var(--text-2);
-      font-weight: 600;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
-    .js-preview { overflow: hidden; display: flex; flex-direction: column; background: var(--bg-base); }
-
-    /* =====================================================================
        3D TOAST NOTIFICATION
        ===================================================================== */
     #toast-area {
@@ -1567,8 +1447,6 @@
       .nav-tab { padding: 0 10px; font-size: 0.68rem; }
       .css-body { flex-direction: column; }
       .css-controls { width: 100%; border-right: none; border-bottom: 1px solid var(--border); max-height: 45vh; }
-      .js-body { grid-template-columns: 1fr; }
-      .js-preview { display: none; }
       .hq-stats-grid { grid-template-columns: 1fr; }
       .hq-options { grid-template-columns: 1fr; }
     }
@@ -1576,6 +1454,13 @@
 
 </head>
 <body>
+  <!-- 3D PERSPECTIVE BACKGROUND ARENA GRID -->
+  <div class="bg-3d-viewport">
+    <div class="bg-3d-plane"></div>
+    <div class="bg-3d-glow-orb orb-1"></div>
+    <div class="bg-3d-glow-orb orb-2"></div>
+  </div>
+
 <div id="app">
 
   <!-- COMPETITION COMMAND BAR — NAVIGATION -->
@@ -1583,7 +1468,7 @@
     <div class="nav-brand">
       <div class="nav-brand-live">Live Session</div>
       <div class="nav-brand-title">Web Dev <span>Arena</span></div>
-      <div class="nav-brand-sub">HTML → CSS → JavaScript</div>
+      <div class="nav-brand-sub">Round 01: HTML · Round 02: CSS</div>
     </div>
     <div class="nav-tabs">
       <button class="nav-tab active" id="navHtml" onclick="switchView('html')">
@@ -1591,9 +1476,6 @@
       </button>
       <button class="nav-tab" id="navCss" onclick="switchView('css')">
         <span class="tab-num">02</span> CSS
-      </button>
-      <button class="nav-tab" id="navJs" onclick="switchView('js')">
-        <span class="tab-num">03</span> JS
       </button>
     </div>
   </nav>
@@ -1768,7 +1650,11 @@
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                     REDO Challenge
                   </button>
-                  <button class="btn btn-orange" onclick="switchView('js')">Go to JS Challenge &rarr;</button>
+                  <button class="btn btn-orange" onclick="toggleFullscreen('css')">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    Full Screen View
+                  </button>
+                  <button class="btn btn-ghost" onclick="switchView('html')">&larr; HTML Quiz</button>
                 </div>
               </div>
             </div>
@@ -1793,73 +1679,6 @@
 
       </div><!-- /css-body -->
     </div><!-- /viewCss -->
-
-    <!-- VIEW 3: JS CHALLENGE -->
-    <div class="view" id="viewJs">
-      <div class="round-header">
-        <div class="round-label">
-          <span class="round-badge">Round 3</span>
-          <div>
-            <div class="round-title">JavaScript Challenge</div>
-            <div class="round-desc">Students implement form validation in script.js using VS Code. Download the ZIP to begin.</div>
-          </div>
-        </div>
-        <div class="round-actions">
-          <button class="btn btn-orange" onclick="downloadZip()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            Download ZIP
-          </button>
-        </div>
-      </div>
-      <div class="js-body">
-        <div class="js-panel">
-          <div>
-            <div class="task-section-title">JavaScript Tasks</div>
-            <div class="task-list">
-              <div class="task-item"><span class="task-num">01</span><span class="task-text">Select the registration form and all input fields using <code>getElementById</code> or <code>querySelector</code>.</span></div>
-              <div class="task-item"><span class="task-num">02</span><span class="task-text">Attach a <code>submit</code> event listener to the form element.</span></div>
-              <div class="task-item"><span class="task-num">03</span><span class="task-text">Call <code>event.preventDefault()</code> inside the listener to stop the page reloading.</span></div>
-              <div class="task-item"><span class="task-num">04</span><span class="task-text">Read and trim values from: fullName, email, phone, courseSelect, password, confirmPassword.</span></div>
-              <div class="task-item"><span class="task-num">05</span><span class="task-text">Validate that name and course are not empty strings.</span></div>
-              <div class="task-item"><span class="task-num">06</span><span class="task-text">Validate email format using regex: <code>/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code>.</span></div>
-              <div class="task-item"><span class="task-num">07</span><span class="task-text">Validate phone is exactly 10 digits: <code>/^\d10$/</code>.</span></div>
-              <div class="task-item"><span class="task-num">08</span><span class="task-text">Validate password length >= 6 characters.</span></div>
-              <div class="task-item"><span class="task-num">09</span><span class="task-text">Check that confirmPassword exactly matches password.</span></div>
-              <div class="task-item"><span class="task-num">10</span><span class="task-text">Display inline error messages in the <code>.error-msg</code> spans beside each invalid field.</span></div>
-              <div class="task-item"><span class="task-num">11</span><span class="task-text">Clear all previous error messages before re-running validation on each submit attempt.</span></div>
-              <div class="task-item"><span class="task-num">12</span><span class="task-text">If all validation passes: show success in <code>#formSuccess</code>, then call <code>form.reset()</code>.</span></div>
-            </div>
-          </div>
-          <div class="dl-card">
-            <h3>Student Starter Project</h3>
-            <p>Download the ZIP. The fully styled HTML and CSS from Rounds 1 &amp; 2 are already linked. Students only write in <code>script.js</code>.</p>
-            <div class="dl-contents">
-              <span class="dl-file-badge">index.html</span>
-              <span class="dl-file-badge">style.css</span>
-              <span class="dl-file-badge">script.js</span>
-              <span class="dl-file-badge">README.md</span>
-            </div>
-            <button class="btn btn-orange" onclick="downloadZip()" style="width:100%;justify-content:center;">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-              Download ZIP
-            </button>
-          </div>
-        </div>
-        <div class="js-preview">
-          <div class="preview-bar">
-            <div class="browser-dots"><div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div></div>
-            <div class="browser-url">Student Registration Portal — Final Styled Preview</div>
-            <div class="preview-live-badge">Final Result</div>
-            <button class="btn-fullscreen" id="btnFsJs" onclick="toggleFullscreen('js')" title="Toggle Full Screen">
-              <svg class="icon-expand" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-              <svg class="icon-compress" style="display:none;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 14h6v6m10-10h-6V4m0 6 7-7M3 21l7-7"/></svg>
-              <span class="fs-label">Full Screen</span>
-            </button>
-          </div>
-          <iframe id="frameJs" class="preview-frame" title="JS Preview"></iframe>
-        </div>
-      </div>
-    </div><!-- /viewJs -->
 
   </div><!-- /views -->
 </div><!-- /app -->
@@ -3199,9 +3018,6 @@ function toggleFullscreen(viewType) {
   } else if (viewType === 'css') {
     targetEl = document.querySelector('.css-preview');
     btnEl = document.getElementById('btnFsCss');
-  } else if (viewType === 'js') {
-    targetEl = document.querySelector('.js-preview');
-    btnEl = document.getElementById('btnFsJs');
   }
   if (!targetEl) return;
 
@@ -3242,11 +3058,13 @@ document.addEventListener('keydown', (e) => {
    =========================================================================== */
 function switchView(v) {
   state.currentView = v;
-  const viewMap = { html: 'viewHtml', css: 'viewCss', js: 'viewJs' };
-  const navMap  = { html: 'navHtml',  css: 'navCss',  js: 'navJs'  };
+  const viewMap = { html: 'viewHtml', css: 'viewCss' };
+  const navMap  = { html: 'navHtml',  css: 'navCss'  };
   Object.keys(viewMap).forEach(k => {
-    document.getElementById(viewMap[k]).classList.toggle('active', k === v);
-    document.getElementById(navMap[k]).classList.toggle('active', k === v);
+    const vEl = document.getElementById(viewMap[k]);
+    const nEl = document.getElementById(navMap[k]);
+    if (vEl) vEl.classList.toggle('active', k === v);
+    if (nEl) nEl.classList.toggle('active', k === v);
   });
   if (v === 'html') {
     if (htmlQuizState.portalRevealed) {
@@ -3256,7 +3074,6 @@ function switchView(v) {
     }
   }
   if (v === 'css') renderCssPreview();
-  if (v === 'js')  renderJsPreview();
 }
 
 /* ===========================================================================
@@ -3730,195 +3547,6 @@ function redoAll() {
 }
 
 /* ===========================================================================
-   ROUND 3: JS PREVIEW & ZIP EXPORT (ALWAYS FULLY STYLED)
-   =========================================================================== */
-function renderJsPreview() {
-  // In Round 3, always render the final completely styled portal
-  const cleanHtml = BASE_HTML.replace(/<style>[\s\S]*?<\/style>/, `<style>\n${COMPLETE_PORTAL_CSS}\n</style>`);
-  const frame = document.getElementById('frameJs');
-  if (frame) frame.srcdoc = cleanHtml;
-}
-
-const STARTER_JS = `// ==========================================================================
-// WEB DEVELOPMENT CHALLENGE — ROUND 3: JAVASCRIPT IMPLEMENTATION
-// Student Registration Portal — Form Validation
-// ==========================================================================
-// Instructions:
-//   Complete the 12 tasks below inside script.js.
-//   Do NOT edit index.html or style.css.
-//   Open index.html in your browser to test your validation logic.
-// ==========================================================================
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  // TASK 1: Select the registration form and all input/error elements
-  const form = document.getElementById('registrationForm');
-  const fullName = document.getElementById('fullName');
-  const email = document.getElementById('email');
-  const phone = document.getElementById('phone');
-  const courseSelect = document.getElementById('courseSelect');
-  const password = document.getElementById('password');
-  const confirmPassword = document.getElementById('confirmPassword');
-
-  const nameError = document.getElementById('nameError');
-  const emailError = document.getElementById('emailError');
-  const phoneError = document.getElementById('phoneError');
-  const courseError = document.getElementById('courseError');
-  const passwordError = document.getElementById('passwordError');
-  const confirmError = document.getElementById('confirmError');
-  const formSuccess = document.getElementById('formSuccess');
-
-  // TASK 2: Attach a 'submit' event listener to the form element
-  form.addEventListener('submit', (event) => {
-
-    // TASK 3: Prevent default form submission (stops page reloading)
-    event.preventDefault();
-
-    // TASK 11: Clear all previous error messages before re-validating
-    nameError.textContent = '';
-    emailError.textContent = '';
-    phoneError.textContent = '';
-    courseError.textContent = '';
-    passwordError.textContent = '';
-    confirmError.textContent = '';
-    formSuccess.style.display = 'none';
-    formSuccess.textContent = '';
-
-    let isValid = true;
-
-    // TASK 4: Read and trim values from all inputs
-    const nameVal = fullName.value.trim();
-    const emailVal = email.value.trim();
-    const phoneVal = phone.value.trim();
-    const courseVal = courseSelect.value;
-    const passVal = password.value;
-    const confirmVal = confirmPassword.value;
-
-    // TASK 5: Validate that Full Name is not empty
-    if (!nameVal) {
-      nameError.textContent = 'Full name is required.';
-      isValid = false;
-    }
-
-    // TASK 5b: Validate that a course is selected
-    if (!courseVal) {
-      courseError.textContent = 'Please choose a course from the list.';
-      isValid = false;
-    }
-
-    // TASK 6: Validate email format using regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailVal) {
-      emailError.textContent = 'Email address is required.';
-      isValid = false;
-    } else if (!emailRegex.test(emailVal)) {
-      emailError.textContent = 'Please enter a valid email address (e.g. student@example.com).';
-      isValid = false;
-    }
-
-    // TASK 7: Validate phone is exactly 10 digits: /^\d{10}$/
-    const phoneRegex = /^\d{10}$/;
-    if (!phoneVal) {
-      phoneError.textContent = 'Phone number is required.';
-      isValid = false;
-    } else if (!phoneRegex.test(phoneVal)) {
-      phoneError.textContent = 'Phone number must be exactly 10 digits.';
-      isValid = false;
-    }
-
-    // TASK 8: Validate password length >= 6 characters
-    if (!passVal) {
-      passwordError.textContent = 'Password is required.';
-      isValid = false;
-    } else if (passVal.length < 6) {
-      passwordError.textContent = 'Password must be at least 6 characters long.';
-      isValid = false;
-    }
-
-    // TASK 9: Validate confirmPassword matches password
-    if (!confirmVal) {
-      confirmError.textContent = 'Please confirm your password.';
-      isValid = false;
-    } else if (confirmVal !== passVal) {
-      confirmError.textContent = 'Passwords do not match.';
-      isValid = false;
-    }
-
-    // TASK 12: If all validation passes: display success message and reset form
-    if (isValid) {
-      formSuccess.textContent = 'Registration successful! Welcome to Web Development 2026.';
-      formSuccess.style.display = 'block';
-      form.reset();
-    }
-
-  });
-
-});
-`;
-
-const README_CONTENT = `# Web Development Challenge — Round 3: JavaScript Implementation
-
-## 🎯 Objective
-Students implement client-side form validation in \`script.js\` for the Student Registration Portal.
-
-## 📁 Package Contents
-- \`index.html\`  — The semantic HTML structure from Round 1 (do not edit)
-- \`style.css\`   — The complete production CSS styling from Round 2 (do not edit)
-- \`script.js\`   — Write your JavaScript form validation logic here
-- \`README.md\`   — Student instructions and task checklist
-
-## 🚀 How to Run & Test
-1. Extract this ZIP to a folder.
-2. Open the folder in **VS Code** (or your favorite code editor).
-3. Open \`index.html\` in your browser (double click or use Live Server).
-4. Complete the 12 tasks inside \`script.js\`.
-5. Test submitting with valid, invalid, and empty input fields.
-
-## ✅ Tasks Checklist
-- [x] **01**: Select the form and input elements
-- [x] **02**: Attach \`submit\` event listener
-- [x] **03**: Prevent default form submission (\`event.preventDefault()\`)
-- [x] **04**: Read and trim values
-- [x] **05**: Validate Full Name & Course selection
-- [x] **06**: Validate Email format with regex
-- [x] **07**: Validate Phone is exactly 10 digits
-- [x] **08**: Validate Password length >= 6 characters
-- [x] **09**: Validate Confirm Password matches Password
-- [x] **10**: Display inline error messages in \`.error-msg\` spans
-- [x] **11**: Clear errors before each validation attempt
-- [x] **12**: Show success message and reset form on valid submission
-`;
-
-function downloadZip() {
-  // Generate clean standalone index.html linking to style.css and script.js
-  let finalHtml = BASE_HTML
-    .replace(/<style>[\s\S]*?<\/style>/, '  <link rel="stylesheet" href="style.css">')
-    .replace('</body>', '  <script src="script.js"><\\/script>\n</body>');
-
-  const finalCss = COMPLETE_PORTAL_CSS;
-
-  if (window.JSZip) {
-    const zip = new JSZip();
-    zip.file('index.html', finalHtml);
-    zip.file('style.css', finalCss);
-    zip.file('script.js', STARTER_JS);
-    zip.file('README.md', README_CONTENT);
-    zip.generateAsync({ type: 'blob' }).then(blob => {
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'web-dev-challenge-round3.zip';
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 100);
-      toast('ZIP downloaded! Fully styled HTML + CSS + JS starter bundle ready.');
-    });
-  } else {
-    toast('JSZip not available. Check internet connection.');
-  }
-}
-
-
-/* ===========================================================================
    3D INTERACTIVE TILT & MOTION ENGINE
    =========================================================================== */
 function setup3DTiltEffect() {
@@ -3951,7 +3579,6 @@ function setup3DTiltEffect() {
 window.addEventListener('DOMContentLoaded', () => {
   renderHtmlQuestion();
   renderQuestion();
-  renderJsPreview();
   setTimeout(setup3DTiltEffect, 60);
 });
 </script>
