@@ -1450,6 +1450,368 @@
       .hq-stats-grid { grid-template-columns: 1fr; }
       .hq-options { grid-template-columns: 1fr; }
     }
+  
+    /* =====================================================================
+       3D RAPID FIRE COUNTDOWN TIMER (NON-DESTRUCTIVE HOST UTILITY)
+       ===================================================================== */
+    .rapid-timer-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 20px;
+      margin-bottom: 22px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.92) 100%);
+      border: 1.5px solid var(--border-2);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF;
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .rapid-timer-banner:hover {
+      border-color: var(--orange-border);
+      box-shadow: 0 8px 24px rgba(249, 115, 22, 0.12), 0 2px 6px rgba(15, 23, 42, 0.04);
+    }
+
+    .rapid-timer-banner.is-running {
+      border-color: var(--orange);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 247, 237, 0.95) 100%);
+      box-shadow: 0 0 22px rgba(249, 115, 22, 0.22), 0 6px 18px rgba(15, 23, 42, 0.06);
+    }
+
+    .rapid-timer-banner.times-up {
+      border-color: #F87171;
+      background: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 100%);
+      box-shadow: 0 0 26px rgba(239, 68, 68, 0.26), 0 4px 14px rgba(220, 38, 38, 0.12);
+      animation: timerBuzzerShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    @keyframes timerBuzzerShake {
+      10%, 90% { transform: translate3d(-1.5px, 0, 0); }
+      20%, 80% { transform: translate3d(2.5px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+      40%, 60% { transform: translate3d(3px, 0, 0); }
+    }
+
+    .rapid-timer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 170px;
+    }
+
+    .rapid-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--orange-dark);
+      background: var(--orange-light);
+      padding: 3px 9px;
+      border-radius: 4px;
+      border: 1px solid var(--orange-border);
+      width: fit-content;
+    }
+
+    .rapid-pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 8px var(--orange);
+      animation: pulseDot 1.4s ease-in-out infinite;
+    }
+
+    .rapid-timer-banner.is-running .rapid-pulse-dot {
+      animation-duration: 0.6s;
+      background: #EA580C;
+      box-shadow: 0 0 10px #EA580C;
+    }
+
+    .rapid-timer-banner.times-up .rapid-pulse-dot {
+      background: #DC2626;
+      box-shadow: 0 0 12px #DC2626;
+      animation: none;
+    }
+
+    .rapid-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-3);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* 3D LOADER GESTURE */
+    .rapid-timer-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .rapid-3d-loader {
+      width: 82px;
+      height: 82px;
+      position: relative;
+      perspective: 600px;
+      transform-style: preserve-3d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: perspective(600px) rotateX(14deg);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .rapid-3d-loader:hover {
+      transform: perspective(600px) rotateX(0deg) scale(1.05);
+    }
+
+    .loader-3d-orbit {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .loader-3d-orbit.outer {
+      inset: -6px;
+      border: 1.5px dashed rgba(249, 115, 22, 0.35);
+      animation: rapidOrbitSpin 10s linear infinite;
+    }
+
+    .loader-3d-orbit.inner {
+      inset: -1px;
+      border: 1px dotted rgba(249, 115, 22, 0.25);
+      animation: rapidOrbitCounter 6s linear infinite;
+    }
+
+    .rapid-timer-banner.is-running .loader-3d-orbit.outer {
+      border-color: rgba(249, 115, 22, 0.85);
+      box-shadow: 0 0 14px rgba(249, 115, 22, 0.3);
+      animation-duration: 2s;
+    }
+
+    .rapid-timer-banner.times-up .loader-3d-orbit.outer {
+      border-color: #EF4444;
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.4);
+      animation-duration: 1.2s;
+    }
+
+    @keyframes rapidOrbitSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes rapidOrbitCounter {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    .loader-3d-svg {
+      width: 82px;
+      height: 82px;
+      transform: rotate(-90deg);
+      filter: drop-shadow(0 3px 6px rgba(249, 115, 22, 0.22));
+    }
+
+    .loader-bg-track {
+      fill: rgba(248, 250, 252, 0.95);
+      stroke: #E2E8F0;
+      stroke-width: 6;
+    }
+
+    .loader-meter-ring {
+      fill: none;
+      stroke-width: 6.5;
+      stroke-linecap: round;
+      stroke-dasharray: 226.19;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.04s linear, stroke 0.25s ease;
+    }
+
+    .loader-3d-core {
+      position: absolute;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      transform: translateZ(16px);
+      pointer-events: none;
+    }
+
+    .loader-digit {
+      font-family: var(--mono);
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: var(--text-1);
+      text-shadow: 0 1px 0 #FFFFFF, 0 2px 8px rgba(249, 115, 22, 0.25);
+      line-height: 1;
+      display: inline-block;
+    }
+
+    .loader-digit.pop {
+      animation: digitPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes digitPop {
+      0% { transform: scale(1.38) translateZ(8px); color: var(--orange-dark); }
+      50% { transform: scale(0.92); }
+      100% { transform: scale(1) translateZ(0); color: var(--text-1); }
+    }
+
+    .loader-unit {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--text-3);
+      margin-left: 2px;
+    }
+
+    .rapid-timer-banner.times-up .loader-digit {
+      color: #DC2626 !important;
+      text-shadow: 0 0 14px rgba(220, 38, 38, 0.45);
+    }
+
+    .rapid-timer-banner.times-up .loader-unit {
+      color: #DC2626 !important;
+    }
+
+    /* RIGHT CONTROLS & STATUS */
+    .rapid-timer-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .rapid-status-badge {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: var(--bg-s3);
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      letter-spacing: 0.03em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .rapid-status-badge.running {
+      background: #FFF7ED;
+      color: #EA580C;
+      border-color: #FDBA74;
+    }
+
+    .rapid-status-badge.alert {
+      background: #FEF2F2;
+      color: #DC2626;
+      border-color: #FECACA;
+      font-weight: 800;
+      animation: alertPulse 0.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes alertPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(220, 38, 38, 0); }
+      100% { transform: scale(1.04); box-shadow: 0 0 12px rgba(220, 38, 38, 0.35); }
+    }
+
+    .rapid-status-badge .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #EA580C;
+      animation: pulseDot 0.6s infinite alternate;
+    }
+
+    .rapid-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-timer-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+      color: #FFFFFF;
+      font-family: var(--font);
+      font-size: 0.84rem;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius);
+      cursor: pointer;
+      box-shadow: 0 3px 0 #C2410C, 0 4px 10px rgba(249, 115, 22, 0.3);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.18s ease;
+      user-select: none;
+    }
+
+    .btn-timer-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 0 #C2410C, 0 8px 16px rgba(249, 115, 22, 0.38);
+    }
+
+    .btn-timer-primary:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #C2410C, 0 2px 4px rgba(249, 115, 22, 0.2);
+    }
+
+    .btn-timer-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      background: #FFFFFF;
+      color: var(--text-2);
+      font-family: var(--font);
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1.5px solid var(--border-2);
+      border-radius: var(--radius);
+      cursor: pointer;
+      box-shadow: 0 2px 0 var(--border), 0 3px 6px rgba(15, 23, 42, 0.04);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, color 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+    }
+
+    .btn-timer-secondary:hover {
+      transform: translateY(-1px);
+      color: var(--orange);
+      border-color: var(--orange-border);
+      box-shadow: 0 3px 0 var(--border), 0 5px 10px rgba(15, 23, 42, 0.06);
+    }
+
+    .btn-timer-secondary:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    @media (max-width: 680px) {
+      .rapid-timer-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        padding: 14px 16px;
+      }
+      .rapid-timer-left {
+        align-items: center;
+        min-width: 0;
+      }
+      .rapid-timer-right {
+        align-items: center;
+      }
+    }
+
   </style>
 
 </head>
@@ -3622,6 +3984,8 @@ document.addEventListener('keydown', (e) => {
    VIEW SWITCHING
    =========================================================================== */
 function switchView(v) {
+  pauseRapidTimer('html');
+  pauseRapidTimer('css');
   state.currentView = v;
   const viewMap = { html: 'viewHtml', css: 'viewCss' };
   const navMap  = { html: 'navHtml',  css: 'navCss'  };
@@ -3639,6 +4003,263 @@ function switchView(v) {
     }
   }
   if (v === 'css') renderCssPreview();
+}
+
+
+/* ===========================================================================
+   RAPID FIRE 5-SECOND TIMER SYSTEM (NON-DESTRUCTIVE HOST UTILITY)
+   =========================================================================== */
+const rapidTimerState = {
+  html: {
+    remainingMs: 5000,
+    isRunning: false,
+    intervalId: null
+  },
+  css: {
+    remainingMs: 5000,
+    isRunning: false,
+    intervalId: null
+  }
+};
+
+function playTimerChime(type) {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const now = ctx.currentTime;
+    
+    if (type === 'start') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.1);
+    } else if (type === 'tick') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(659.25, now);
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    } else if (type === 'timesup') {
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(587.33, now);
+      gain1.gain.setValueAtTime(0.18, now);
+      gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.14);
+      osc1.connect(gain1);
+      gain1.connect(ctx.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.14);
+
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(880, now + 0.15);
+      gain2.gain.setValueAtTime(0.22, now + 0.15);
+      gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start(now + 0.15);
+      osc2.stop(now + 0.45);
+    }
+  } catch (e) {
+    // AudioContext fallback
+  }
+}
+
+function renderRapidTimerHtml(view) {
+  return `
+    <div class="rapid-timer-banner" id="${view}RapidTimerBanner">
+      <div class="rapid-timer-left">
+        <div class="rapid-badge">
+          <span class="rapid-pulse-dot"></span>
+          <span>RAPID FIRE TIMER</span>
+        </div>
+        <div class="rapid-subtitle">5-second host countdown &bull; Raise answer when buzzer rings</div>
+      </div>
+
+      <div class="rapid-timer-center">
+        <div class="rapid-3d-loader" id="${view}TimerLoader" title="Rapid Fire 3D Countdown">
+          <div class="loader-3d-orbit outer"></div>
+          <div class="loader-3d-orbit inner"></div>
+          <svg class="loader-3d-svg" viewBox="0 0 88 88">
+            <defs>
+              <linearGradient id="${view}TimerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FB923C"/>
+                <stop offset="60%" stop-color="#F97316"/>
+                <stop offset="100%" stop-color="#EA580C"/>
+              </linearGradient>
+            </defs>
+            <circle class="loader-bg-track" cx="44" cy="44" r="36" />
+            <circle class="loader-meter-ring" id="${view}TimerRing" cx="44" cy="44" r="36" style="stroke:url(#${view}TimerGrad);" />
+          </svg>
+          <div class="loader-3d-core">
+            <span class="loader-digit" id="${view}TimerDigit">5</span>
+            <span class="loader-unit">s</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rapid-timer-right">
+        <div class="rapid-status-badge" id="${view}TimerStatus">Ready to Start</div>
+        <div class="rapid-btn-group">
+          <button type="button" class="btn-timer-primary" id="${view}BtnTimerStart" onclick="toggleRapidTimer('${view}')">
+            <span class="btn-timer-icon" id="${view}IconTimerStart">▶</span>
+            <span id="${view}LblTimerStart">Start Timer</span>
+          </button>
+          <button type="button" class="btn-timer-secondary" onclick="resetRapidTimer('${view}')" title="Reset to 5 seconds">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function updateRapidTimerUI(view) {
+  const ts = rapidTimerState[view];
+  const banner = document.getElementById(view + 'RapidTimerBanner');
+  const ring = document.getElementById(view + 'TimerRing');
+  const digit = document.getElementById(view + 'TimerDigit');
+  const status = document.getElementById(view + 'TimerStatus');
+  const iconStart = document.getElementById(view + 'IconTimerStart');
+  const lblStart = document.getElementById(view + 'LblTimerStart');
+  
+  if (!banner || !ring || !digit) return;
+
+  const totalMs = 5000;
+  const currentMs = Math.max(0, ts.remainingMs);
+  const circumference = 226.19;
+  const fraction = currentMs / totalMs;
+  const offset = circumference * (1 - fraction);
+  ring.style.strokeDashoffset = offset;
+
+  const displaySec = Math.ceil(currentMs / 1000);
+  const oldText = digit.textContent;
+  digit.textContent = currentMs === 0 ? '0' : String(displaySec);
+
+  if (oldText !== digit.textContent) {
+    digit.classList.remove('pop');
+    void digit.offsetWidth;
+    digit.classList.add('pop');
+  }
+
+  if (currentMs === 0) {
+    banner.classList.add('times-up');
+    banner.classList.remove('is-running');
+    ring.style.stroke = '#DC2626';
+    if (status) {
+      status.className = 'rapid-status-badge alert';
+      status.innerHTML = '🚨 TIME\'S UP! Raise Answers ✋';
+    }
+    if (iconStart) iconStart.textContent = '↺';
+    if (lblStart) lblStart.textContent = 'Restart 5s';
+  } else if (ts.isRunning) {
+    banner.classList.add('is-running');
+    banner.classList.remove('times-up');
+    ring.style.stroke = `url(#${view}TimerGrad)`;
+    if (status) {
+      status.className = 'rapid-status-badge running';
+      status.innerHTML = '<span class="live-dot"></span> Rapid Countdown...';
+    }
+    if (iconStart) iconStart.textContent = '⏸';
+    if (lblStart) lblStart.textContent = 'Pause';
+  } else {
+    banner.classList.remove('is-running', 'times-up');
+    ring.style.stroke = `url(#${view}TimerGrad)`;
+    if (status) {
+      status.className = 'rapid-status-badge';
+      status.textContent = currentMs < 5000 ? 'Paused' : 'Ready to Start';
+    }
+    if (iconStart) iconStart.textContent = '▶';
+    if (lblStart) lblStart.textContent = currentMs < 5000 ? 'Resume' : 'Start Timer';
+  }
+}
+
+function startRapidTimer(view) {
+  const ts = rapidTimerState[view];
+  if (ts.isRunning) return;
+
+  if (ts.remainingMs <= 0) {
+    ts.remainingMs = 5000;
+  }
+
+  ts.isRunning = true;
+  playTimerChime('start');
+
+  let lastTime = performance.now();
+  let lastSec = Math.ceil(ts.remainingMs / 1000);
+
+  clearInterval(ts.intervalId);
+  ts.intervalId = setInterval(() => {
+    const now = performance.now();
+    const delta = now - lastTime;
+    lastTime = now;
+
+    ts.remainingMs = Math.max(0, ts.remainingMs - delta);
+    const currentSec = Math.ceil(ts.remainingMs / 1000);
+
+    if (currentSec !== lastSec && currentSec > 0 && currentSec <= 2) {
+      playTimerChime('tick');
+      lastSec = currentSec;
+    }
+
+    if (ts.remainingMs <= 0) {
+      clearInterval(ts.intervalId);
+      ts.intervalId = null;
+      ts.isRunning = false;
+      ts.remainingMs = 0;
+      updateRapidTimerUI(view);
+      playTimerChime('timesup');
+      toast('⏰ Rapid Fire 5s elapsed! Students raise your answers!');
+    } else {
+      updateRapidTimerUI(view);
+    }
+  }, 40);
+
+  updateRapidTimerUI(view);
+}
+
+function pauseRapidTimer(view) {
+  const ts = rapidTimerState[view];
+  clearInterval(ts.intervalId);
+  ts.intervalId = null;
+  ts.isRunning = false;
+  updateRapidTimerUI(view);
+}
+
+function resetRapidTimer(view) {
+  const ts = rapidTimerState[view];
+  clearInterval(ts.intervalId);
+  ts.intervalId = null;
+  ts.isRunning = false;
+  ts.remainingMs = 5000;
+  updateRapidTimerUI(view);
+}
+
+function toggleRapidTimer(view) {
+  const ts = rapidTimerState[view];
+  if (ts.remainingMs <= 0) {
+    resetRapidTimer(view);
+    startRapidTimer(view);
+  } else if (ts.isRunning) {
+    pauseRapidTimer(view);
+  } else {
+    startRapidTimer(view);
+  }
 }
 
 /* ===========================================================================
@@ -3745,6 +4366,7 @@ function renderHtmlQuestion() {
 
   qArea.innerHTML = `
     <div class="hq-card">
+      ${renderRapidTimerHtml('html')}
       <div class="hq-topic-badge">${escapeHtml(q.topic)}</div>
       <h3 class="hq-question-text">${escapeHtml(q.question)}</h3>
       <div class="hq-options">
@@ -3752,6 +4374,7 @@ function renderHtmlQuestion() {
       </div>
     </div>
   `;
+  resetRapidTimer('html');
 
   renderHtmlFeedback();
   setTimeout(setup3DTiltEffect, 30);
@@ -4011,6 +4634,7 @@ function renderQuestion() {
   if (container) {
     container.innerHTML = `
       <div class="q-card">
+        ${renderRapidTimerHtml('css')}
         <div class="q-topic-tag">${q.title}</div>
         <h3 class="q-text">${escapeHtml(q.q)}</h3>
         <div class="q-purpose">${escapeHtml(q.purpose)}</div>
@@ -4022,6 +4646,7 @@ function renderQuestion() {
           ${state.qIndex < QUESTIONS.length - 1 ? 'Next Question &rarr;' : 'Review Final Styled Page &#10003;'}
         </button>
       </div>`;
+    resetRapidTimer('css');
   }
 
   renderCssPreview();
@@ -4115,7 +4740,7 @@ function redoAll() {
    3D INTERACTIVE TILT & MOTION ENGINE
    =========================================================================== */
 function setup3DTiltEffect() {
-  const tiltElements = document.querySelectorAll('.hq-card, .q-card, .hq-top-card, .dl-card, .hq-stat-box, .hq-option, .q-option');
+  const tiltElements = document.querySelectorAll('.hq-card, .q-card, .hq-top-card, .dl-card, .hq-stat-box, .hq-option, .q-option, .rapid-timer-banner, .rapid-3d-loader');
   tiltElements.forEach(el => {
     if (el.dataset.tiltInitialized) return;
     el.dataset.tiltInitialized = 'true';
