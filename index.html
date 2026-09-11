@@ -1452,23 +1452,24 @@
     }
   
     /* =====================================================================
-       3D RAPID FIRE COUNTDOWN TIMER (NON-DESTRUCTIVE HOST UTILITY)
+       3D RAPID FIRE COUNTDOWN TIMER (PERFECT ALIGNMENT & RESPONSIVENESS)
        ===================================================================== */
     .rapid-timer-banner {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 14px 20px;
-      margin-bottom: 22px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.92) 100%);
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.94) 100%);
       border: 1.5px solid var(--border-2);
       border-radius: var(--radius-lg);
-      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF;
       position: relative;
       overflow: hidden;
       transform-style: preserve-3d;
-      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-sizing: border-box;
+      width: 100%;
     }
 
     .rapid-timer-banner:hover {
@@ -1478,7 +1479,7 @@
 
     .rapid-timer-banner.is-running {
       border-color: var(--orange);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 247, 237, 0.95) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 247, 237, 0.96) 100%);
       box-shadow: 0 0 22px rgba(249, 115, 22, 0.22), 0 6px 18px rgba(15, 23, 42, 0.06);
     }
 
@@ -1496,11 +1497,13 @@
       40%, 60% { transform: translate3d(3px, 0, 0); }
     }
 
-    .rapid-timer-left {
+    /* TOP ROW: BADGE & STATUS */
+    .rapid-timer-top {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-      min-width: 170px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
     }
 
     .rapid-badge {
@@ -1508,16 +1511,16 @@
       align-items: center;
       gap: 7px;
       font-family: var(--mono);
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--orange-dark);
       background: var(--orange-light);
-      padding: 3px 9px;
+      padding: 3px 8px;
       border-radius: 4px;
       border: 1px solid var(--orange-border);
-      width: fit-content;
+      white-space: nowrap;
     }
 
     .rapid-pulse-dot {
@@ -1541,31 +1544,68 @@
       animation: none;
     }
 
-    .rapid-subtitle {
-      font-size: 0.78rem;
-      color: var(--text-3);
-      font-weight: 500;
-      line-height: 1.4;
+    .rapid-status-badge {
+      font-family: var(--mono);
+      font-size: 0.70rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 4px;
+      background: var(--bg-s3);
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      letter-spacing: 0.03em;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
     }
 
-    /* 3D LOADER GESTURE */
-    .rapid-timer-center {
+    .rapid-status-badge.running {
+      background: #FFF7ED;
+      color: #EA580C;
+      border-color: #FDBA74;
+    }
+
+    .rapid-status-badge.alert {
+      background: #FEF2F2;
+      color: #DC2626;
+      border-color: #FECACA;
+      font-weight: 800;
+      animation: alertPulse 0.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes alertPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(220, 38, 38, 0); }
+      100% { transform: scale(1.04); box-shadow: 0 0 12px rgba(220, 38, 38, 0.35); }
+    }
+
+    .rapid-status-badge .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #EA580C;
+      animation: pulseDot 0.6s infinite alternate;
+    }
+
+    /* MAIN ROW: 3D LOADER & CONTROLS */
+    .rapid-timer-main {
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
+      gap: 16px;
+      width: 100%;
     }
 
     .rapid-3d-loader {
-      width: 82px;
-      height: 82px;
+      width: 72px;
+      height: 72px;
+      min-width: 72px;
       position: relative;
       perspective: 600px;
       transform-style: preserve-3d;
       display: flex;
       align-items: center;
       justify-content: center;
-      transform: perspective(600px) rotateX(14deg);
+      transform: perspective(600px) rotateX(12deg);
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -1580,7 +1620,7 @@
     }
 
     .loader-3d-orbit.outer {
-      inset: -6px;
+      inset: -5px;
       border: 1.5px dashed rgba(249, 115, 22, 0.35);
       animation: rapidOrbitSpin 10s linear infinite;
     }
@@ -1614,8 +1654,8 @@
     }
 
     .loader-3d-svg {
-      width: 82px;
-      height: 82px;
+      width: 72px;
+      height: 72px;
       transform: rotate(-90deg);
       filter: drop-shadow(0 3px 6px rgba(249, 115, 22, 0.22));
     }
@@ -1646,7 +1686,7 @@
 
     .loader-digit {
       font-family: var(--mono);
-      font-size: 1.85rem;
+      font-size: 1.75rem;
       font-weight: 900;
       color: var(--text-1);
       text-shadow: 0 1px 0 #FFFFFF, 0 2px 8px rgba(249, 115, 22, 0.25);
@@ -1666,7 +1706,7 @@
 
     .loader-unit {
       font-family: var(--mono);
-      font-size: 0.82rem;
+      font-size: 0.80rem;
       font-weight: 800;
       color: var(--text-3);
       margin-left: 2px;
@@ -1681,66 +1721,33 @@
       color: #DC2626 !important;
     }
 
-    /* RIGHT CONTROLS & STATUS */
-    .rapid-timer-right {
+    /* RIGHT ACTIONS AREA */
+    .rapid-actions-area {
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
       gap: 8px;
+      flex: 1;
+      min-width: 0;
     }
 
-    .rapid-status-badge {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 4px;
-      background: var(--bg-s3);
-      color: var(--text-2);
-      border: 1px solid var(--border);
-      letter-spacing: 0.03em;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
-
-    .rapid-status-badge.running {
-      background: #FFF7ED;
-      color: #EA580C;
-      border-color: #FDBA74;
-    }
-
-    .rapid-status-badge.alert {
-      background: #FEF2F2;
-      color: #DC2626;
-      border-color: #FECACA;
-      font-weight: 800;
-      animation: alertPulse 0.8s infinite alternate ease-in-out;
-    }
-
-    @keyframes alertPulse {
-      0% { transform: scale(1); box-shadow: 0 0 0 rgba(220, 38, 38, 0); }
-      100% { transform: scale(1.04); box-shadow: 0 0 12px rgba(220, 38, 38, 0.35); }
-    }
-
-    .rapid-status-badge .live-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #EA580C;
-      animation: pulseDot 0.6s infinite alternate;
+    .rapid-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-3);
+      font-weight: 500;
+      line-height: 1.35;
     }
 
     .rapid-btn-group {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .btn-timer-primary {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 7px;
       padding: 8px 16px;
       background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
@@ -1748,12 +1755,13 @@
       font-family: var(--font);
       font-size: 0.84rem;
       font-weight: 700;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       border-radius: var(--radius);
       cursor: pointer;
       box-shadow: 0 3px 0 #C2410C, 0 4px 10px rgba(249, 115, 22, 0.3);
       transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.18s ease;
       user-select: none;
+      white-space: nowrap;
     }
 
     .btn-timer-primary:hover {
@@ -1769,6 +1777,7 @@
     .btn-timer-secondary {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 4px;
       padding: 8px 12px;
       background: #FFFFFF;
@@ -1782,6 +1791,7 @@
       box-shadow: 0 2px 0 var(--border), 0 3px 6px rgba(15, 23, 42, 0.04);
       transition: transform 0.1s ease, box-shadow 0.1s ease, color 0.15s ease, border-color 0.15s ease;
       user-select: none;
+      white-space: nowrap;
     }
 
     .btn-timer-secondary:hover {
@@ -1794,22 +1804,6 @@
     .btn-timer-secondary:active {
       transform: translateY(1px);
       box-shadow: 0 1px 0 var(--border);
-    }
-
-    @media (max-width: 680px) {
-      .rapid-timer-banner {
-        flex-direction: column;
-        text-align: center;
-        gap: 12px;
-        padding: 14px 16px;
-      }
-      .rapid-timer-left {
-        align-items: center;
-        min-width: 0;
-      }
-      .rapid-timer-right {
-        align-items: center;
-      }
     }
 
   </style>
@@ -4082,15 +4076,15 @@ function playTimerChime(type) {
 function renderRapidTimerHtml(view) {
   return `
     <div class="rapid-timer-banner" id="${view}RapidTimerBanner">
-      <div class="rapid-timer-left">
+      <div class="rapid-timer-top">
         <div class="rapid-badge">
           <span class="rapid-pulse-dot"></span>
           <span>RAPID FIRE TIMER</span>
         </div>
-        <div class="rapid-subtitle">5-second host countdown &bull; Raise answer when buzzer rings</div>
+        <div class="rapid-status-badge" id="${view}TimerStatus">Ready to Start</div>
       </div>
 
-      <div class="rapid-timer-center">
+      <div class="rapid-timer-main">
         <div class="rapid-3d-loader" id="${view}TimerLoader" title="Rapid Fire 3D Countdown">
           <div class="loader-3d-orbit outer"></div>
           <div class="loader-3d-orbit inner"></div>
@@ -4110,19 +4104,19 @@ function renderRapidTimerHtml(view) {
             <span class="loader-unit">s</span>
           </div>
         </div>
-      </div>
 
-      <div class="rapid-timer-right">
-        <div class="rapid-status-badge" id="${view}TimerStatus">Ready to Start</div>
-        <div class="rapid-btn-group">
-          <button type="button" class="btn-timer-primary" id="${view}BtnTimerStart" onclick="toggleRapidTimer('${view}')">
-            <span class="btn-timer-icon" id="${view}IconTimerStart">▶</span>
-            <span id="${view}LblTimerStart">Start Timer</span>
-          </button>
-          <button type="button" class="btn-timer-secondary" onclick="resetRapidTimer('${view}')" title="Reset to 5 seconds">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-            Reset
-          </button>
+        <div class="rapid-actions-area">
+          <div class="rapid-subtitle">5s Host Timer &bull; Raise answer on buzzer</div>
+          <div class="rapid-btn-group">
+            <button type="button" class="btn-timer-primary" id="${view}BtnTimerStart" onclick="toggleRapidTimer('${view}')">
+              <span class="btn-timer-icon" id="${view}IconTimerStart">▶</span>
+              <span id="${view}LblTimerStart">Start Timer</span>
+            </button>
+            <button type="button" class="btn-timer-secondary" onclick="resetRapidTimer('${view}')" title="Reset to 5 seconds">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              Reset
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -4365,8 +4359,8 @@ function renderHtmlQuestion() {
   }).join('');
 
   qArea.innerHTML = `
+    ${renderRapidTimerHtml('html')}
     <div class="hq-card">
-      ${renderRapidTimerHtml('html')}
       <div class="hq-topic-badge">${escapeHtml(q.topic)}</div>
       <h3 class="hq-question-text">${escapeHtml(q.question)}</h3>
       <div class="hq-options">
@@ -4633,8 +4627,8 @@ function renderQuestion() {
 
   if (container) {
     container.innerHTML = `
+      ${renderRapidTimerHtml('css')}
       <div class="q-card">
-        ${renderRapidTimerHtml('css')}
         <div class="q-topic-tag">${q.title}</div>
         <h3 class="q-text">${escapeHtml(q.q)}</h3>
         <div class="q-purpose">${escapeHtml(q.purpose)}</div>
